@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
-import Input from '@/components/form/Input';
-import Textarea from '@/components/form/Textarea';
 import ProgressBar from '@/components/ui/ProgressBar';
 import Button from '@/components/ui/Button';
+import FormView from './FormView';
 // 아이콘은 간단한 SVG로 대체하거나 나중에 아이콘 라이브러리 추가 가능
 const Plus = ({ size }: { size?: number }) => (
   <svg
@@ -105,19 +104,6 @@ const CheckCircle2 = ({ size, className }: { size?: number; className?: string }
     <polyline points="22 4 12 14.01 9 11.01"></polyline>
   </svg>
 );
-const X = ({ size }: { size?: number }) => (
-  <svg
-    width={size || 24}
-    height={size || 24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-);
 
 const initialFormData: ProposalFormData = {
   clientCompanyName: '',
@@ -171,89 +157,86 @@ export default function ProposalForm() {
   }, []);
 
   // 제안서 목록을 로컬 스토리지에 저장
-  const saveProposals = useCallback((proposalsList: Proposal[]) => {
+  const saveProposals = (proposalsList: Proposal[]) => {
     localStorage.setItem('deckly_proposals', JSON.stringify(proposalsList));
     setProposals(proposalsList);
-  }, []);
+  };
 
   // 제안서 생성
-  const generateProposal = useCallback(
-    async (proposalId: string, data: ProposalFormData) => {
-      setIsGenerating(true);
-      setGenStatus({ progress: 10, message: '미팅 전사록 분석 중...' });
+  const generateProposal = async (proposalId: string, data: ProposalFormData) => {
+    setIsGenerating(true);
+    setGenStatus({ progress: 10, message: '미팅 전사록 분석 중...' });
 
-      const updateProgress = (progress: number, message: string) => {
-        setGenStatus({ progress, message });
-        // 로컬 상태 업데이트
-        const updated = proposals.map(p =>
-          p.id === proposalId ? { ...p, progress, status: 'generating' as ProposalStatus } : p,
-        );
-        saveProposals(updated);
+    const updateProgress = (progress: number, message: string) => {
+      setGenStatus({ progress, message });
+      // 로컬 상태 업데이트
+      const updated = proposals.map(p =>
+        p.id === proposalId ? { ...p, progress, status: 'generating' as ProposalStatus } : p,
+      );
+      saveProposals(updated);
+    };
+
+    try {
+      updateProgress(30, '제안서 구조 설계 중...');
+
+      // API 호출
+      const requestData: ProposalRequest = {
+        meetingNotes: data.transcriptText,
+        title: data.projectName,
+        client: data.clientCompanyName,
+        date: data.meetingDate,
+        projectOverview: data.includeSummary,
+        budget:
+          data.budgetMin && data.budgetMax ? `${data.budgetMin}~${data.budgetMax}` : undefined,
+        period:
+          data.startDate && data.openDate ? `${data.startDate} ~ ${data.openDate}` : undefined,
+        requirements: data.priorityFeatures,
       };
 
-      try {
-        updateProgress(30, '제안서 구조 설계 중...');
+      updateProgress(60, 'AI가 상세 내용을 작성하는 중...');
 
-        // API 호출
-        const requestData: ProposalRequest = {
-          meetingNotes: data.transcriptText,
-          title: data.projectName,
-          client: data.clientCompanyName,
-          date: data.meetingDate,
-          projectOverview: data.includeSummary,
-          budget:
-            data.budgetMin && data.budgetMax ? `${data.budgetMin}~${data.budgetMax}` : undefined,
-          period:
-            data.startDate && data.openDate ? `${data.startDate} ~ ${data.openDate}` : undefined,
-          requirements: data.priorityFeatures,
-        };
+      const { data: response } = await apiClient.post<ProposalResponse>('/gemini', requestData);
 
-        updateProgress(60, 'AI가 상세 내용을 작성하는 중...');
-
-        const { data: response } = await apiClient.post<ProposalResponse>('/gemini', requestData);
-
-        if (!response.success || !response.content) {
-          throw new Error(response.error || '제안서 생성에 실패했습니다.');
-        }
-
-        updateProgress(90, '제안서 마무리 중...');
-
-        // 로컬 스토리지에 저장
-        const completedProposal: Proposal = {
-          id: proposalId,
-          ...data,
-          content: response.content,
-          status: 'completed',
-          progress: 100,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        const updated = proposals.map(p => (p.id === proposalId ? completedProposal : p));
-        saveProposals(updated);
-
-        setIsGenerating(false);
-        setView('result');
-        setCurrentProposal(completedProposal);
-      } catch (err) {
-        console.error('제안서 생성 오류:', err);
-        const errorProposal: Proposal = {
-          id: proposalId,
-          ...data,
-          status: 'error',
-          error: err instanceof Error ? err.message : '알 수 없는 오류',
-          createdAt: new Date().toISOString(),
-        };
-        const updated = proposals.map(p => (p.id === proposalId ? errorProposal : p));
-        saveProposals(updated);
-        setIsGenerating(false);
-        alert('제안서 생성 중 오류가 발생했습니다.');
+      if (!response.success || !response.content) {
+        throw new Error(response.error || '제안서 생성에 실패했습니다.');
       }
-    },
-    [proposals, saveProposals, setView, setCurrentProposal],
-  );
 
-  const handleCreate = useCallback(async () => {
+      updateProgress(90, '제안서 마무리 중...');
+
+      // 로컬 스토리지에 저장
+      const completedProposal: Proposal = {
+        id: proposalId,
+        ...data,
+        content: response.content,
+        status: 'completed',
+        progress: 100,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const updated = proposals.map(p => (p.id === proposalId ? completedProposal : p));
+      saveProposals(updated);
+
+      setIsGenerating(false);
+      setView('result');
+      setCurrentProposal(completedProposal);
+    } catch (err) {
+      console.error('제안서 생성 오류:', err);
+      const errorProposal: Proposal = {
+        id: proposalId,
+        ...data,
+        status: 'error',
+        error: err instanceof Error ? err.message : '알 수 없는 오류',
+        createdAt: new Date().toISOString(),
+      };
+      const updated = proposals.map(p => (p.id === proposalId ? errorProposal : p));
+      saveProposals(updated);
+      setIsGenerating(false);
+      alert('제안서 생성 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleCreate = async () => {
     if (!formData.transcriptText.trim()) return;
 
     // 새 제안서 생성 (로컬 스토리지)
@@ -272,7 +255,7 @@ export default function ProposalForm() {
 
     // 제안서 생성 시작
     generateProposal(proposalId, formData);
-  }, [formData, proposals, saveProposals, generateProposal]);
+  };
 
   // 대시보드 뷰
   const DashboardView = () => (
@@ -348,175 +331,12 @@ export default function ProposalForm() {
     </div>
   );
 
-  // 각 필드별 onChange 핸들러를 useCallback으로 메모이제이션
-  const handleClientCompanyNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, clientCompanyName: e.target.value }));
-  }, []);
-
-  const handleProjectNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, projectName: e.target.value }));
-  }, []);
-
-  const handleMeetingDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, meetingDate: e.target.value }));
-  }, []);
-
-  const handleClientContactChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, clientContact: e.target.value }));
-  }, []);
-
-  const handleTranscriptTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData(prev => ({ ...prev, transcriptText: e.target.value }));
-  }, []);
-
-  // 폼 뷰 - useMemo로 메모이제이션하여 불필요한 재생성 방지
-  const FormView = useMemo(() => {
-    const renderStep = () => {
-      switch (step) {
-        case 1:
-          return (
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-black mb-4">Step 1. 기본 정보</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  label="클라이언트사"
-                  required
-                  id="clientCompanyName"
-                  name="clientCompanyName"
-                  type="text"
-                  value={formData.clientCompanyName}
-                  onChange={handleClientCompanyNameChange}
-                  placeholder="회사명"
-                  autoComplete="organization"
-                />
-                <Input
-                  label="프로젝트명"
-                  required
-                  id="projectName"
-                  name="projectName"
-                  type="text"
-                  value={formData.projectName}
-                  onChange={handleProjectNameChange}
-                  placeholder="프로젝트명"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  label="미팅 날짜"
-                  id="meetingDate"
-                  name="meetingDate"
-                  type="date"
-                  value={formData.meetingDate}
-                  onChange={handleMeetingDateChange}
-                />
-                <Input
-                  label="담당자명"
-                  id="clientContact"
-                  name="clientContact"
-                  type="text"
-                  value={formData.clientContact}
-                  onChange={handleClientContactChange}
-                  placeholder="김철수"
-                  autoComplete="name"
-                />
-              </div>
-            </div>
-          );
-        case 2:
-          return (
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-black mb-4">Step 2. 미팅 전사록 입력</h2>
-              <p className="text-xs text-gray-500 mb-2">
-                AI가 분석할 수 있도록 미팅 대화 내용이나 요약된 메모를 입력해주세요.
-              </p>
-              <Textarea
-                label=""
-                id="transcriptText"
-                name="transcriptText"
-                value={formData.transcriptText}
-                onChange={handleTranscriptTextChange}
-                className="h-48"
-                placeholder="여기에 회의록 내용을 붙여넣어주세요."
-                required
-              />
-              <div className="flex justify-between text-[10px] text-gray-400 px-1">
-                <span>AI가 정확한 제안을 하려면 최소 50자 이상의 구체적인 내용이 필요합니다.</span>
-                <span>{formData.transcriptText.length} 자</span>
-              </div>
-            </div>
-          );
-        default:
-          return null;
-      }
+  // 단일 핸들러로 통합 (더 간결하고 유지보수 용이)
+  const handleInputChange = (field: keyof ProposalFormData) => {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormData(prev => ({ ...prev, [field]: e.target.value }));
     };
-
-    return (
-      <div className="max-w-3xl mx-auto py-12 px-4">
-        <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-gray-100">
-          <div className="flex justify-between items-center mb-10">
-            <div>
-              <span className="text-indigo-600 font-bold text-sm tracking-widest uppercase">
-                Step {step} of 2
-              </span>
-              <h1 className="text-2xl font-black text-gray-400 mt-1">제안서 정보 입력</h1>
-            </div>
-            <button
-              onClick={() => setView('dashboard')}
-              className="p-2 hover:bg-gray-100 rounded-full transition"
-            >
-              <X size={24} />
-            </button>
-          </div>
-
-          {renderStep()}
-
-          <div className="flex justify-between mt-12 pt-8 border-t border-gray-50">
-            <Button
-              variant="ghost"
-              disabled={step === 1}
-              onClick={() => setStep(s => s - 1)}
-              icon={<ChevronLeft size={20} />}
-            >
-              이전 단계
-            </Button>
-
-            {step < 2 ? (
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={() => setStep(s => s + 1)}
-                icon={<ChevronRight size={20} />}
-                iconPosition="right"
-              >
-                다음 단계
-              </Button>
-            ) : (
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleCreate}
-                disabled={formData.transcriptText.length < 50}
-              >
-                AI 제안서 생성하기
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }, [
-    step,
-    formData,
-    handleClientCompanyNameChange,
-    handleProjectNameChange,
-    handleMeetingDateChange,
-    handleClientContactChange,
-    handleTranscriptTextChange,
-    handleCreate,
-    setStep,
-    setView,
-  ]);
+  };
 
   // 결과 뷰
   const ResultView = () => (
@@ -592,7 +412,16 @@ export default function ProposalForm() {
       {/* Main Content */}
       <main className="pb-20">
         {view === 'dashboard' && <DashboardView />}
-        {view === 'form' && FormView}
+        {view === 'form' && (
+          <FormView
+            step={step}
+            formData={formData}
+            onInputChange={handleInputChange}
+            onStepChange={setStep}
+            onClose={() => setView('dashboard')}
+            onSubmit={handleCreate}
+          />
+        )}
         {view === 'result' && <ResultView />}
       </main>
 

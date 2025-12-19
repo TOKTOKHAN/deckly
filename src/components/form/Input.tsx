@@ -25,7 +25,7 @@ export default function Input({
       </label>
       <input
         id={inputId}
-        className={`p-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${className}`}
+        className={`p-2.5 border border-gray-300 text-black rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${className}`}
         {...props}
       />
       {error && <span className="text-xs text-red-500">{error}</span>}
