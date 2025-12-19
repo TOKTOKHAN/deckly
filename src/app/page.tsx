@@ -1,3 +1,5 @@
+import ProposalForm from '@/components/proposal/ProposalForm';
+
 export default function Home() {
-  return <div>홈</div>;
+  return <ProposalForm />;
 }
