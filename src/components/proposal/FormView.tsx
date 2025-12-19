@@ -100,6 +100,7 @@ export default function FormView({
                 />
                 <Input
                   label="담당자명"
+                  required
                   id="clientContact"
                   name="clientContact"
                   type="text"
@@ -110,6 +111,7 @@ export default function FormView({
                 />
                 <Input
                   label="미팅 날짜"
+                  required
                   id="meetingDate"
                   name="meetingDate"
                   type="date"
@@ -122,6 +124,7 @@ export default function FormView({
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">제안사 정보</h3>
                 <Input
                   label="제안사"
+                  required
                   id="ourCompany"
                   name="ourCompany"
                   type="text"
@@ -131,6 +134,7 @@ export default function FormView({
                 />
                 <Input
                   label="담당자명"
+                  required
                   id="ourContact"
                   name="ourContact"
                   type="text"
@@ -141,6 +145,7 @@ export default function FormView({
                 />
                 <Input
                   label="제안서 작성일"
+                  required
                   id="proposalDate"
                   name="proposalDate"
                   type="date"

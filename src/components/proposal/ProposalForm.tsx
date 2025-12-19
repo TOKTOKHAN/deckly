@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
+import { getProposals, createProposal, updateProposal } from '@/lib/supabase/proposals';
 import ProgressBar from '@/components/ui/ProgressBar';
 import Button from '@/components/ui/Button';
 import FormView from './FormView';
@@ -134,46 +135,59 @@ export default function ProposalForm() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStatus, setGenStatus] = useState<GenerationStatus>({ progress: 0, message: '' });
 
-  // 로컬 스토리지에서 제안서 목록 로드
+  // Supabase에서 제안서 목록 로드
   useEffect(() => {
-    const loadProposals = () => {
-      const stored = localStorage.getItem('deckly_proposals');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          setProposals(
-            parsed.sort((a: Proposal, b: Proposal) => {
-              const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-              const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-              return dateB - dateA;
-            }),
-          );
-        } catch (err) {
-          console.error('제안서 로드 오류:', err);
+    const loadProposals = async () => {
+      try {
+        const data = await getProposals();
+        setProposals(data);
+      } catch (err) {
+        console.error('제안서 로드 오류:', err);
+        // Supabase 연결 실패 시 localStorage로 폴백
+        const stored = localStorage.getItem('deckly_proposals');
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            setProposals(
+              parsed.sort((a: Proposal, b: Proposal) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateB - dateA;
+              }),
+            );
+          } catch (parseErr) {
+            console.error('로컬 스토리지 파싱 오류:', parseErr);
+          }
         }
       }
     };
     loadProposals();
   }, []);
 
-  // 제안서 목록을 로컬 스토리지에 저장
-  const saveProposals = (proposalsList: Proposal[]) => {
-    localStorage.setItem('deckly_proposals', JSON.stringify(proposalsList));
-    setProposals(proposalsList);
-  };
-
   // 제안서 생성
   const generateProposal = async (proposalId: string, data: ProposalFormData) => {
     setIsGenerating(true);
     setGenStatus({ progress: 10, message: '미팅 전사록 분석 중...' });
 
-    const updateProgress = (progress: number, message: string) => {
+    const updateProgress = async (progress: number, message: string) => {
       setGenStatus({ progress, message });
-      // 로컬 상태 업데이트
-      const updated = proposals.map(p =>
-        p.id === proposalId ? { ...p, progress, status: 'generating' as ProposalStatus } : p,
-      );
-      saveProposals(updated);
+      // Supabase에 진행 상태 업데이트
+      try {
+        const currentProposal = proposals.find(p => p.id === proposalId);
+        if (currentProposal) {
+          const updated = { ...currentProposal, progress, status: 'generating' as ProposalStatus };
+          await updateProposal(updated);
+          setProposals(prev => prev.map(p => (p.id === proposalId ? updated : p)));
+        }
+      } catch (err) {
+        console.error('진행 상태 업데이트 오류:', err);
+        // Supabase 실패 시 로컬 상태만 업데이트
+        setProposals(prev =>
+          prev.map(p =>
+            p.id === proposalId ? { ...p, progress, status: 'generating' as ProposalStatus } : p,
+          ),
+        );
+      }
     };
 
     try {
@@ -206,7 +220,7 @@ export default function ProposalForm() {
 
       updateProgress(90, '제안서 마무리 중...');
 
-      // 로컬 스토리지에 저장
+      // Supabase에 저장
       const completedProposal: Proposal = {
         id: proposalId,
         ...data,
@@ -217,8 +231,25 @@ export default function ProposalForm() {
         updatedAt: new Date().toISOString(),
       };
 
-      const updated = proposals.map(p => (p.id === proposalId ? completedProposal : p));
-      saveProposals(updated);
+      try {
+        await updateProposal(completedProposal);
+        setProposals(prev => prev.map(p => (p.id === proposalId ? completedProposal : p)));
+      } catch (err) {
+        console.error('제안서 저장 오류:', err);
+        // Supabase 실패 시 로컬 상태만 업데이트
+        setProposals(prev => prev.map(p => (p.id === proposalId ? completedProposal : p)));
+        // localStorage에도 백업 저장
+        try {
+          const stored = localStorage.getItem('deckly_proposals');
+          const parsed = stored ? JSON.parse(stored) : [];
+          const updated = parsed.map((p: Proposal) =>
+            p.id === proposalId ? completedProposal : p,
+          );
+          localStorage.setItem('deckly_proposals', JSON.stringify(updated));
+        } catch (localErr) {
+          console.error('로컬 스토리지 백업 오류:', localErr);
+        }
+      }
 
       setIsGenerating(false);
       setView('result');
@@ -232,8 +263,13 @@ export default function ProposalForm() {
         error: err instanceof Error ? err.message : '알 수 없는 오류',
         createdAt: new Date().toISOString(),
       };
-      const updated = proposals.map(p => (p.id === proposalId ? errorProposal : p));
-      saveProposals(updated);
+      try {
+        await updateProposal(errorProposal);
+        setProposals(prev => prev.map(p => (p.id === proposalId ? errorProposal : p)));
+      } catch (updateErr) {
+        console.error('에러 상태 저장 오류:', updateErr);
+        setProposals(prev => prev.map(p => (p.id === proposalId ? errorProposal : p)));
+      }
       setIsGenerating(false);
       alert('제안서 생성 중 오류가 발생했습니다.');
     }
@@ -242,22 +278,41 @@ export default function ProposalForm() {
   const handleCreate = async () => {
     if (!formData.transcriptText.trim()) return;
 
-    // 새 제안서 생성 (로컬 스토리지)
-    const proposalId = `proposal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // 새 제안서 생성 (Supabase)
+    // id는 명시하지 않음 - Supabase가 자동으로 UUID 생성
     const newProposal: Proposal = {
-      id: proposalId,
+      id: '', // 임시 값 (Supabase가 생성한 ID로 교체됨)
       ...formData,
       status: 'generating',
       progress: 0,
       createdAt: new Date().toISOString(),
     };
 
-    // 로컬 스토리지에 추가
-    const updated = [newProposal, ...proposals];
-    saveProposals(updated);
+    let createdProposal: Proposal;
+
+    try {
+      // Supabase에 저장 (id는 자동 생성됨)
+      createdProposal = await createProposal(newProposal);
+      setProposals(prev => [createdProposal, ...prev]);
+    } catch (err) {
+      console.error('제안서 생성 오류:', err);
+      // Supabase 실패 시 로컬 상태만 업데이트
+      // 임시 ID 생성 (localStorage용)
+      const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      createdProposal = { ...newProposal, id: tempId };
+      setProposals(prev => [createdProposal, ...prev]);
+      // localStorage에도 백업 저장
+      try {
+        const stored = localStorage.getItem('deckly_proposals');
+        const parsed = stored ? JSON.parse(stored) : [];
+        localStorage.setItem('deckly_proposals', JSON.stringify([createdProposal, ...parsed]));
+      } catch (localErr) {
+        console.error('로컬 스토리지 백업 오류:', localErr);
+      }
+    }
 
     // 제안서 생성 시작
-    generateProposal(proposalId, formData);
+    generateProposal(createdProposal.id, formData);
   };
 
   // 대시보드 뷰
