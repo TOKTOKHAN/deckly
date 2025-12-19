@@ -117,13 +117,17 @@ const initialFormData: ProposalFormData = {
   includeSummary: '',
   excludeScope: '',
   priorityFeatures: '',
+  projectPhase: '',
   startDate: new Date().toISOString().substring(0, 10),
   openDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().substring(0, 10),
   budgetMin: '',
   budgetMax: '',
   budgetConfirmed: '협의 중',
+  priorityFactor: '',
   transcriptText: '',
   volume: '표준',
+  designStyle: '기업형',
+  figureStyle: '범위',
 };
 
 export default function ProposalForm() {

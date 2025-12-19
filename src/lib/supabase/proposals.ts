@@ -7,12 +7,16 @@ interface ProposalMetadata {
   includeSummary?: string;
   excludeScope?: string;
   priorityFeatures?: string;
+  projectPhase?: string;
   startDate?: string;
   openDate?: string;
   budgetMin?: string;
   budgetMax?: string;
   budgetConfirmed?: string;
+  priorityFactor?: string;
   volume?: string;
+  designStyle?: string;
+  figureStyle?: string;
 }
 
 // Supabase DB 스키마 타입 (DB 컬럼명과 매핑)
@@ -50,12 +54,16 @@ function proposalToRow(proposal: Proposal): Omit<ProposalRow, 'id' | 'created_at
       includeSummary: proposal.includeSummary,
       excludeScope: proposal.excludeScope,
       priorityFeatures: proposal.priorityFeatures,
+      projectPhase: proposal.projectPhase,
       startDate: proposal.startDate,
       openDate: proposal.openDate,
       budgetMin: proposal.budgetMin,
       budgetMax: proposal.budgetMax,
       budgetConfirmed: proposal.budgetConfirmed,
+      priorityFactor: proposal.priorityFactor,
       volume: proposal.volume,
+      designStyle: proposal.designStyle,
+      figureStyle: proposal.figureStyle,
     },
     status: proposal.status,
     progress: proposal.progress || null,
@@ -87,12 +95,16 @@ function rowToProposal(row: ProposalRow): Proposal {
     includeSummary: metadata.includeSummary || '',
     excludeScope: metadata.excludeScope || '',
     priorityFeatures: metadata.priorityFeatures || '',
+    projectPhase: metadata.projectPhase || '',
     startDate: metadata.startDate || '',
     openDate: metadata.openDate || '',
     budgetMin: metadata.budgetMin || '',
     budgetMax: metadata.budgetMax || '',
     budgetConfirmed: metadata.budgetConfirmed || '협의 중',
+    priorityFactor: metadata.priorityFactor || '',
     volume: metadata.volume || '표준',
+    designStyle: metadata.designStyle || '기업형',
+    figureStyle: metadata.figureStyle || '범위',
   };
 }
 
