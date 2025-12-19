@@ -72,49 +72,82 @@ export default function FormView({
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-black mb-4">Step 1. 기본 정보</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="클라이언트사"
-                required
-                id="clientCompanyName"
-                name="clientCompanyName"
-                type="text"
-                value={formData.clientCompanyName}
-                onChange={onInputChange('clientCompanyName')}
-                placeholder="회사명"
-                autoComplete="organization"
-              />
-              <Input
-                label="프로젝트명"
-                required
-                id="projectName"
-                name="projectName"
-                type="text"
-                value={formData.projectName}
-                onChange={onInputChange('projectName')}
-                placeholder="프로젝트명"
-                autoComplete="off"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="미팅 날짜"
-                id="meetingDate"
-                name="meetingDate"
-                type="date"
-                value={formData.meetingDate}
-                onChange={onInputChange('meetingDate')}
-              />
-              <Input
-                label="담당자명"
-                id="clientContact"
-                name="clientContact"
-                type="text"
-                value={formData.clientContact}
-                onChange={onInputChange('clientContact')}
-                placeholder="김철수"
-                autoComplete="name"
-              />
+            <Input
+              label="프로젝트명"
+              required
+              id="projectName"
+              name="projectName"
+              type="text"
+              value={formData.projectName}
+              onChange={onInputChange('projectName')}
+              placeholder="프로젝트명"
+              autoComplete="off"
+            />
+            <div className="grid grid-cols-2 gap-6">
+              {/* 왼쪽: 클라이언트사 정보 */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">클라이언트사 정보</h3>
+                <Input
+                  label="클라이언트사"
+                  required
+                  id="clientCompanyName"
+                  name="clientCompanyName"
+                  type="text"
+                  value={formData.clientCompanyName}
+                  onChange={onInputChange('clientCompanyName')}
+                  placeholder="회사명"
+                  autoComplete="organization"
+                />
+                <Input
+                  label="담당자명"
+                  id="clientContact"
+                  name="clientContact"
+                  type="text"
+                  value={formData.clientContact}
+                  onChange={onInputChange('clientContact')}
+                  placeholder="담당자명"
+                  autoComplete="name"
+                />
+                <Input
+                  label="미팅 날짜"
+                  id="meetingDate"
+                  name="meetingDate"
+                  type="date"
+                  value={formData.meetingDate}
+                  onChange={onInputChange('meetingDate')}
+                />
+              </div>
+              {/* 오른쪽: 제안사 정보 */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">제안사 정보</h3>
+                <Input
+                  label="제안사"
+                  id="ourCompany"
+                  name="ourCompany"
+                  type="text"
+                  value="TOKTOKHAN.DEV"
+                  disabled
+                  className="bg-gray-50"
+                />
+                <Input
+                  label="담당자명"
+                  id="ourContact"
+                  name="ourContact"
+                  type="text"
+                  value={formData.ourContact}
+                  onChange={onInputChange('ourContact')}
+                  placeholder="담당자명"
+                  autoComplete="name"
+                />
+                <Input
+                  label="제안서 작성일"
+                  id="proposalDate"
+                  name="proposalDate"
+                  type="date"
+                  value={formData.proposalDate}
+                  onChange={onInputChange('proposalDate')}
+                />
+              </div>
             </div>
           </div>
         );

@@ -27,7 +27,7 @@ export default function Textarea({
       )}
       <textarea
         id={textareaId}
-        className={`w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none ${className}`}
+        className={`w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-y ${className}`}
         {...props}
       />
       {error && <span className="text-xs text-red-500">{error}</span>}

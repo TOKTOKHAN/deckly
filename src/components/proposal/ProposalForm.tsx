@@ -185,6 +185,9 @@ export default function ProposalForm() {
         title: data.projectName,
         client: data.clientCompanyName,
         date: data.meetingDate,
+        clientContact: data.clientContact,
+        proposalDate: data.proposalDate,
+        ourContact: data.ourContact,
         projectOverview: data.includeSummary,
         budget:
           data.budgetMin && data.budgetMax ? `${data.budgetMin}~${data.budgetMax}` : undefined,

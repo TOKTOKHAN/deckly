@@ -91,6 +91,24 @@ export const PROPOSAL_TEMPLATE = `
 
 ---
 
+### 프로젝트 기본 정보 (메타데이터)
+다음 정보를 제안서에 반영하세요. 특히 표지와 클로징 메시지에 활용하세요.
+
+**클라이언트사 정보:**
+- 클라이언트사: {CLIENT}
+- 담당자명: {CLIENT_CONTACT}
+- 미팅 일자: {MEETING_DATE}
+
+**제안사 정보:**
+- 제안사: TOKTOKHAN.DEV
+- 담당자명: {OUR_CONTACT}
+- 제안서 작성일: {PROPOSAL_DATE}
+
+**프로젝트 정보:**
+- 프로젝트명: {TITLE}
+
+---
+
 다음 회의록/메모 내용을 분석하여 위 요구사항에 맞는 HTML 제안서를 생성하세요.
 **중요: 설명 없이 HTML 코드만 출력하세요.**
 
@@ -103,11 +121,22 @@ export function createProposalPrompt(data: {
   title?: string;
   client?: string;
   date?: string;
+  clientContact?: string;
+  proposalDate?: string;
+  ourContact?: string;
   projectOverview?: string;
   budget?: string;
   period?: string;
   requirements?: string;
 }): string {
+  // 메타데이터를 프롬프트 템플릿에 주입
+  const prompt = PROPOSAL_TEMPLATE.replace('{CLIENT}', data.client || '')
+    .replace('{CLIENT_CONTACT}', data.clientContact || '')
+    .replace('{MEETING_DATE}', data.date || '')
+    .replace('{OUR_CONTACT}', data.ourContact || '')
+    .replace('{PROPOSAL_DATE}', data.proposalDate || '')
+    .replace('{TITLE}', data.title || '');
+
   let meetingContent = '';
 
   // 회의록/메모가 있으면 우선 사용
@@ -128,5 +157,5 @@ export function createProposalPrompt(data: {
   }
 
   // 기본 템플릿 + 회의록 내용
-  return `${PROPOSAL_TEMPLATE}\n${meetingContent}`;
+  return `${prompt}\n${meetingContent}`;
 }
