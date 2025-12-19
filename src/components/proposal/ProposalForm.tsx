@@ -32,7 +32,10 @@ export default function ProposalForm() {
       const errorMessage =
         err instanceof Error ? err.message : '제안서 생성 중 오류가 발생했습니다.';
       setError(errorMessage);
-      console.error('에러:', err);
+      console.error('에러 상세:', {
+        message: err instanceof Error ? err.message : 'Unknown error',
+        error: err,
+      });
     } finally {
       setLoading(false);
     }
@@ -52,7 +55,7 @@ export default function ProposalForm() {
             value={meetingNotes}
             onChange={e => setMeetingNotes(e.target.value)}
             placeholder="고객 미팅 회의록이나 프로젝트 메모를 입력하세요..."
-            className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-64 p-4 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
