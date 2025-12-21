@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
@@ -401,58 +402,76 @@ export default function ProposalForm() {
   };
 
   // 결과 뷰
-  const ResultView = () => (
-    <div className="max-w-5xl mx-auto py-8 px-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setView('dashboard')}
-            icon={<ChevronLeft size={16} />}
-            className="mb-2 text-sm"
-          >
-            대시보드로 돌아가기
-          </Button>
-          <h1 className="text-3xl font-black text-gray-900">{currentProposal?.projectName}</h1>
-        </div>
-        <div className="flex gap-2 w-full md:w-auto">
-          <Button
-            variant="outline"
-            size="sm"
-            icon={<Download size={18} />}
-            className="flex-1 md:flex-none"
-          >
-            PDF 다운로드
-          </Button>
-          {currentProposal && (
+  const ResultView = () => {
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    const handlePrint = useReactToPrint({
+      contentRef: contentRef,
+      documentTitle: currentProposal?.projectName || '제안서',
+      onBeforePrint: async () => {
+        if (!contentRef.current) {
+          throw new Error('인쇄할 내용이 없습니다.');
+        }
+      },
+    });
+
+    return (
+      <div className="max-w-5xl mx-auto py-8 px-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+          <div>
             <Button
-              variant="primary"
+              variant="ghost"
               size="sm"
-              onClick={() => generateProposal(currentProposal.id, currentProposal)}
-              icon={<RefreshCw size={18} />}
-              className="flex-1 md:flex-none"
+              onClick={() => setView('dashboard')}
+              icon={<ChevronLeft size={16} />}
+              className="mb-2 text-sm"
             >
-              AI 다시 생성
+              대시보드로 돌아가기
             </Button>
+            <h1 className="text-3xl font-black text-gray-900">{currentProposal?.projectName}</h1>
+          </div>
+          <div className="flex gap-2 w-full md:w-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<Download size={18} />}
+              className="flex-1 md:flex-none"
+              onClick={handlePrint}
+            >
+              PDF 다운로드
+            </Button>
+            {currentProposal && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => generateProposal(currentProposal.id, currentProposal)}
+                icon={<RefreshCw size={18} />}
+                className="flex-1 md:flex-none"
+              >
+                AI 다시 생성
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <div
+          ref={contentRef}
+          className="bg-white rounded-[2.5rem] p-8 md:p-16 shadow-2xl border border-gray-50 min-h-[800px]"
+        >
+          {currentProposal?.content ? (
+            <div
+              className="prose prose-indigo max-w-none"
+              dangerouslySetInnerHTML={{ __html: currentProposal.content }}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-gray-400">
+              <p className="font-medium">내용을 불러오는 중입니다...</p>
+            </div>
           )}
         </div>
       </div>
-
-      <div className="bg-white rounded-[2.5rem] p-8 md:p-16 shadow-2xl border border-gray-50 min-h-[800px]">
-        {currentProposal?.content ? (
-          <div
-            className="prose prose-indigo max-w-none"
-            dangerouslySetInnerHTML={{ __html: currentProposal.content }}
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400">
-            <p className="font-medium">내용을 불러오는 중입니다...</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">

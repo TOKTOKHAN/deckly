@@ -86,3 +86,33 @@ body {
     left: 0;
   }
 }
+
+/* 인쇄 스타일 */
+@media print {
+  /* 인쇄 시 숨길 요소 */
+  .no-print {
+    display: none !important;
+  }
+
+  /* 페이지 설정 */
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+
+  /* 배경색 인쇄 */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 제안서 영역 스타일 조정 */
+  .prose {
+    color: #000;
+  }
+
+  /* 페이지 나누기 */
+  .page-break {
+    page-break-after: always;
+  }
+}
