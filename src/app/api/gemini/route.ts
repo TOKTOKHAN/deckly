@@ -33,9 +33,11 @@ export async function POST(request: NextRequest) {
     // Gemini 클라이언트 생성 (최신 @google/genai 패키지 사용)
     const ai = new GoogleGenAI({});
 
-    // 구글 콘솔 클라우드 무료 티어에서는 flash 모델만 사용 가능
+    // 모델명: 환경 변수로 설정 가능, 기본값은 gemini-3-pro-preview
+    const modelName = process.env.GEMINI_MODEL || 'gemini-3-pro-preview';
+
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: modelName,
       contents: prompt,
     });
 
