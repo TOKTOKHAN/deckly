@@ -165,10 +165,17 @@ export async function updateProposal(proposal: Proposal): Promise<Proposal> {
   }
 
   try {
+    const rowData = proposalToRow(proposal);
+    console.log('업데이트할 데이터:', {
+      id: proposal.id,
+      contentLength: rowData.content?.length || 0,
+      hasContent: !!rowData.content,
+    });
+
     const { data, error } = await supabase
       .from('proposals')
       .update({
-        ...proposalToRow(proposal),
+        ...rowData,
         updated_at: new Date().toISOString(),
       })
       .eq('id', proposal.id)
@@ -177,8 +184,23 @@ export async function updateProposal(proposal: Proposal): Promise<Proposal> {
 
     if (error) {
       console.error('제안서 업데이트 오류:', error);
+      console.error('에러 상세:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
       throw error;
     }
+
+    if (!data) {
+      throw new Error('업데이트된 데이터를 받지 못했습니다.');
+    }
+
+    console.log('업데이트 성공:', {
+      id: data.id,
+      contentLength: data.content?.length || 0,
+    });
 
     return rowToProposal(data);
   } catch (err) {

@@ -85,6 +85,23 @@ body {
     position: absolute;
     left: 0;
   }
+
+  /* 편집 모드 스타일 */
+  .prose[contenteditable='true'] {
+    cursor: text;
+  }
+
+  .prose[contenteditable='true']:focus {
+    outline: none;
+  }
+
+  .prose[contenteditable='true'] * {
+    cursor: text;
+  }
+
+  .prose[contenteditable='true'] img {
+    cursor: default;
+  }
 }
 
 /* 인쇄 스타일 */
