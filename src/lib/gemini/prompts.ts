@@ -25,43 +25,65 @@ export const BODY_PROMPT_TEMPLATE = `
 - 본문: text-base
 
 ### 본문 구조 (필수 포함)
-다음 섹션들을 Tailwind 클래스를 사용하여 생성하세요. 각 섹션은 명확한 제목(h2 태그)을 사용하여 목차와 일치시켜야 합니다:
+다음 섹션들을 Tailwind 클래스를 사용하여 생성하세요. 각 섹션은 명확한 제목(h2 태그)을 사용하여 목차와 일치시켜야 합니다.
+
+**중요: 각 섹션은 반드시 다음 구조로 감싸야 합니다:**
+<div class="a4-page">
+  <div class="proposal-section bg-white rounded-lg shadow-md p-8">
+    <!-- 섹션 내용 -->
+  </div>
+</div>
+
+섹션 내용이 한 페이지를 넘어갈 경우, 자동으로 다음 페이지로 넘어가도록 여러 개의 a4-page div로 나누어 구성하세요.
 
 1) 프로젝트 개요 (Overview)
+   - 구조: <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-md p-8">
    - 제목: <h2 class="text-3xl font-bold text-indigo-600 mb-6">1. 프로젝트 개요</h2>
    - 내용: 목적, 문제점, 타겟 니즈
-   - 클래스: bg-white rounded-lg shadow-md p-8 mb-6
+   - 각 섹션은 독립적인 a4-page div로 감싸기
 
 2) 요구사항 이해 (Requirements)
+   - 구조: <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-md p-8">
    - 제목: <h2 class="text-3xl font-bold text-indigo-600 mb-6">2. 요구사항 이해</h2>
    - 내용: 요구사항 리스트, 리스크, 핵심 기준
-   - 클래스: bg-white rounded-lg shadow-md p-8 mb-6
+   - 각 섹션은 독립적인 a4-page div로 감싸기
 
 3) 제안하는 방향성 (Solution)
+   - 구조: <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-md p-8">
    - 제목: <h2 class="text-3xl font-bold text-indigo-600 mb-6">3. 제안하는 방향성</h2>
    - 내용: 핵심 전략 3가지, 주요 기능 구조도, MVP 범위
-   - 클래스: bg-white rounded-lg shadow-md p-8 mb-6
+   - 각 섹션은 독립적인 a4-page div로 감싸기
 
 4) 예상 일정 및 추진 방식 (Execution)
+   - 구조: <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-md p-8">
    - 제목: <h2 class="text-3xl font-bold text-indigo-600 mb-6">4. 예상 일정 및 추진 방식</h2>
    - 내용: 단계별 일정표, 투입 인력, 협업 방식
-   - 클래스: bg-white rounded-lg shadow-md p-8 mb-6
+   - 각 섹션은 독립적인 a4-page div로 감싸기
 
 5) 기대효과 (Impact)
+   - 구조: <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-md p-8">
    - 제목: <h2 class="text-3xl font-bold text-indigo-600 mb-6">5. 기대효과</h2>
    - 내용: 기대효과, 당사 강점
-   - 클래스: bg-white rounded-lg shadow-md p-8 mb-6
+   - 각 섹션은 독립적인 a4-page div로 감싸기
 
 ### 기술 요구사항
 - Tailwind CSS 클래스만 사용 (인라인 스타일 최소화)
-- A4 페이지 구분: class="a4-page"
+- A4 페이지 구분: 각 섹션은 반드시 <div class="a4-page">로 감싸야 함
+- 각 섹션은 독립적인 페이지로 구성 (섹션 내부에 class="proposal-section" 추가)
+- 섹션 내용이 한 페이지를 넘어갈 경우, 자동으로 다음 페이지로 넘어가도록 구성
 - 반응형 디자인 고려
 - 이미지 대신 CSS/Tailwind로 다이어그램 구현
 
 ### 출력 형식
 - HTML 코드만 출력 (코드 블록 마크다운 없이)
 - <!DOCTYPE html>이나 <html> 태그 없이 본문 내용만
-- 각 섹션은 <div class="a4-page">로 감싸기
+- 각 섹션은 반드시 다음 형식으로 감싸기:
+  <div class="a4-page">
+    <div class="proposal-section">
+      <!-- 섹션 내용 -->
+    </div>
+  </div>
+- 섹션 내용이 길 경우, 여러 개의 a4-page div로 나누어 구성
 
 ### 프로젝트 정보
 - 프로젝트명: {projectName}

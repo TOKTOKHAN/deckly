@@ -141,12 +141,31 @@ export function generateHTMLWrapper(bodyContent: string): string {
       }
       .a4-page {
         width: 210mm;
-        height: 297mm !important;
-        overflow: hidden !important;
+        min-height: 297mm;
+        max-height: 297mm;
         page-break-after: always;
+        page-break-inside: avoid;
         margin: 0;
+        padding: 20mm;
+        box-sizing: border-box;
         border: none;
         box-shadow: none;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+      }
+      .section-content {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      /* 섹션이 길 경우 자동으로 다음 페이지로 넘어가도록 */
+      .proposal-section {
+        page-break-inside: avoid;
+        break-inside: avoid-page;
+      }
+      /* 마지막 페이지는 page-break-after 제거 */
+      .a4-page:last-child {
+        page-break-after: auto;
       }
     }
   </style>
