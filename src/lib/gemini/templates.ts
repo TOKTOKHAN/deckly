@@ -35,17 +35,17 @@ export const TAILWIND_THEME = {
 // 표지 HTML 템플릿
 export function generateCoverTemplate(data: TemplateData): string {
   return `
-    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col items-center justify-center min-h-screen">
+    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col items-center justify-center min-h-screen" style="background: linear-gradient(to bottom right, #4f46e5, #1f2937) !important; color: white !important;">
       <div class="text-center space-y-8">
-        <h1 class="text-5xl font-black mb-4">${data.projectName}</h1>
-        <div class="border-t-2 border-white/30 w-32 mx-auto my-8"></div>
+        <h1 class="text-7xl font-black mb-4" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important;">${data.projectName}</h1>
+        <div class="border-t-2 border-white/30 w-32 mx-auto my-8" style="border-top: 2px solid rgba(255, 255, 255, 0.3); width: 8rem; margin: 2rem auto;"></div>
         <div class="space-y-4">
-          <p class="text-2xl font-bold">TOKTOKHAN.DEV</p>
-          ${data.clientCompanyName ? `<p class="text-lg opacity-90">${data.clientCompanyName}</p>` : ''}
+          <h3 class="text-2xl text-white font-bold" style="color: white !important; font-size: 3rem; font-weight: bold;">TOKTOKHAN.DEV</h3>
+          ${data.clientCompanyName ? `<p class="text-xl opacity-90" style="color: white !important; font-size: 1.5rem; opacity: 0.9;">${data.clientCompanyName}</p>` : ''}
         </div>
-        <div class="mt-12 space-y-2 text-sm opacity-80">
-          ${data.proposalDate ? `<p>제안서 작성일: ${data.proposalDate}</p>` : ''}
-          ${data.meetingDate ? `<p>미팅 일자: ${data.meetingDate}</p>` : ''}
+        <div class="mt-12 space-y-2 text-sm opacity-80" style="margin-top: 3rem; font-size: 0.875rem; opacity: 0.8;">
+          ${data.proposalDate ? `<p style="color: white !important;">제안서 작성일: ${data.proposalDate}</p>` : ''}
+          ${data.meetingDate ? `<p style="color: white !important;">미팅 일자: ${data.meetingDate}</p>` : ''}
         </div>
       </div>
     </div>
@@ -57,31 +57,23 @@ export function generateTableOfContentsTemplate(): string {
   return `
     <div class="a4-page bg-white p-8">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold text-indigo-600 mb-8 text-center">목차</h2>
+        <h2 class="text-6xl font-bold text-indigo-600 mb-8 text-center">목  차</h2>
         <div class="space-y-4 mt-12">
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-lg text-gray-900">1. 프로젝트 개요</span>
-            <span class="text-gray-500">3</span>
+            <span class="text-3xl font-semibold text-indigo-600">1. 프로젝트 개요</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-lg text-gray-900">2. 요구사항 이해</span>
-            <span class="text-gray-500">5</span>
+            <span class="text-3xl font-semibold text-indigo-600">2. 요구사항 이해</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-lg text-gray-900">3. 제안하는 방향성</span>
-            <span class="text-gray-500">7</span>
+            <span class="text-3xl font-semibold text-indigo-600">3. 제안하는 방향성</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-lg text-gray-900">4. 예상 일정 및 추진 방식</span>
-            <span class="text-gray-500">9</span>
+            <span class="text-3xl font-semibold text-indigo-600">4. 예상 일정 및 추진 방식</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-lg text-gray-900">5. 기대효과</span>
-            <span class="text-gray-500">11</span>
+            <span class="text-3xl font-semibold text-indigo-600">5. 기대효과</span>
           </div>
-        </div>
-        <div class="mt-16 text-sm text-gray-500 text-center">
-          <p>* 페이지 번호는 실제 제안서와 다를 수 있습니다.</p>
         </div>
       </div>
     </div>
@@ -91,17 +83,21 @@ export function generateTableOfContentsTemplate(): string {
 // 끝마무리 HTML 템플릿
 export function generateConclusionTemplate(data: TemplateData): string {
   return `
-    <div class="a4-page bg-white p-8">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center space-y-8 py-16">
-          <h2 class="text-3xl font-bold text-indigo-600 mb-8">감사합니다</h2>
-          <div class="space-y-4">
-            <p class="text-lg text-gray-900">
+    <div class="a4-page bg-white p-8" style="background-color: white !important; padding: 2rem !important;">
+      <div class="max-w-4xl mx-auto" style="max-width: 56rem !important; margin-left: auto !important; margin-right: auto !important;">
+        <div class="text-center space-y-8 py-16" style="text-align: center !important; padding-top: 4rem !important; padding-bottom: 4rem !important;">
+          <h2 class="text-2xl font-bold text-indigo-600 mb-8" style="font-size: 2.25rem !important; font-weight: bold !important; color: #4f46e5 !important; margin-bottom: 2rem !important;">감사합니다</h2>
+          <div class="space-y-4" style="display: flex; flex-direction: column; gap: 1rem;">
+            <p class="text-xl font-semibold text-gray-700" style="font-size: 1.5rem !important; font-weight: 600 !important; color: #374151 !important; line-height: 1.75rem;">
+              ${data.projectName}의 성공적인 추진을 위해 최선을 다하겠습니다.
+              <br style="display: block; content: ''; margin-top: 0.5rem;">
               본 제안서에 대한 추가 문의사항이 있으시면 언제든지 연락 주시기 바랍니다.
+              <br style="display: block; content: ''; margin-top: 0.5rem;">
+              함께 성장하는 파트너가 되기를 기대합니다.
             </p>
-            <div class="mt-12 pt-8 border-t-2 border-indigo-600/20">
-              <p class="text-2xl font-bold text-indigo-600 mb-4">TOKTOKHAN.DEV</p>
-              ${data.ourContact ? `<p class="text-gray-900">담당자: ${data.ourContact}</p>` : ''}
+            <div class="mt-12 pt-8 border-t-2 border-indigo-600/20" style="margin-top: 3rem !important; padding-top: 2rem !important; border-top: 2px solid rgba(79, 70, 229, 0.2) !important;">
+              <p class="text-4xl font-bold text-indigo-600 mb-4" style="font-size: 2.25rem !important; font-weight: bold !important; color: #4f46e5 !important; margin-bottom: 1rem !important;">TOKTOKHAN.DEV</p>
+              ${data.ourContact ? `<p class="text-gray-900" style="color: #111827 !important;">담당자: ${data.ourContact}</p>` : ''}
             </div>
           </div>
         </div>
@@ -153,6 +149,23 @@ export function generateHTMLWrapper(bodyContent: string): string {
         overflow: visible;
         display: flex;
         flex-direction: column;
+      }
+      /* 표지 페이지는 패딩 제거하고 중앙 정렬 */
+      .a4-page:first-child {
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+      }
+      .a4-page:first-child > div {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
       }
       .section-content {
         page-break-inside: avoid;

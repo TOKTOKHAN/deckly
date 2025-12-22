@@ -107,7 +107,11 @@ body {
 /* 인쇄 스타일 */
 @media print {
   /* 인쇄 시 숨길 요소 */
-  .no-print {
+  .no-print,
+  button,
+  nav,
+  header,
+  footer {
     display: none !important;
   }
 
@@ -123,12 +127,37 @@ body {
     print-color-adjust: exact !important;
   }
 
-  /* 제안서 영역 스타일 조정 */
+  /* body 스타일 */
+  body {
+    margin: 0;
+    padding: 0;
+    background: white !important;
+  }
+
+  /* 제안서 컨테이너 스타일 - 인쇄 시에도 화면과 동일하게 유지 */
+  /* 컨테이너의 rounded, shadow 등은 인쇄 시에도 유지 (화면과 일치) */
+
+  /* 제안서 내용 영역 - 화면과 동일한 스타일 유지 */
   .prose {
     color: #000;
   }
 
-  /* A4 페이지 구분 */
+  /* 제안서 섹션 스타일 - 화면과 동일하게 유지 */
+  .proposal-section {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+  /* 편집 모드 스타일 - 인쇄 시에도 유지 */
+  .prose[contenteditable='true'] {
+    cursor: text;
+  }
+
+  .prose[contenteditable='true']:focus {
+    outline: none;
+  }
+
+  /* A4 페이지 구분 - 인쇄 시 A4 크기로 조정 */
   .a4-page {
     width: 210mm;
     min-height: 297mm;
@@ -139,11 +168,47 @@ body {
     padding: 20mm;
     box-sizing: border-box;
     overflow: visible;
+    display: block !important;
   }
 
-  .proposal-section {
-    page-break-inside: avoid;
-    break-inside: avoid-page;
+  /* 표지 스타일 (첫 번째 a4-page) - 중앙 정렬 강제 */
+  .a4-page:first-child {
+    background: linear-gradient(to bottom right, #4f46e5, #1f2937) !important;
+    color: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important; /* 표지 패딩 제거 */
+    text-align: center !important;
+  }
+
+  /* 표지 내부 컨테이너 중앙 정렬 */
+  .a4-page:first-child > div {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .a4-page:first-child h1 {
+    font-size: 4.5rem !important;
+    font-weight: 900 !important;
+    color: white !important;
+    text-align: center !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .a4-page:first-child h3 {
+    font-size: 3rem !important;
+    font-weight: bold !important;
+    color: white !important;
+  }
+
+  .a4-page:first-child p {
+    color: white !important;
   }
 
   /* 마지막 페이지는 page-break-after 제거 */
