@@ -50,7 +50,7 @@ export const PROPOSAL_TEMPLATE = `
    - 텍스트: style="color: var(--primary)" 또는 text-[var(--primary)]
    - 테두리: style="border-color: var(--primary)" 또는 border-[var(--primary)]
 4) **PDF/Print Logic (필수 - 엄격 준수):**
-   - 우측 하단에 고정된(fixed) 'PDF 저장' 버튼 구현 (\`onclick="window.print()"\`).
+   - **중요**: HTML 내부에 PDF 저장 버튼을 생성하지 마세요. 외부 UI에서 제공됩니다.
    - **<style> 태그 내에 다음 CSS 규칙을 반드시 포함할 것:**
      \`\`\`css
      @media print {
@@ -70,7 +70,6 @@ export const PROPOSAL_TEMPLATE = `
             border: none;
             box-shadow: none;
         }
-        .no-print { display: none !important; } /* 버튼 숨김 */
      }
      \`\`\`
 5) No Images: <img> 태그 대신 CSS/Tailwind로 다이어그램 구현.
