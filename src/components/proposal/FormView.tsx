@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { UseFormRegister, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { ProposalFormData } from '@/types/proposal';
 import Input from '@/components/form/Input';
 import Textarea from '@/components/form/Textarea';
@@ -50,6 +51,9 @@ const X = ({ size }: { size?: number }) => (
 interface FormViewProps {
   step: number;
   formData: ProposalFormData;
+  errors: FieldErrors<ProposalFormData>;
+  register: UseFormRegister<ProposalFormData>;
+  setValue: UseFormSetValue<ProposalFormData>;
   onInputChange: (
     field: keyof ProposalFormData,
   ) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
@@ -61,11 +65,49 @@ interface FormViewProps {
 export default function FormView({
   step,
   formData,
-  onInputChange,
+  errors,
+  register,
+  setValue,
+  onInputChange: _onInputChange,
   onStepChange,
   onClose,
   onSubmit,
 }: FormViewProps) {
+  // 각 step별 필수 필드 체크 함수
+  const isStepValid = (stepNumber: number): boolean => {
+    switch (stepNumber) {
+      case 1:
+        // Step 1 필수 필드: projectName, clientCompanyName, brandColor1, brandColor2, brandColor3, font, startDate, endDate
+        return (
+          !!formData.projectName?.trim() &&
+          !!formData.clientCompanyName?.trim() &&
+          !!formData.brandColor1 &&
+          !!formData.brandColor2 &&
+          !!formData.brandColor3 &&
+          !!formData.font &&
+          !!formData.startDate &&
+          !!formData.endDate &&
+          !errors.projectName &&
+          !errors.clientCompanyName &&
+          !errors.brandColor1 &&
+          !errors.brandColor2 &&
+          !errors.brandColor3 &&
+          !errors.font &&
+          !errors.startDate &&
+          !errors.endDate
+        );
+      case 2:
+        // Step 2 필수 필드: transcriptText (최소 50자)
+        return (
+          !!formData.transcriptText &&
+          formData.transcriptText.length >= 50 &&
+          !errors.transcriptText
+        );
+      default:
+        return true;
+    }
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -79,33 +121,26 @@ export default function FormView({
               <h3 className="text-lg font-semibold text-gray-800">프로젝트 정보</h3>
               <Input
                 label="프로젝트명"
-                required
                 id="projectName"
-                name="projectName"
-                type="text"
-                value={formData.projectName}
-                onChange={onInputChange('projectName')}
+                {...register('projectName')}
+                error={errors.projectName?.message}
                 placeholder="프로젝트명"
                 autoComplete="off"
               />
               <Input
                 label="클라이언트사"
-                required
                 id="clientCompanyName"
-                name="clientCompanyName"
-                type="text"
-                value={formData.clientCompanyName}
-                onChange={onInputChange('clientCompanyName')}
+                {...register('clientCompanyName')}
+                error={errors.clientCompanyName?.message}
                 placeholder="회사명"
                 autoComplete="organization"
               />
               <Input
                 label="슬로건"
                 id="slogan"
-                name="slogan"
                 type="text"
-                value={formData.slogan}
-                onChange={onInputChange('slogan')}
+                {...register('slogan')}
+                error={errors.slogan?.message}
                 placeholder="지향하는 방향성"
               />
             </div>
@@ -118,61 +153,94 @@ export default function FormView({
               </p>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">컬러 1</label>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    컬러 1
+                    {errors.brandColor1 && (
+                      <span className="ml-2 text-xs text-red-500">
+                        {errors.brandColor1.message}
+                      </span>
+                    )}
+                  </label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
                       id="brandColor1"
-                      name="brandColor1"
                       value={formData.brandColor1}
-                      onChange={onInputChange('brandColor1')}
+                      onChange={e => {
+                        setValue('brandColor1', e.target.value, { shouldValidate: true });
+                      }}
                       className="h-10 w-20 cursor-pointer rounded-lg border border-gray-300"
                     />
                     <input
                       type="text"
-                      value={formData.brandColor1}
-                      onChange={onInputChange('brandColor1')}
-                      className="flex-1 rounded-xl border border-gray-300 p-2 text-sm"
+                      {...register('brandColor1')}
+                      className={`flex-1 rounded-xl border p-2 text-sm transition focus:outline-none focus:ring-2 ${
+                        errors.brandColor1
+                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                          : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
+                      }`}
                       placeholder="#4f46e5"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">컬러 2</label>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    컬러 2
+                    {errors.brandColor2 && (
+                      <span className="ml-2 text-xs text-red-500">
+                        {errors.brandColor2.message}
+                      </span>
+                    )}
+                  </label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
                       id="brandColor2"
-                      name="brandColor2"
                       value={formData.brandColor2}
-                      onChange={onInputChange('brandColor2')}
+                      onChange={e => {
+                        setValue('brandColor2', e.target.value, { shouldValidate: true });
+                      }}
                       className="h-10 w-20 cursor-pointer rounded-lg border border-gray-300"
                     />
                     <input
                       type="text"
-                      value={formData.brandColor2}
-                      onChange={onInputChange('brandColor2')}
-                      className="flex-1 rounded-xl border border-gray-300 p-2 text-sm"
+                      {...register('brandColor2')}
+                      className={`flex-1 rounded-xl border p-2 text-sm transition focus:outline-none focus:ring-2 ${
+                        errors.brandColor2
+                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                          : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
+                      }`}
                       placeholder="#1f2937"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">컬러 3</label>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    컬러 3
+                    {errors.brandColor3 && (
+                      <span className="ml-2 text-xs text-red-500">
+                        {errors.brandColor3.message}
+                      </span>
+                    )}
+                  </label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
                       id="brandColor3"
-                      name="brandColor3"
                       value={formData.brandColor3}
-                      onChange={onInputChange('brandColor3')}
+                      onChange={e => {
+                        setValue('brandColor3', e.target.value, { shouldValidate: true });
+                      }}
                       className="h-10 w-20 cursor-pointer rounded-lg border border-gray-300"
                     />
                     <input
                       type="text"
-                      value={formData.brandColor3}
-                      onChange={onInputChange('brandColor3')}
-                      className="flex-1 rounded-xl border border-gray-300 p-2 text-sm"
+                      {...register('brandColor3')}
+                      className={`flex-1 rounded-xl border p-2 text-sm transition focus:outline-none focus:ring-2 ${
+                        errors.brandColor3
+                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                          : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
+                      }`}
                       placeholder="#ffffff"
                     />
                   </div>
@@ -210,13 +278,18 @@ export default function FormView({
               <div className="mb-4 flex flex-col gap-1.5">
                 <label htmlFor="font" className="text-sm font-semibold text-gray-700">
                   폰트 선택
+                  {errors.font && (
+                    <span className="ml-2 text-xs text-red-500">{errors.font.message}</span>
+                  )}
                 </label>
                 <select
                   id="font"
-                  name="font"
-                  value={formData.font}
-                  onChange={onInputChange('font')}
-                  className="rounded-xl border border-gray-300 p-2.5 text-black transition focus:border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  {...register('font')}
+                  className={`rounded-xl border p-2.5 text-black transition focus:outline-none focus:ring-2 ${
+                    errors.font
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
+                  }`}
                 >
                   <option value="Pretendard">Pretendard</option>
                   <option value="Noto Sans KR">Noto Sans KR</option>
@@ -231,50 +304,43 @@ export default function FormView({
               <div className="grid grid-cols-2 gap-4">
                 <Input
                   label="시작일"
-                  required
                   id="startDate"
-                  name="startDate"
                   type="date"
-                  value={formData.startDate}
-                  onChange={onInputChange('startDate')}
+                  {...register('startDate')}
+                  error={errors.startDate?.message}
                 />
                 <Input
                   label="종료일 (개발 완료일)"
-                  required
                   id="endDate"
-                  name="endDate"
                   type="date"
-                  value={formData.endDate}
-                  onChange={onInputChange('endDate')}
+                  {...register('endDate')}
+                  error={errors.endDate?.message}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Input
                   label="검수 기간"
                   id="reviewPeriod"
-                  name="reviewPeriod"
                   type="text"
-                  value={formData.reviewPeriod}
-                  onChange={onInputChange('reviewPeriod')}
+                  {...register('reviewPeriod')}
+                  error={errors.reviewPeriod?.message}
                   placeholder="예: 2주, 1개월"
                 />
                 <Input
                   label="유지보수 기간"
                   id="maintenancePeriod"
-                  name="maintenancePeriod"
                   type="text"
-                  value={formData.maintenancePeriod}
-                  onChange={onInputChange('maintenancePeriod')}
+                  {...register('maintenancePeriod')}
+                  error={errors.maintenancePeriod?.message}
                   placeholder="예: 3개월, 6개월"
                 />
               </div>
               <Input
                 label="오픈일/런칭일 (선택)"
                 id="openDate"
-                name="openDate"
                 type="date"
-                value={formData.openDate || ''}
-                onChange={onInputChange('openDate')}
+                {...register('openDate')}
+                error={errors.openDate?.message}
               />
             </div>
 
@@ -284,10 +350,9 @@ export default function FormView({
               <Input
                 label="투입 인력"
                 id="teamSize"
-                name="teamSize"
                 type="text"
-                value={formData.teamSize}
-                onChange={onInputChange('teamSize')}
+                {...register('teamSize')}
+                error={errors.teamSize?.message}
                 placeholder="예: 프론트엔드 2명, 백엔드 2명, 디자이너 1명"
               />
             </div>
@@ -298,10 +363,9 @@ export default function FormView({
               <Input
                 label="예산"
                 id="budgetMin"
-                name="budgetMin"
                 type="text"
-                value={formData.budgetMin}
-                onChange={onInputChange('budgetMin')}
+                {...register('budgetMin')}
+                error={errors.budgetMin?.message}
                 placeholder="예산을 입력해주세요."
               />
             </div>
@@ -317,16 +381,14 @@ export default function FormView({
             <Textarea
               label=""
               id="transcriptText"
-              name="transcriptText"
-              value={formData.transcriptText}
-              onChange={onInputChange('transcriptText')}
+              {...register('transcriptText')}
+              error={errors.transcriptText?.message}
               className="h-48"
               placeholder="여기에 회의록 내용을 붙여넣어주세요."
-              required
             />
             <div className="flex justify-between px-1 text-[10px] text-gray-400">
               <span>AI가 정확한 제안을 하려면 최소 50자 이상의 구체적인 내용이 필요합니다.</span>
-              <span>{formData.transcriptText.length} 자</span>
+              <span>{formData.transcriptText?.length || 0} 자</span>
             </div>
           </div>
         );
@@ -367,18 +429,14 @@ export default function FormView({
               variant="secondary"
               size="lg"
               onClick={() => onStepChange(step + 1)}
+              disabled={!isStepValid(step)}
               icon={<ChevronRight size={20} />}
               iconPosition="right"
             >
               다음 단계
             </Button>
           ) : (
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={onSubmit}
-              disabled={formData.transcriptText.length < 50}
-            >
+            <Button variant="primary" size="lg" onClick={onSubmit} disabled={!isStepValid(step)}>
               AI 제안서 생성하기
             </Button>
           )}
