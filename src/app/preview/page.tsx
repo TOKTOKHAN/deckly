@@ -16,11 +16,11 @@ export default function PreviewPage() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const sampleData: TemplateData = {
-    projectName: '테스트 프로젝트명',
-    clientCompanyName: '테스트 고객사',
-    clientContact: '홍길동',
+    projectName: '사업제안서 자동화 플랫폼',
+    clientCompanyName: '똑똑한개발자',
+    clientContact: '신성오',
     meetingDate: '2025-01-15',
-    ourContact: '김철수',
+    ourContact: '신성오',
     proposalDate: '2025-01-20',
   };
 

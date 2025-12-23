@@ -53,7 +53,7 @@ export function generateCoverTemplate(data: TemplateData): string {
           data.clientCompanyName
             ? `
         <div class="mb-16" style="margin-bottom: 4rem !important;">
-          <h2 class="text-4xl font-black text-white tracking-tight" style="font-size: 2.25rem !important; font-weight: 900 !important; color: white !important; letter-spacing: -0.025em !important;">${data.clientCompanyName}</h2>
+          <h2 class="text-4xl font-black text-white tracking-tight" style="display: inline-block !important; font-size: 2.25rem !important; font-weight: 900 !important; color: white !important; letter-spacing: -0.025em !important; max-width: fit-content !important;">${data.clientCompanyName}</h2>
           
         </div>
         `
@@ -63,10 +63,9 @@ export function generateCoverTemplate(data: TemplateData): string {
         <!-- 메인 타이틀 -->
         <div class="relative">
           <h1 class="text-7xl font-black text-white leading-tight mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">${data.projectName}</h1>
-          
-          <div class="pl-6 border-l-2 border-white" style="padding-left: 1.5rem !important; border-left: 2px solid rgb(244, 238, 238) !important;">
+          <div class="pl-6 border-l-2 border-white" style="padding-left: 0.5rem !important; border-left: 2px solid rgb(244, 238, 238) !important;">
             <p class="text-lg font-light leading-relaxed max-w-xl" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 1.125rem !important; font-weight: 300 !important; line-height: 1.75 !important; max-width: 36rem !important;">
-              ${data.clientCompanyName ? `${data.clientCompanyName}를 위한` : ''} 전문적인 제안서
+              ${data.clientCompanyName ? `${data.clientCompanyName}를 위한` : ''} 구체적인 프로젝트 기획 제안서
             </p>
           </div>
         </div>
@@ -79,7 +78,7 @@ export function generateCoverTemplate(data: TemplateData): string {
           <div>
             <div class="flex flex-col gap-2 items-start mb-5" style="margin-bottom: 1.25rem !important;">
               <span class="text-xl font-bold text-white tracking-tight" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important; letter-spacing: -0.025em !important;">TOKTOKHAN.DEV</span>
-              <span class="text-[12px] opacity-60">서울특별시 마포구 동교로12안길 39</span>
+              <span class="text-[11px] opacity-60">서울특별시 마포구 동교로 12안길 39</span>
               <span class="text-[11px] opacity-60">E. sales@toktokhan.dev | W. www.toktokhan.dev</span>
               <span class="text-[11px] opacity-60">© 2025 Toktokhan.dev. All rights reserved.</span>
             </div>
