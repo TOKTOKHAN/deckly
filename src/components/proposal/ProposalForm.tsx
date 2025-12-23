@@ -234,16 +234,16 @@ export default function ProposalForm() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top Nav */}
-      <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <nav className="sticky top-0 z-40 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
           <div
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex cursor-pointer items-center gap-2"
             onClick={() => setView('dashboard')}
           >
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
               <CheckCircle2 className="text-white" size={20} />
             </div>
-            <span className="font-black text-xl tracking-tight text-gray-900">DECKLY</span>
+            <span className="text-xl font-black tracking-tight text-gray-900">DECKLY</span>
           </div>
         </div>
       </nav>

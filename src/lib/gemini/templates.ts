@@ -41,7 +41,7 @@ export function generateCoverTemplate(data: TemplateData): string {
         <div class="border-t-2 border-white/30 w-32 mx-auto my-8" style="border-top: 2px solid rgba(255, 255, 255, 0.3); width: 8rem; margin: 2rem auto;"></div>
         <div class="space-y-4">
           <h3 class="text-2xl text-white font-bold" style="color: white !important; font-size: 3rem; font-weight: bold;">TOKTOKHAN.DEV</h3>
-          ${data.clientCompanyName ? `<p class="text-xl opacity-90" style="color: white !important; font-size: 1.5rem; opacity: 0.9;">${data.clientCompanyName}</p>` : ''}
+          ${data.clientCompanyName ? `<p class="text-xl opacity-90" style="color: white !important; font-size: 3rem; opacity: 0.9;">${data.clientCompanyName}</p>` : ''}
         </div>
         <div class="mt-12 space-y-2 text-sm opacity-80" style="margin-top: 3rem; font-size: 0.875rem; opacity: 0.8;">
           ${data.proposalDate ? `<p style="color: white !important;">제안서 작성일: ${data.proposalDate}</p>` : ''}

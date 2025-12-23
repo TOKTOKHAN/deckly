@@ -171,19 +171,12 @@ body {
     display: block !important;
   }
 
-  /* 표지 스타일 (첫 번째 a4-page) - 중앙 정렬 강제 */
+  /* 표지 스타일 (첫 번째 a4-page) - 레이아웃만 정의 (세부 스타일은 templates.ts의 인라인 스타일 사용) */
   .a4-page:first-child {
-    background: linear-gradient(to bottom right, #4f46e5, #1f2937) !important;
-    color: white !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important; /* 표지 패딩 제거 */
-    text-align: center !important;
+    padding: 0 !important; /* 표지 패딩 제거 - 레이아웃 관련만 */
   }
 
-  /* 표지 내부 컨테이너 중앙 정렬 */
+  /* 표지 내부 컨테이너 중앙 정렬 - 레이아웃만 정의 */
   .a4-page:first-child > div {
     width: 100% !important;
     display: flex !important;
@@ -191,24 +184,6 @@ body {
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
-  }
-
-  .a4-page:first-child h1 {
-    font-size: 4.5rem !important;
-    font-weight: 900 !important;
-    color: white !important;
-    text-align: center !important;
-    margin-bottom: 1rem !important;
-  }
-
-  .a4-page:first-child h3 {
-    font-size: 3rem !important;
-    font-weight: bold !important;
-    color: white !important;
-  }
-
-  .a4-page:first-child p {
-    color: white !important;
   }
 
   /* 마지막 페이지는 page-break-after 제거 */

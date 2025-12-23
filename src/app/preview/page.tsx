@@ -65,10 +65,10 @@ export default function PreviewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8 bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">템플릿 미리보기</h1>
-          <p className="text-gray-600 mb-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 rounded-lg bg-white p-6 shadow-md">
+          <h1 className="mb-4 text-3xl font-bold text-gray-900">템플릿 미리보기</h1>
+          <p className="mb-6 text-gray-600">
             제안서 템플릿의 스타일을 확인할 수 있습니다. 아래 버튼을 클릭하여 각 템플릿을
             확인하세요.
           </p>
@@ -76,7 +76,7 @@ export default function PreviewPage() {
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setSelectedTemplate('cover')}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`rounded-lg px-4 py-2 font-medium transition ${
                 selectedTemplate === 'cover'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -86,7 +86,7 @@ export default function PreviewPage() {
             </button>
             <button
               onClick={() => setSelectedTemplate('toc')}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`rounded-lg px-4 py-2 font-medium transition ${
                 selectedTemplate === 'toc'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -96,7 +96,7 @@ export default function PreviewPage() {
             </button>
             <button
               onClick={() => setSelectedTemplate('conclusion')}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`rounded-lg px-4 py-2 font-medium transition ${
                 selectedTemplate === 'conclusion'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -106,7 +106,7 @@ export default function PreviewPage() {
             </button>
             <button
               onClick={() => setSelectedTemplate('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`rounded-lg px-4 py-2 font-medium transition ${
                 selectedTemplate === 'all'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -117,20 +117,32 @@ export default function PreviewPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-xl p-8">
-          <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
+        <div className="rounded-lg bg-white p-8 shadow-xl">
+          <div className="mb-4 flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (iframeRef.current?.contentWindow) {
+                  iframeRef.current.contentWindow.print();
+                }
+              }}
+              className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition hover:bg-indigo-700"
+            >
+              📄 PDF 미리보기 (인쇄)
+            </button>
+          </div>
+          <div className="overflow-hidden rounded-lg border-2 border-gray-200">
             <iframe
               ref={iframeRef}
-              className="w-full min-h-[800px] border-0"
+              className="min-h-[800px] w-full border-0"
               title="템플릿 미리보기"
-              sandbox="allow-same-origin allow-scripts"
+              sandbox="allow-same-origin allow-scripts allow-modals"
             />
           </div>
         </div>
 
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">샘플 데이터</h2>
-          <pre className="bg-gray-100 p-4 rounded-lg overflow-auto text-sm">
+        <div className="mt-8 rounded-lg bg-white p-6 shadow-md">
+          <h2 className="mb-4 text-xl font-bold text-gray-900">샘플 데이터</h2>
+          <pre className="overflow-auto rounded-lg bg-gray-100 p-4 text-sm">
             {JSON.stringify(sampleData, null, 2)}
           </pre>
         </div>
