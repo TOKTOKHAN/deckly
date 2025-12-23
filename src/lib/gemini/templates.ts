@@ -2,13 +2,33 @@
 // Tailwind CSS 기반 고정 템플릿
 
 export interface TemplateData {
+  // 기본 정보
   projectName: string;
   clientCompanyName: string;
-  // 제거 예정 필드들
-  // clientContact?: string;
-  // meetingDate?: string;
-  // ourContact?: string;
-  // proposalDate?: string;
+  slogan?: string; // 제안서 마무리 부분에 사용
+  brandColor1?: string; // 브랜드 컬러 1
+  brandColor2?: string; // 브랜드 컬러 2
+  brandColor3?: string; // 브랜드 컬러 3
+  clientLogo?: string; // 고객사 로고 URL (선택)
+  clientWebsite?: string; // 고객사 사이트 URL (선택)
+  font?: string; // 폰트 (기본값: 'Pretendard')
+
+  // 프로젝트 정보
+  teamSize?: string; // 투입 인력
+  startDate?: string; // 프로젝트 시작일
+  endDate?: string; // 개발 종료일
+  reviewPeriod?: string; // 검수 기간
+  maintenancePeriod?: string; // 유지보수 기간
+  openDate?: string; // 오픈일/런칭일 (선택)
+
+  // 예산
+  budgetMin?: string;
+
+  // 기타
+  includeSummary?: string;
+  priorityFeatures?: string;
+  transcriptText?: string; // 미팅 전사록
+  proposalDate?: string; // 제안서 작성일 (선택, 없으면 현재 날짜 사용)
 }
 
 // Tailwind 테마 기반 Gem (디자인 시스템)
@@ -35,11 +55,52 @@ export const TAILWIND_THEME = {
 
 // 표지 HTML 템플릿
 export function generateCoverTemplate(data: TemplateData): string {
-  return `
-    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col min-h-screen" style="background: linear-gradient(to bottom right,rgb(97, 94, 168),rgb(41, 74, 120)) !important; color: white !important; position: relative !important;">
-      <!-- 상단 헤더 -->
-      <!-- 제거 예정: 날짜 표시 영역 (상단 헤더) -->
+  // 브랜드 컬러 추출
+  const primaryColor = data.brandColor1 || '#4f46e5'; // indigo-600
+  const secondaryColor = data.brandColor2 || '#1f2937'; // gray-800
 
+  // 배경 그라데이션 생성
+  const backgroundGradient = `linear-gradient(to bottom right, ${primaryColor}, ${secondaryColor})`;
+
+  // 날짜 포맷팅 함수 (proposalDate가 있으면 사용, 없으면 현재 날짜 사용)
+  const formatDate = (dateString?: string): string => {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    let date: Date;
+    if (dateString) {
+      // proposalDate가 있으면 사용
+      date = new Date(dateString);
+    } else {
+      // 없으면 현재 날짜 사용
+      date = new Date();
+    }
+
+    return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+  };
+
+  const formattedDate = formatDate(data.proposalDate);
+
+  return `
+    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col min-h-screen" style="background: ${backgroundGradient} !important; color: white !important; position: relative !important;">
+      <!-- 상단 헤더 -->
+      <div class="px-12 pt-12 flex justify-end items-start z-10" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-top: 3rem !important;">
+        <div class="text-[10px] font-bold tracking-[0.3em] text-white/60 uppercase" style="font-size: 10px !important; font-weight: bold !important; letter-spacing: 0.3em !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important;">
+          ${formattedDate}
+        </div>
+      </div>
       <!-- 중앙 메인 영역 -->
       <div class="flex-1 px-12 flex flex-col justify-center z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important;">
         <!-- 클라이언트 회사명 영역 -->
@@ -53,7 +114,6 @@ export function generateCoverTemplate(data: TemplateData): string {
         `
             : ''
         }
-
         <!-- 메인 타이틀 -->
         <div class="relative">
           <h1 class="text-7xl font-black text-white leading-tight mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">${data.projectName}</h1>
@@ -64,7 +124,6 @@ export function generateCoverTemplate(data: TemplateData): string {
           </div>
         </div>
       </div>
-
       <!-- 하단 푸터 -->
       <div class="px-12 pb-12 z-10" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-bottom: 3rem !important;">
         <div class="border-t border-white pt-8 flex justify-between items-end" style="border-top: 1px solid rgba(255, 255, 255, 0.2) !important; padding-top: 2rem !important;">

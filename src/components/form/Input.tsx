@@ -12,9 +12,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ label, required, error, id, className = '', ...props }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
-    // error는 input 요소에 전달하지 않도록 제거
-    const { error: _, ...inputProps } = props as InputProps & { error?: string };
-
     return (
       <div className="mb-4 flex flex-col gap-1.5">
         <label htmlFor={inputId} className="text-sm font-semibold text-gray-700">
@@ -29,7 +26,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
               : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
           } ${className}`}
-          {...inputProps}
+          {...props}
         />
         {error && <span className="mt-0.5 text-xs font-medium text-red-500">{error}</span>}
       </div>

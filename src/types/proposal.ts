@@ -37,9 +37,11 @@ export interface ProposalFormData {
   designStyle: string;
   figureStyle: string;
 
+  // 날짜 정보
+  proposalDate?: string; // 제안서 작성일 (선택, 없으면 현재 날짜 사용)
+
   // 제거 예정 필드들
   // meetingDate: string;
-  // proposalDate: string;
   // clientContact: string;
   // ourContact: string;
 }
