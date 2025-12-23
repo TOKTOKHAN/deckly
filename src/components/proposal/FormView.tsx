@@ -70,8 +70,9 @@ export default function FormView({
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6">
+          <div className="space-y-3">
             <h2 className="mb-4 text-xl font-bold text-black">Step 1. 기본 정보</h2>
+            <p className="text-sm text-red-500">* 아래 항목들은 필수로 입력해야합니다.</p>
 
             {/* 기본 정보 */}
             <div className="space-y-4">
@@ -105,7 +106,7 @@ export default function FormView({
                 type="text"
                 value={formData.slogan}
                 onChange={onInputChange('slogan')}
-                placeholder="지향하는 방향성 작성"
+                placeholder="지향하는 방향성"
               />
             </div>
 
@@ -117,9 +118,7 @@ export default function FormView({
               </p>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    컬러 1 <span className="text-red-500">*</span>
-                  </label>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">컬러 1</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
@@ -139,9 +138,7 @@ export default function FormView({
                   </div>
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    컬러 2 <span className="text-red-500">*</span>
-                  </label>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">컬러 2</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
@@ -161,9 +158,7 @@ export default function FormView({
                   </div>
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    컬러 3 <span className="text-red-500">*</span>
-                  </label>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">컬러 3</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"

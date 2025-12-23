@@ -21,10 +21,11 @@ export default function Input({
   return (
     <div className="mb-4 flex flex-col gap-1.5">
       <label htmlFor={inputId} className="text-sm font-semibold text-gray-700">
-        {label} {required && <span className="text-red-500">*</span>}
+        {label}
       </label>
       <input
         id={inputId}
+        required={required}
         className={`rounded-xl border border-gray-300 p-2.5 text-black transition focus:border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 ${className}`}
         {...props}
       />
