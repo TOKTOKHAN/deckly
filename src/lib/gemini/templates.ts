@@ -37,15 +37,13 @@ export function generateCoverTemplate(data: TemplateData): string {
   return `
     <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col items-center justify-center min-h-screen" style="background: linear-gradient(to bottom right, #4f46e5, #1f2937) !important; color: white !important;">
       <div class="text-center space-y-8">
-        <h1 class="text-7xl font-black mb-4" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important;">${data.projectName}</h1>
-        <div class="border-t-2 border-white/30 w-32 mx-auto my-8" style="border-top: 2px solid rgba(255, 255, 255, 0.3); width: 8rem; margin: 2rem auto;"></div>
+        <h1 class="font-black mb-4" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important;">${data.projectName}</h1>
+        <div style="border-top: 2px solid rgba(255, 255, 255, 0.3) !important; width: 30rem !important; margin: 2rem auto !important;"></div>
         <div class="space-y-4">
-          <h3 class="text-2xl text-white font-bold" style="color: white !important; font-size: 3rem; font-weight: bold;">TOKTOKHAN.DEV</h3>
-          ${data.clientCompanyName ? `<p class="text-xl opacity-90" style="color: white !important; font-size: 3rem; opacity: 0.9;">${data.clientCompanyName}</p>` : ''}
+          <h3 class="text-white font-bold" style="color: white !important; font-size: 3.5rem; font-weight: bold;">TOKTOKHAN.DEV</h3>
+          ${data.clientCompanyName ? `<p class="mb-10 opacity-90" style="color: white !important; font-weight: bold; font-size: 3.5rem; opacity: 0.9;">${data.clientCompanyName}</p>` : ''}
         </div>
         <div class="mt-12 space-y-2 text-sm opacity-80" style="margin-top: 3rem; font-size: 0.875rem; opacity: 0.8;">
-          ${data.proposalDate ? `<p style="color: white !important;">제안서 작성일: ${data.proposalDate}</p>` : ''}
-          ${data.meetingDate ? `<p style="color: white !important;">미팅 일자: ${data.meetingDate}</p>` : ''}
         </div>
       </div>
     </div>
