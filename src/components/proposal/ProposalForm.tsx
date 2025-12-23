@@ -12,18 +12,34 @@ import ResultView from './ResultView';
 import { CheckCircle2 } from '@/components/icons';
 
 const initialFormData: ProposalFormData = {
+  // 기본 정보
   clientCompanyName: '',
   projectName: '',
+  slogan: '',
+  brandColor1: '#4f46e5', // indigo-600 (기본 브랜드 컬러)
+  brandColor2: '#1f2937', // gray-800 (기본 브랜드 컬러)
+  brandColor3: '#ffffff', // white (기본 브랜드 컬러)
+  clientLogo: undefined,
+  clientWebsite: undefined,
+  font: 'Pretendard',
+
+  // 프로젝트 정보
+  teamSize: '',
+  startDate: new Date().toISOString().substring(0, 10),
+  endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().substring(0, 10),
+  reviewPeriod: '',
+  maintenancePeriod: '',
+  openDate: undefined,
+
+  // 예산
+  budgetMin: '',
+
+  // 기타
   target: ['실무자'],
   includeSummary: '',
   excludeScope: '',
   priorityFeatures: '',
   projectPhase: '',
-  startDate: new Date().toISOString().substring(0, 10),
-  openDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().substring(0, 10),
-  budgetMin: '',
-  budgetMax: '',
-  budgetConfirmed: '협의 중',
   priorityFactor: '',
   transcriptText: '',
   volume: '표준',
@@ -101,8 +117,7 @@ export default function ProposalForm() {
         title: data.projectName,
         client: data.clientCompanyName,
         projectOverview: data.includeSummary,
-        budget:
-          data.budgetMin && data.budgetMax ? `${data.budgetMin}~${data.budgetMax}` : undefined,
+        budget: data.budgetMin || undefined,
         period:
           data.startDate && data.openDate ? `${data.startDate} ~ ${data.openDate}` : undefined,
         requirements: data.priorityFeatures,
@@ -211,7 +226,7 @@ export default function ProposalForm() {
 
   // 단일 핸들러로 통합 (더 간결하고 유지보수 용이)
   const handleInputChange = (field: keyof ProposalFormData) => {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       setFormData(prev => ({ ...prev, [field]: e.target.value }));
     };
   };

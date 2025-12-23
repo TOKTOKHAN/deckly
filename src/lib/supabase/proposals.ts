@@ -3,16 +3,32 @@ import { Proposal, ProposalStatus } from '@/types/proposal';
 
 // metadata 타입 정의
 interface ProposalMetadata {
+  // 기본 정보
+  slogan?: string;
+  brandColor1?: string;
+  brandColor2?: string;
+  brandColor3?: string;
+  clientLogo?: string;
+  clientWebsite?: string;
+  font?: string;
+
+  // 프로젝트 정보
+  teamSize?: string;
+  startDate?: string;
+  endDate?: string;
+  reviewPeriod?: string;
+  maintenancePeriod?: string;
+  openDate?: string;
+
+  // 예산
+  budgetMin?: string;
+
+  // 기타
   target?: string[];
   includeSummary?: string;
   excludeScope?: string;
   priorityFeatures?: string;
   projectPhase?: string;
-  startDate?: string;
-  openDate?: string;
-  budgetMin?: string;
-  budgetMax?: string;
-  budgetConfirmed?: string;
   priorityFactor?: string;
   volume?: string;
   designStyle?: string;
@@ -43,23 +59,40 @@ function proposalToRow(proposal: Proposal): Omit<ProposalRow, 'id' | 'created_at
   return {
     title: proposal.projectName,
     client: proposal.clientCompanyName,
-    client_contact: proposal.clientContact,
-    meeting_date: proposal.meetingDate,
-    proposal_date: proposal.proposalDate,
-    our_contact: proposal.ourContact,
+    // 제거 예정 필드들 (빈 문자열로 처리)
+    client_contact: '',
+    meeting_date: '',
+    proposal_date: '',
+    our_contact: '',
     content: proposal.content || null,
     meeting_notes: proposal.transcriptText,
     metadata: {
+      // 기본 정보
+      slogan: proposal.slogan,
+      brandColor1: proposal.brandColor1,
+      brandColor2: proposal.brandColor2,
+      brandColor3: proposal.brandColor3,
+      clientLogo: proposal.clientLogo,
+      clientWebsite: proposal.clientWebsite,
+      font: proposal.font,
+
+      // 프로젝트 정보
+      teamSize: proposal.teamSize,
+      startDate: proposal.startDate,
+      endDate: proposal.endDate,
+      reviewPeriod: proposal.reviewPeriod,
+      maintenancePeriod: proposal.maintenancePeriod,
+      openDate: proposal.openDate,
+
+      // 예산
+      budgetMin: proposal.budgetMin,
+
+      // 기타
       target: proposal.target,
       includeSummary: proposal.includeSummary,
       excludeScope: proposal.excludeScope,
       priorityFeatures: proposal.priorityFeatures,
       projectPhase: proposal.projectPhase,
-      startDate: proposal.startDate,
-      openDate: proposal.openDate,
-      budgetMin: proposal.budgetMin,
-      budgetMax: proposal.budgetMax,
-      budgetConfirmed: proposal.budgetConfirmed,
       priorityFactor: proposal.priorityFactor,
       volume: proposal.volume,
       designStyle: proposal.designStyle,
@@ -79,10 +112,6 @@ function rowToProposal(row: ProposalRow): Proposal {
     id: row.id,
     projectName: row.title,
     clientCompanyName: row.client,
-    clientContact: row.client_contact,
-    meetingDate: row.meeting_date,
-    proposalDate: row.proposal_date,
-    ourContact: row.our_contact,
     transcriptText: row.meeting_notes,
     content: row.content || undefined,
     status: row.status,
@@ -90,17 +119,34 @@ function rowToProposal(row: ProposalRow): Proposal {
     error: row.error || undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+
     // metadata에서 복원
+    // 기본 정보
+    slogan: metadata.slogan || '',
+    brandColor1: metadata.brandColor1 || '#4f46e5',
+    brandColor2: metadata.brandColor2 || '#1f2937',
+    brandColor3: metadata.brandColor3 || '#ffffff',
+    clientLogo: metadata.clientLogo,
+    clientWebsite: metadata.clientWebsite,
+    font: metadata.font || 'Pretendard',
+
+    // 프로젝트 정보
+    teamSize: metadata.teamSize || '',
+    startDate: metadata.startDate || '',
+    endDate: metadata.endDate || '',
+    reviewPeriod: metadata.reviewPeriod || '',
+    maintenancePeriod: metadata.maintenancePeriod || '',
+    openDate: metadata.openDate,
+
+    // 예산
+    budgetMin: metadata.budgetMin || '',
+
+    // 기타
     target: metadata.target || ['실무자'],
     includeSummary: metadata.includeSummary || '',
     excludeScope: metadata.excludeScope || '',
     priorityFeatures: metadata.priorityFeatures || '',
     projectPhase: metadata.projectPhase || '',
-    startDate: metadata.startDate || '',
-    openDate: metadata.openDate || '',
-    budgetMin: metadata.budgetMin || '',
-    budgetMax: metadata.budgetMax || '',
-    budgetConfirmed: metadata.budgetConfirmed || '협의 중',
     priorityFactor: metadata.priorityFactor || '',
     volume: metadata.volume || '표준',
     designStyle: metadata.designStyle || '기업형',
