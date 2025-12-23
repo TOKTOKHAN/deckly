@@ -47,12 +47,12 @@ export const BODY_PROMPT_TEMPLATE = `
 
 **각 섹션은 반드시 다음 구조로 감싸야 합니다 (변경 금지):**
 - 외부 컨테이너: div 태그에 class="a4-page" 속성 필수
-- 내부 컨테이너: div 태그에 class="proposal-section bg-white rounded-lg shadow-md p-8" 속성 필수
+- 내부 컨테이너: div 태그에 class="proposal-section bg-white rounded-lg shadow-none p-8" 속성 필수
 - 구조: a4-page > proposal-section > 섹션 내용
 
 **스타일 규칙 (엄격 준수):**
 - 배경색: 반드시 bg-white 클래스 사용
-- 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-md p-8 클래스 필수
+- 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-none p-8 클래스 필수
 - 제목 색상: 반드시 text-indigo-600 클래스 사용 (다른 색상 사용 금지)
 - 제목 크기: text-3xl font-bold 클래스 사용
 - 패딩: p-8 클래스 사용
@@ -63,7 +63,7 @@ export const BODY_PROMPT_TEMPLATE = `
 
 각 섹션은 다음 형식을 정확히 따라야 합니다:
 - 외부: div class="a4-page"
-- 내부: div class="proposal-section bg-white rounded-lg shadow-md p-8"
+- 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
 - 제목: h2 class="text-3xl font-bold text-indigo-600 mb-6"
 
 1) 프로젝트 개요 (Overview)
@@ -91,7 +91,7 @@ export const BODY_PROMPT_TEMPLATE = `
 - 표지, 목차, 끝마무리 템플릿과 동일한 스타일 사용 필수
 - 배경색: bg-white 클래스 (다른 배경색 사용 금지)
 - 제목 색상: text-indigo-600 클래스 (다른 색상 사용 금지)
-- 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-md p-8 클래스 (변경 금지)
+- 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-none p-8 클래스 (변경 금지)
 
 **구조 규칙:**
 - Tailwind CSS 클래스만 사용 (인라인 스타일 최소화)
@@ -116,7 +116,7 @@ export const BODY_PROMPT_TEMPLATE = `
 2. DOCTYPE이나 html 태그 없이 본문 내용만 출력
 3. 각 섹션은 반드시 다음 형식으로 감싸기 (변경 금지):
    - 외부: div class="a4-page"
-   - 내부: div class="proposal-section bg-white rounded-lg shadow-md p-8"
+   - 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
    - 제목: h2 class="text-3xl font-bold text-indigo-600 mb-6"
 4. 섹션 내용이 길 경우, 여러 개의 a4-page div로 나누어 구성
 5. 제목은 반드시 h2 태그에 class="text-3xl font-bold text-indigo-600 mb-6" 형식 사용
@@ -175,7 +175,7 @@ export const PROPOSAL_TEMPLATE = `
    - 5개 섹션 목록 (1. 프로젝트 개요 ~ 5. 기대효과)
 
 2) 본문 섹션 (5개 필수)
-   - 각 섹션은 <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-md p-8">로 감싸기
+   - 각 섹션은 <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-none p-8">로 감싸기
    - 제목은 h2 태그에 class="text-3xl font-bold text-indigo-600 mb-6" 사용
    1) 프로젝트 개요 (Overview): 목적, 문제점, 타겟 니즈
    2) 요구사항 이해 (Requirements): 요구사항 리스트, 리스크, 핵심 기준

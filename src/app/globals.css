@@ -142,10 +142,11 @@ body {
     color: #000;
   }
 
-  /* 제안서 섹션 스타일 - 화면과 동일하게 유지 */
+  /* 제안서 섹션 스타일 - 인쇄 시 shadow 제거 */
   .proposal-section {
     page-break-inside: avoid;
     break-inside: avoid-page;
+    box-shadow: none !important;
   }
 
   /* 편집 모드 스타일 - 인쇄 시에도 유지 */

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Proposal } from '@/types/proposal';
 import { updateProposal } from '@/lib/supabase/proposals';
 import { extractMetadataFromHTML } from '@/lib/utils/extractMetadataFromHTML';
+import { generateHTMLWrapper } from '@/lib/gemini/templates';
 import Button from '@/components/ui/Button';
 import { ChevronLeft, Download, Edit, RefreshCw, Save, X } from '@/components/icons';
 
@@ -39,6 +40,7 @@ function extractBodyContent(html: string): string {
 export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }: ResultViewProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const editableRef = useRef<HTMLDivElement>(null);
+  const printIframeRef = useRef<HTMLIFrameElement | null>(null);
 
   // 편집 모드 상태
   const [isEditing, setIsEditing] = useState(false);
@@ -97,6 +99,16 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
     };
   }, [bodyContent]);
 
+  // 컴포넌트 언마운트 시 iframe 정리
+  useEffect(() => {
+    return () => {
+      if (printIframeRef.current && printIframeRef.current.parentNode) {
+        printIframeRef.current.parentNode.removeChild(printIframeRef.current);
+        printIframeRef.current = null;
+      }
+    };
+  }, []);
+
   // 공통 스타일 적용 함수 - 레이아웃만 처리 (세부 스타일은 templates.ts의 인라인 스타일 사용)
   // templates.ts에서 이미 인라인 스타일로 모든 것을 정의했으므로, 여기서는 레이아웃 관련만 처리
   const applyCommonStyles = (container: HTMLElement | null) => {
@@ -135,18 +147,43 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
   }, [bodyContent]);
 
   const handlePrint = () => {
-    if (!contentRef.current) {
+    if (!bodyContent) {
       alert('인쇄할 내용이 없습니다.');
       return;
     }
 
-    // 공통 스타일 적용 함수 사용 (화면 표시와 동일)
-    applyCommonStyles(contentRef.current);
+    // generateHTMLWrapper로 감싸서 완전한 HTML 생성 (preview/page.tsx와 동일)
+    const fullHTML = generateHTMLWrapper(bodyContent);
 
-    // 약간의 지연 후 인쇄 (스타일 적용 시간 확보)
-    setTimeout(() => {
-      window.print();
-    }, 100);
+    // 숨겨진 iframe 생성 (화면에 보이지 않음)
+    if (!printIframeRef.current) {
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = 'none';
+      document.body.appendChild(iframe);
+      printIframeRef.current = iframe;
+    }
+
+    const iframe = printIframeRef.current;
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+
+    if (iframeDoc) {
+      iframeDoc.open();
+      iframeDoc.write(fullHTML);
+      iframeDoc.close();
+
+      // 스타일이 로드될 때까지 대기 후 인쇄 (iframe에 내용을 write하면 이미 로드된 상태)
+      setTimeout(() => {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        }
+      }, 500);
+    }
   };
 
   // 편집 모드 진입
