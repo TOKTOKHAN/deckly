@@ -53,8 +53,8 @@ export function generateCoverTemplate(data: TemplateData): string {
 // 목차 HTML 템플릿
 export function generateTableOfContentsTemplate(): string {
   return `
-    <div class="a4-page bg-white p-8">
-      <div class="max-w-4xl mx-auto">
+    <div class="a4-page bg-white p-4" style="padding: 1rem !important;">
+      <div class="max-w-5xl mx-auto">
         <h2 class="text-6xl font-bold text-indigo-600 mb-8 text-center">목  차</h2>
         <div class="space-y-4 mt-12">
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
@@ -84,18 +84,17 @@ export function generateConclusionTemplate(data: TemplateData): string {
     <div class="a4-page bg-white p-8" style="background-color: white !important; padding: 2rem !important;">
       <div class="max-w-4xl mx-auto" style="max-width: 56rem !important; margin-left: auto !important; margin-right: auto !important;">
         <div class="text-center space-y-8 py-16" style="text-align: center !important; padding-top: 4rem !important; padding-bottom: 4rem !important;">
-          <h2 class="text-2xl font-bold text-indigo-600 mb-8" style="font-size: 2.25rem !important; font-weight: bold !important; color: #4f46e5 !important; margin-bottom: 2rem !important;">감사합니다</h2>
           <div class="space-y-4" style="display: flex; flex-direction: column; gap: 1rem;">
-            <p class="text-xl font-semibold text-gray-700" style="font-size: 1.5rem !important; font-weight: 600 !important; color: #374151 !important; line-height: 1.75rem;">
+            <p class="text-xl font-semibold text-gray-700" style="font-size: 1.5rem !important; font-weight: semibold !important; color: #374151 !important; line-height: 1.75rem;">
               ${data.projectName}의 성공적인 추진을 위해 최선을 다하겠습니다.
               <br style="display: block; content: ''; margin-top: 0.5rem;">
               본 제안서에 대한 추가 문의사항이 있으시면 언제든지 연락 주시기 바랍니다.
               <br style="display: block; content: ''; margin-top: 0.5rem;">
               함께 성장하는 파트너가 되기를 기대합니다.
             </p>
+            <h2 class="text-2xl font-bold text-indigo-600 mb-8" style="font-size: 2.25rem !important; font-weight: bold !important; color: #4f46e5 !important; margin-bottom: 2rem !important;">감사합니다</h2>
             <div class="mt-12 pt-8 border-t-2 border-indigo-600/20" style="margin-top: 3rem !important; padding-top: 2rem !important; border-top: 2px solid rgba(79, 70, 229, 0.2) !important;">
               <p class="text-4xl font-bold text-indigo-600 mb-4" style="font-size: 2.25rem !important; font-weight: bold !important; color: #4f46e5 !important; margin-bottom: 1rem !important;">TOKTOKHAN.DEV</p>
-              ${data.ourContact ? `<p class="text-gray-900" style="color: #111827 !important;">담당자: ${data.ourContact}</p>` : ''}
             </div>
           </div>
         </div>
