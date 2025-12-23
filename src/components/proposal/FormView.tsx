@@ -71,7 +71,7 @@ export default function FormView({
       case 1:
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-black mb-4">Step 1. 기본 정보</h2>
+            <h2 className="mb-4 text-xl font-bold text-black">Step 1. 기본 정보</h2>
             <Input
               label="프로젝트명"
               required
@@ -86,7 +86,7 @@ export default function FormView({
             <div className="grid grid-cols-2 gap-6">
               {/* 왼쪽: 클라이언트사 정보 */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">클라이언트사 정보</h3>
+                <h3 className="mb-2 text-lg font-semibold text-gray-800">클라이언트사 정보</h3>
                 <Input
                   label="클라이언트사"
                   required
@@ -121,7 +121,7 @@ export default function FormView({
               </div>
               {/* 오른쪽: 제안사 정보 */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">제안사 정보</h3>
+                <h3 className="mb-2 text-lg font-semibold text-gray-800">제안사 정보</h3>
                 <Input
                   label="제안사"
                   required
@@ -159,8 +159,8 @@ export default function FormView({
       case 2:
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-black mb-4">Step 2. 미팅 전사록 입력</h2>
-            <p className="text-xs text-gray-500 mb-2">
+            <h2 className="mb-4 text-xl font-bold text-black">Step 2. 미팅 전사록 입력</h2>
+            <p className="mb-2 text-xs text-gray-500">
               AI가 분석할 수 있도록 미팅 대화 내용이나 요약된 메모를 입력해주세요.
             </p>
             <Textarea
@@ -173,7 +173,7 @@ export default function FormView({
               placeholder="여기에 회의록 내용을 붙여넣어주세요."
               required
             />
-            <div className="flex justify-between text-[10px] text-gray-400 px-1">
+            <div className="flex justify-between px-1 text-[10px] text-gray-400">
               <span>AI가 정확한 제안을 하려면 최소 50자 이상의 구체적인 내용이 필요합니다.</span>
               <span>{formData.transcriptText.length} 자</span>
             </div>
@@ -185,23 +185,23 @@ export default function FormView({
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-12 px-4">
-      <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-gray-100">
-        <div className="flex justify-between items-center mb-10">
+    <div className="mx-auto max-w-3xl px-4 py-12">
+      <div className="rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-2xl md:p-12">
+        <div className="mb-10 flex items-center justify-between">
           <div>
-            <span className="text-indigo-600 font-bold text-sm tracking-widest uppercase">
+            <span className="text-sm font-bold uppercase tracking-widest text-indigo-600">
               Step {step} of 2
             </span>
-            <h1 className="text-2xl font-black text-gray-400 mt-1">제안서 정보 입력</h1>
+            <h1 className="mt-1 text-2xl font-black text-gray-400">제안서 정보 입력</h1>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition">
+          <button onClick={onClose} className="rounded-full p-2 transition hover:bg-gray-100">
             <X size={24} />
           </button>
         </div>
 
         {renderStep()}
 
-        <div className="flex justify-between mt-12 pt-8 border-t border-gray-50">
+        <div className="mt-12 flex justify-between border-t border-gray-50 pt-8">
           <Button
             variant="ghost"
             disabled={step === 1}

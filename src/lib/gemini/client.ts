@@ -10,10 +10,13 @@ const genAI = new GoogleGenAI({
   apiKey: apiKey,
 });
 
-// 제안서 생성용 모델 (구글 콘솔 클라우드 무료 티어에서는 flash 모델만 사용 가능)
+// 제안서 생성용 모델
+// 환경 변수 GEMINI_MODEL로 모델명 설정 가능 (기본값: gemini-3-pro-preview)
+const getModelName = () => process.env.GEMINI_MODEL || 'gemini-3-pro-preview';
+
 export const generateProposal = async (prompt: string) => {
   const response = await genAI.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: getModelName(),
     contents: prompt,
   });
   return response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || '';
@@ -22,7 +25,7 @@ export const generateProposal = async (prompt: string) => {
 // 스트리밍 모델 실시간 생성되는 내용들 표시
 export const generateProposalStream = async (prompt: string) => {
   const response = await genAI.models.generateContentStream({
-    model: 'gemini-2.5-flash',
+    model: getModelName(),
     contents: prompt,
   });
   return response;

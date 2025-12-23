@@ -85,4 +85,115 @@ body {
     position: absolute;
     left: 0;
   }
+
+  /* 편집 모드 스타일 */
+  .prose[contenteditable='true'] {
+    cursor: text;
+  }
+
+  .prose[contenteditable='true']:focus {
+    outline: none;
+  }
+
+  .prose[contenteditable='true'] * {
+    cursor: text;
+  }
+
+  .prose[contenteditable='true'] img {
+    cursor: default;
+  }
+}
+
+/* 인쇄 스타일 */
+@media print {
+  /* 인쇄 시 숨길 요소 */
+  .no-print,
+  button,
+  nav,
+  header,
+  footer {
+    display: none !important;
+  }
+
+  /* 페이지 설정 */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  /* 배경색 인쇄 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* body 스타일 */
+  body {
+    margin: 0;
+    padding: 0;
+    background: white !important;
+  }
+
+  /* 제안서 컨테이너 스타일 - 인쇄 시에도 화면과 동일하게 유지 */
+  /* 컨테이너의 rounded, shadow 등은 인쇄 시에도 유지 (화면과 일치) */
+
+  /* 제안서 내용 영역 - 화면과 동일한 스타일 유지 */
+  .prose {
+    color: #000;
+  }
+
+  /* 제안서 섹션 스타일 - 인쇄 시 shadow 제거 */
+  .proposal-section {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+    box-shadow: none !important;
+  }
+
+  /* 편집 모드 스타일 - 인쇄 시에도 유지 */
+  .prose[contenteditable='true'] {
+    cursor: text;
+  }
+
+  .prose[contenteditable='true']:focus {
+    outline: none;
+  }
+
+  /* A4 페이지 구분 - 인쇄 시 A4 크기로 조정 */
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    max-height: 297mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+    margin: 0;
+    padding: 20mm;
+    box-sizing: border-box;
+    overflow: visible;
+    display: block !important;
+  }
+
+  /* 표지 스타일 (첫 번째 a4-page) - 레이아웃만 정의 (세부 스타일은 templates.ts의 인라인 스타일 사용) */
+  .a4-page:first-child {
+    padding: 0 !important; /* 표지 패딩 제거 - 레이아웃 관련만 */
+  }
+
+  /* 표지 내부 컨테이너 중앙 정렬 - 레이아웃만 정의 */
+  .a4-page:first-child > div {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* 마지막 페이지는 page-break-after 제거 */
+  .a4-page:last-child {
+    page-break-after: auto;
+  }
+
+  /* 페이지 나누기 */
+  .page-break {
+    page-break-after: always;
+  }
 }
