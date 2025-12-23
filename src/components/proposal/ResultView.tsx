@@ -41,14 +41,11 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
   const contentRef = useRef<HTMLDivElement>(null);
   const editableRef = useRef<HTMLDivElement>(null);
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
-
-  // 편집 모드 상태
   const [isEditing, setIsEditing] = useState(false);
   const [originalContent, setOriginalContent] = useState<string>('');
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // body 내용만 추출
   const bodyContent = proposal?.content ? extractBodyContent(proposal.content) : '';
 
   // Tailwind CDN 및 스타일 동적 로드 (표지 그라데이션 등 Tailwind 클래스 사용을 위해)
@@ -94,9 +91,7 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
       document.head.appendChild(style);
     }
 
-    return () => {
-      // cleanup은 하지 않음 (다른 곳에서도 사용할 수 있음)
-    };
+    return () => {};
   }, [bodyContent]);
 
   // 컴포넌트 언마운트 시 iframe 정리
@@ -110,7 +105,6 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
   }, []);
 
   // 공통 스타일 적용 함수 - 레이아웃만 처리 (세부 스타일은 templates.ts의 인라인 스타일 사용)
-  // templates.ts에서 이미 인라인 스타일로 모든 것을 정의했으므로, 여기서는 레이아웃 관련만 처리
   const applyCommonStyles = (container: HTMLElement | null) => {
     if (!container) return;
 
@@ -131,8 +125,6 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
         (coverInnerDiv as HTMLElement).style.textAlign = 'center';
       }
     }
-
-    // 끝마무리 페이지는 templates.ts의 인라인 스타일로 충분하므로 추가 처리 불필요
   };
 
   // bodyContent가 렌더링된 후 표지와 끝마무리에 직접 스타일 적용 (화면 표시용)
@@ -152,7 +144,7 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
       return;
     }
 
-    // generateHTMLWrapper로 감싸서 완전한 HTML 생성 (preview/page.tsx와 동일)
+    // generateHTMLWrapper로 감싸서 완전한 HTML 생성
     const fullHTML = generateHTMLWrapper(bodyContent);
 
     // 숨겨진 iframe 생성 (화면에 보이지 않음)
@@ -176,7 +168,6 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
       iframeDoc.write(fullHTML);
       iframeDoc.close();
 
-      // 스타일이 로드될 때까지 대기 후 인쇄 (iframe에 내용을 write하면 이미 로드된 상태)
       setTimeout(() => {
         if (iframe.contentWindow) {
           iframe.contentWindow.focus();
@@ -205,7 +196,6 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
         if (!editableRef.current) return;
 
         editableRef.current.focus();
-        // 커서를 시작 위치로 이동
         const range = document.createRange();
         const sel = window.getSelection();
         if (sel && editableRef.current.firstChild) {
@@ -218,7 +208,6 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
     }
   }, [isEditing, bodyContent]);
 
-  // 편집 내용 변경 감지
   const handleContentChange = () => {
     if (!editableRef.current || !originalContent) return;
 
@@ -226,7 +215,6 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
     setHasChanges(currentContent !== originalContent);
   };
 
-  // 저장
   const handleSave = async () => {
     if (!editableRef.current || !proposal) return;
 
@@ -265,20 +253,15 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
         extracted: extractedMetadata,
       });
 
-      // Supabase에 저장
       const savedProposal = await updateProposal(updatedProposal);
 
       console.log('제안서 저장 성공:', savedProposal.id);
 
-      // 상태 업데이트 (Supabase에서 반환된 데이터 사용)
       onUpdate(savedProposal);
 
       setIsEditing(false);
       setHasChanges(false);
       setOriginalContent('');
-
-      // 성공 메시지 (선택사항)
-      // alert('제안서가 성공적으로 저장되었습니다.');
     } catch (error) {
       console.error('제안서 저장 오류:', error);
       const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
@@ -288,7 +271,6 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
     }
   };
 
-  // 취소
   const handleCancel = () => {
     if (hasChanges && !confirm('저장하지 않은 변경사항이 있습니다. 정말 취소하시겠습니까?')) {
       return;

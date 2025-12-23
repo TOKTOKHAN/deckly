@@ -52,7 +52,6 @@ export default function ProposalForm() {
         setProposals(data);
       } catch (err) {
         console.error('제안서 로드 오류:', err);
-        // Supabase 연결 실패 시 localStorage로 폴백
         const stored = localStorage.getItem('deckly_proposals');
         if (stored) {
           try {
@@ -80,7 +79,6 @@ export default function ProposalForm() {
 
     const updateProgress = async (progress: number, message: string) => {
       setGenStatus({ progress, message });
-      // Supabase에 진행 상태 업데이트
       try {
         const currentProposal = proposals.find(p => p.id === proposalId);
         if (currentProposal) {
@@ -90,7 +88,6 @@ export default function ProposalForm() {
         }
       } catch (err) {
         console.error('진행 상태 업데이트 오류:', err);
-        // Supabase 실패 시 로컬 상태만 업데이트
         setProposals(prev =>
           prev.map(p =>
             p.id === proposalId ? { ...p, progress, status: 'generating' as ProposalStatus } : p,
@@ -145,9 +142,7 @@ export default function ProposalForm() {
         setProposals(prev => prev.map(p => (p.id === proposalId ? completedProposal : p)));
       } catch (err) {
         console.error('제안서 저장 오류:', err);
-        // Supabase 실패 시 로컬 상태만 업데이트
         setProposals(prev => prev.map(p => (p.id === proposalId ? completedProposal : p)));
-        // localStorage에도 백업 저장
         try {
           const stored = localStorage.getItem('deckly_proposals');
           const parsed = stored ? JSON.parse(stored) : [];
@@ -206,11 +201,9 @@ export default function ProposalForm() {
     } catch (err) {
       console.error('제안서 생성 오류:', err);
       // Supabase 실패 시 로컬 상태만 업데이트
-      // 임시 ID 생성 (localStorage용)
       const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       createdProposal = { ...newProposal, id: tempId };
       setProposals(prev => [createdProposal, ...prev]);
-      // localStorage에도 백업 저장
       try {
         const stored = localStorage.getItem('deckly_proposals');
         const parsed = stored ? JSON.parse(stored) : [];
@@ -233,7 +226,6 @@ export default function ProposalForm() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Nav */}
       <nav className="sticky top-0 z-40 border-b border-gray-100 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
           <div
@@ -247,8 +239,6 @@ export default function ProposalForm() {
           </div>
         </div>
       </nav>
-
-      {/* Main Content */}
       <main className="pb-20">
         {view === 'dashboard' && (
           <DashboardView
@@ -288,8 +278,6 @@ export default function ProposalForm() {
           />
         )}
       </main>
-
-      {/* Generating Overlay */}
       <GeneratingOverlay isGenerating={isGenerating} genStatus={genStatus} />
     </div>
   );
