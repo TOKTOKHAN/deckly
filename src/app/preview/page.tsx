@@ -18,10 +18,6 @@ export default function PreviewPage() {
   const sampleData: TemplateData = {
     projectName: '사업제안서 자동화 플랫폼',
     clientCompanyName: '똑똑한개발자',
-    clientContact: '신성오',
-    meetingDate: '2025-01-15',
-    ourContact: '신성오',
-    proposalDate: '2025-01-20',
   };
 
   // iframe 내용 업데이트

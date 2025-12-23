@@ -47,10 +47,6 @@ export async function generateProposalWithChains(
       meetingNotes: data.meetingNotes || '',
       projectName: data.projectName,
       clientCompanyName: data.clientCompanyName,
-      clientContact: data.clientContact || '',
-      meetingDate: data.meetingDate || '',
-      ourContact: data.ourContact || '',
-      proposalDate: data.proposalDate || '',
     });
 
     const bodyResponse = await model.invoke(bodyPrompt);

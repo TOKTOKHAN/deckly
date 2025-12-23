@@ -4,10 +4,11 @@
 export interface TemplateData {
   projectName: string;
   clientCompanyName: string;
-  clientContact?: string;
-  meetingDate?: string;
-  ourContact?: string;
-  proposalDate?: string;
+  // 제거 예정 필드들
+  // clientContact?: string;
+  // meetingDate?: string;
+  // ourContact?: string;
+  // proposalDate?: string;
 }
 
 // Tailwind 테마 기반 Gem (디자인 시스템)
@@ -37,14 +38,7 @@ export function generateCoverTemplate(data: TemplateData): string {
   return `
     <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col min-h-screen" style="background: linear-gradient(to bottom right,rgb(97, 94, 168),rgb(41, 74, 120)) !important; color: white !important; position: relative !important;">
       <!-- 상단 헤더 -->
-      <div class="px-12 pt-12 flex justify-between items-start z-10" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-top: 3rem !important;">
-        <div class="text-xs font-bold tracking-widest text-white opacity-60 uppercase" style="font-size: 0.625rem !important; letter-spacing: 0.3em !important; opacity: 0.6 !important;">
-          ${data.proposalDate ? `Proposal Date: ${data.proposalDate}` : ''}
-        </div>
-        <div class="text-xs font-bold tracking-widest text-white opacity-60 uppercase" style="font-size: 0.625rem !important; letter-spacing: 0.3em !important; opacity: 0.6 !important;">
-          ${data.meetingDate ? data.meetingDate : ''}
-        </div>
-      </div>
+      <!-- 제거 예정: 날짜 표시 영역 (상단 헤더) -->
 
       <!-- 중앙 메인 영역 -->
       <div class="flex-1 px-12 flex flex-col justify-center z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important;">

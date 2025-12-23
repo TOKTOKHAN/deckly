@@ -5,10 +5,11 @@ export type ProposalStatus = 'draft' | 'generating' | 'completed' | 'error';
 export interface ProposalFormData {
   clientCompanyName: string;
   projectName: string;
-  meetingDate: string;
-  proposalDate: string;
-  clientContact: string;
-  ourContact: string;
+  // 제거 예정 필드들
+  // meetingDate: string;
+  // proposalDate: string;
+  // clientContact: string;
+  // ourContact: string;
   target: string[];
   includeSummary: string;
   excludeScope: string;

@@ -14,10 +14,6 @@ import { CheckCircle2 } from '@/components/icons';
 const initialFormData: ProposalFormData = {
   clientCompanyName: '',
   projectName: '',
-  meetingDate: new Date().toISOString().substring(0, 10),
-  proposalDate: new Date().toISOString().substring(0, 10),
-  clientContact: '',
-  ourContact: '',
   target: ['실무자'],
   includeSummary: '',
   excludeScope: '',
@@ -104,10 +100,6 @@ export default function ProposalForm() {
         meetingNotes: data.transcriptText,
         title: data.projectName,
         client: data.clientCompanyName,
-        date: data.meetingDate,
-        clientContact: data.clientContact,
-        proposalDate: data.proposalDate,
-        ourContact: data.ourContact,
         projectOverview: data.includeSummary,
         budget:
           data.budgetMin && data.budgetMax ? `${data.budgetMin}~${data.budgetMax}` : undefined,

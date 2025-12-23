@@ -125,10 +125,7 @@ export const BODY_PROMPT_TEMPLATE = `
 ### 프로젝트 정보
 - 프로젝트명: {projectName}
 - 클라이언트사: {clientCompanyName}
-- 담당자명: {clientContact}
-- 미팅 일자: {meetingDate}
-- 제안사 담당자: {ourContact}
-- 제안서 작성일: {proposalDate}
+<!-- 제거 예정 필드들 -->
 
 ### 회의록/메모 내용
 {meetingNotes}
