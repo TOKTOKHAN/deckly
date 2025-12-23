@@ -35,15 +35,55 @@ export const TAILWIND_THEME = {
 // 표지 HTML 템플릿
 export function generateCoverTemplate(data: TemplateData): string {
   return `
-    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col items-center justify-center min-h-screen" style="background: linear-gradient(to bottom right, #4f46e5, #1f2937) !important; color: white !important;">
-      <div class="text-center space-y-8">
-        <h1 class="font-black mb-4" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important;">${data.projectName}</h1>
-        <div style="border-top: 2px solid rgba(255, 255, 255, 0.3) !important; width: 30rem !important; margin: 2rem auto !important;"></div>
-        <div class="space-y-4">
-          <h3 class="text-white font-bold" style="color: white !important; font-size: 3.5rem; font-weight: bold;">TOKTOKHAN.DEV</h3>
-          ${data.clientCompanyName ? `<p class="mb-10 opacity-90" style="color: white !important; font-weight: bold; font-size: 3.5rem; opacity: 0.9;">${data.clientCompanyName}</p>` : ''}
+    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col min-h-screen" style="background: linear-gradient(to bottom right,rgb(97, 94, 168),rgb(41, 74, 120)) !important; color: white !important; position: relative !important;">
+      <!-- 상단 헤더 -->
+      <div class="px-12 pt-12 flex justify-between items-start z-10" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-top: 3rem !important;">
+        <div class="text-xs font-bold tracking-widest text-white opacity-60 uppercase" style="font-size: 0.625rem !important; letter-spacing: 0.3em !important; opacity: 0.6 !important;">
+          ${data.proposalDate ? `Proposal Date: ${data.proposalDate}` : ''}
         </div>
-        <div class="mt-12 space-y-2 text-sm opacity-80" style="margin-top: 3rem; font-size: 0.875rem; opacity: 0.8;">
+        <div class="text-xs font-bold tracking-widest text-white opacity-60 uppercase" style="font-size: 0.625rem !important; letter-spacing: 0.3em !important; opacity: 0.6 !important;">
+          ${data.meetingDate ? data.meetingDate : ''}
+        </div>
+      </div>
+
+      <!-- 중앙 메인 영역 -->
+      <div class="flex-1 px-12 flex flex-col justify-center z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important;">
+        <!-- 클라이언트 회사명 영역 -->
+        ${
+          data.clientCompanyName
+            ? `
+        <div class="mb-16" style="margin-bottom: 4rem !important;">
+          <h2 class="text-4xl font-black text-white tracking-tight" style="font-size: 2.25rem !important; font-weight: 900 !important; color: white !important; letter-spacing: -0.025em !important;">${data.clientCompanyName}</h2>
+          
+        </div>
+        `
+            : ''
+        }
+
+        <!-- 메인 타이틀 -->
+        <div class="relative">
+          <h1 class="text-7xl font-black text-white leading-tight mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">${data.projectName}</h1>
+          
+          <div class="pl-6 border-l-2 border-white" style="padding-left: 1.5rem !important; border-left: 2px solid rgb(244, 238, 238) !important;">
+            <p class="text-lg font-light leading-relaxed max-w-xl" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 1.125rem !important; font-weight: 300 !important; line-height: 1.75 !important; max-width: 36rem !important;">
+              ${data.clientCompanyName ? `${data.clientCompanyName}를 위한` : ''} 전문적인 제안서
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 푸터 -->
+      <div class="px-12 pb-12 z-10" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-bottom: 3rem !important;">
+        <div class="border-t border-white pt-8 flex justify-between items-end" style="border-top: 1px solid rgba(255, 255, 255, 0.2) !important; padding-top: 2rem !important;">
+          <!-- 회사 정보 -->
+          <div>
+            <div class="flex flex-col gap-2 items-start mb-5" style="margin-bottom: 1.25rem !important;">
+              <span class="text-xl font-bold text-white tracking-tight" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important; letter-spacing: -0.025em !important;">TOKTOKHAN.DEV</span>
+              <span class="text-[12px] opacity-60">서울특별시 마포구 동교로12안길 39</span>
+              <span class="text-[11px] opacity-60">E. sales@toktokhan.dev | W. www.toktokhan.dev</span>
+              <span class="text-[11px] opacity-60">© 2025 Toktokhan.dev. All rights reserved.</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
