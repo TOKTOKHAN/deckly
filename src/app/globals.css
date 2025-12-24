@@ -26,81 +26,57 @@ body {
   }
 }
 
-@layer components {
-  /* 제안서 HTML 렌더링 스타일 */
-  .prose h1 {
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: #1e1b4b;
-    margin-bottom: 2rem;
-    border-left: 6px solid #4f46e5;
-    padding-left: 1.5rem;
-    line-height: 1.2;
+/* A4 미리보기 스타일 (화면 표시용) */
+.a4-preview-container {
+  width: 210mm;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #f3f4f6; /* 회색 배경으로 페이지 구분 명확화 */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 20px 0; /* 상하 패딩 추가로 페이지 간격 명확화 */
+  overflow: visible;
+}
+
+.a4-preview-container .a4-page {
+  width: 210mm;
+  min-height: 297mm;
+  height: auto;
+  margin: 0 auto 30px auto; /* 좌우 중앙 정렬, 하단 간격 증가 */
+  padding: 10mm;
+  box-sizing: border-box;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 페이지 그림자 추가 */
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.a4-preview-container .a4-page:first-child {
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.a4-preview-container .a4-page:last-child {
+  margin-bottom: 0;
+}
+
+/* 모바일 반응형 */
+@media screen and (max-width: 900px) {
+  .a4-preview-container {
+    width: 100%;
+    padding: 0;
   }
 
-  .prose h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: #312e81;
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .prose h2::before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background: #4f46e5;
-    border-radius: 3px;
-  }
-
-  .prose p {
-    line-height: 1.8;
-    color: #4b5563;
-    margin-bottom: 1.25rem;
-    font-size: 1.05rem;
-  }
-
-  .prose ul {
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 2rem;
-  }
-
-  .prose li {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: #4b5563;
-  }
-
-  .prose li::before {
-    content: '•';
-    color: #4f46e5;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-  }
-
-  /* 편집 모드 스타일 */
-  .prose[contenteditable='true'] {
-    cursor: text;
-  }
-
-  .prose[contenteditable='true']:focus {
-    outline: none;
-  }
-
-  .prose[contenteditable='true'] * {
-    cursor: text;
-  }
-
-  .prose[contenteditable='true'] img {
-    cursor: default;
+  .a4-preview-container .a4-page {
+    width: 100%;
+    min-height: auto;
+    padding: 1rem;
+    margin-bottom: 1rem;
   }
 }
 

@@ -375,8 +375,8 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
       {/* 화면 표시용 body 내용만 (PDF 다운로드용으로도 사용) */}
       <div
         ref={contentRef}
-        className={`min-h-[800px] rounded-[2.5rem] border bg-white p-8 shadow-2xl md:p-16 ${
-          isEditing ? 'border-2 border-indigo-300 ring-2 ring-indigo-100' : 'border-gray-50'
+        className={`a4-preview-container ${
+          isEditing ? 'border-2 border-indigo-300 ring-2 ring-indigo-100' : ''
         }`}
       >
         {bodyContent ? (

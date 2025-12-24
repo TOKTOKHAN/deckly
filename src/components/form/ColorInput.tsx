@@ -35,7 +35,7 @@ const ColorInput = React.forwardRef<HTMLInputElement, ColorInputProps>(
             onChange={onTextChange}
             required={required}
             placeholder={placeholder}
-            className={`flex-1 rounded-xl border p-2 text-sm text-black transition focus:outline-none focus:ring-2 ${
+            className={`flex-1 rounded-xl border p-2 text-sm text-black transition placeholder:text-gray-400 focus:outline-none focus:ring-2 ${
               error
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                 : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
