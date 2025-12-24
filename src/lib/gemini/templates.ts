@@ -149,26 +149,32 @@ export function generateCoverTemplate(data: TemplateData): string {
 }
 
 // 목차 HTML 템플릿
-export function generateTableOfContentsTemplate(): string {
+export function generateTableOfContentsTemplate(
+  brandColor1?: string,
+  brandColor2?: string,
+): string {
+  const primaryColor = brandColor1 || '#4f46e5'; // 기본값: indigo-600
+  const secondaryColor = brandColor2 || '#1f2937'; // 기본값: gray-800
+
   return `
     <div class="a4-page bg-white p-4" style="padding: 1rem !important;">
       <div class="max-w-5xl mx-auto">
-        <h2 class="text-6xl font-bold text-indigo-600 mb-8 text-center">목  차</h2>
+        <h2 class="text-6xl font-bold mb-8 text-center" style="color: ${secondaryColor} !important;">목  차</h2>
         <div class="space-y-4 mt-12">
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold text-indigo-600">1. 프로젝트 개요</span>
+            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">1. 프로젝트 개요</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold text-indigo-600">2. 요구사항 이해</span>
+            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">2. 제안 전략</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold text-indigo-600">3. 제안하는 방향성</span>
+            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">3. 기술 및 기능</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold text-indigo-600">4. 예상 일정 및 추진 방식</span>
+            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">4. 사업 관리</span>
           </div>
           <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold text-indigo-600">5. 기대효과</span>
+            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">5. 사업 지원</span>
           </div>
         </div>
       </div>

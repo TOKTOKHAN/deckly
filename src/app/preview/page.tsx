@@ -18,6 +18,8 @@ export default function PreviewPage() {
   const sampleData: TemplateData = {
     projectName: '사업제안서 자동화 플랫폼',
     clientCompanyName: '똑똑한개발자',
+    brandColor1: '#eb4034',
+    brandColor2: '#34c3eb',
   };
 
   // iframe 내용 업데이트
@@ -30,14 +32,20 @@ export default function PreviewPage() {
           templateContent = generateCoverTemplate(sampleData);
           break;
         case 'toc':
-          templateContent = generateTableOfContentsTemplate();
+          templateContent = generateTableOfContentsTemplate(
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+          );
           break;
         case 'conclusion':
           templateContent = generateConclusionTemplate(sampleData);
           break;
         case 'all':
           const cover = generateCoverTemplate(sampleData);
-          const toc = generateTableOfContentsTemplate();
+          const toc = generateTableOfContentsTemplate(
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+          );
           const conclusion = generateConclusionTemplate(sampleData);
           templateContent = cover + toc + conclusion;
           break;
@@ -46,7 +54,12 @@ export default function PreviewPage() {
       }
 
       // generateHTMLWrapper로 감싸서 Tailwind CDN이 로드되도록 함
-      const fullHTML = generateHTMLWrapper(templateContent);
+      const fullHTML = generateHTMLWrapper(
+        templateContent,
+        sampleData.font,
+        sampleData.brandColor1,
+        sampleData.brandColor2,
+      );
 
       const iframe = iframeRef.current;
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;

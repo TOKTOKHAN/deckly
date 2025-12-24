@@ -38,7 +38,7 @@ export async function generateProposalWithChains(
     console.log('표지 미리보기:', cover.substring(0, 200));
 
     // 2. 목차 생성 (템플릿)
-    const tableOfContents = generateTableOfContentsTemplate();
+    const tableOfContents = generateTableOfContentsTemplate(data.brandColor1);
     console.log('목차 생성 완료, 길이:', tableOfContents.length);
 
     // 3. 본문 생성 (AI)
