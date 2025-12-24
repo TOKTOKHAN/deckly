@@ -18,8 +18,8 @@ export default function PreviewPage() {
   const sampleData: TemplateData = {
     projectName: '사업제안서 자동화 플랫폼',
     clientCompanyName: '똑똑한개발자',
-    brandColor1: '#eb4034',
-    brandColor2: '#34c3eb',
+    brandColor1: '#52b8f2',
+    brandColor2: '#975ef2',
   };
 
   // iframe 내용 업데이트

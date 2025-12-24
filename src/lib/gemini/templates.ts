@@ -157,24 +157,89 @@ export function generateTableOfContentsTemplate(
   const secondaryColor = brandColor2 || '#1f2937'; // 기본값: gray-800
 
   return `
-    <div class="a4-page bg-white p-4" style="padding: 1rem !important;">
-      <div class="max-w-5xl mx-auto">
-        <h2 class="text-6xl font-bold mb-8 text-center" style="color: ${secondaryColor} !important;">목  차</h2>
-        <div class="space-y-4 mt-12">
-          <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">1. 프로젝트 개요</span>
+    <div class="a4-page bg-white p-8" style="padding: 2rem !important;">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-6xl font-bold mb-12 text-center" style="color: ${secondaryColor} !important;">목  차</h2>
+        
+        <!-- 카드 그리드 레이아웃 -->
+        <div class="grid grid-cols-2 gap-6 mt-8">
+          <!-- I. 제안 개요 카드 -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">I. 제안 개요</h3>
+              <p class="text-sm text-gray-500 mb-4 font-medium">Introduction</p>
+              <div class="space-y-2">
+                <div class="text-base font-medium text-gray-700">1.1 제안 배경 및 목적</div>
+                <div class="text-base font-medium text-gray-700">1.2 제안의 범위</div>
+                <div class="text-base font-medium text-gray-700">1.3 제안의 특징 및 장점</div>
+                <div class="text-base font-medium text-gray-700">1.4 기대 효과</div>
+              </div>
+            </div>
           </div>
-          <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">2. 제안 전략</span>
+
+          <!-- II. 제안 전략 카드 -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">II. 제안 전략</h3>
+              <p class="text-sm text-gray-500 mb-4 font-medium">Strategy</p>
+              <div class="space-y-2">
+                <div class="text-base font-medium text-gray-700">2.1 사업 이해 및 분석</div>
+                <div class="text-base font-medium text-gray-700">2.2 목표 모델 설계</div>
+                <div class="text-base font-medium text-gray-700">2.3 추진 전략</div>
+              </div>
+            </div>
           </div>
-          <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">3. 기술 및 기능</span>
+
+          <!-- III. 기술 및 기능 부문 카드 -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">III. 기술 및 기능 부문</h3>
+              <p class="text-sm text-gray-500 mb-4 font-medium">Technical Solution</p>
+              <div class="space-y-2">
+                <div class="text-base font-medium text-gray-700">3.1 시스템 목표 아키텍처</div>
+                <div class="text-base font-medium text-gray-700">3.2 기능 구현 방안</div>
+                <div class="text-base font-medium text-gray-700">3.3 UI/UX 구축 방안</div>
+                <div class="text-base font-medium text-gray-700">3.4 보안 및 데이터 관리</div>
+                <div class="text-base font-medium text-gray-700">3.5 시스템 연계 방안</div>
+              </div>
+            </div>
           </div>
-          <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">4. 사업 관리</span>
+
+          <!-- IV. 사업 관리 부문 카드 -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">IV. 사업 관리 부문</h3>
+              <p class="text-sm text-gray-500 mb-4 font-medium">Project Management</p>
+              <div class="space-y-2">
+                <div class="text-base font-medium text-gray-700">4.1 추진 일정</div>
+                <div class="text-base font-medium text-gray-700">4.2 수행 조직 및 인력</div>
+                <div class="text-base font-medium text-gray-700">4.3 개발 방법론</div>
+                <div class="text-base font-medium text-gray-700">4.4 품질 보증 계획</div>
+              </div>
+            </div>
           </div>
-          <div class="flex justify-between items-center py-3 border-b border-gray-200">
-            <span class="text-3xl font-semibold" style="color: ${primaryColor} !important;">5. 사업 지원</span>
+
+          <!-- V. 사업 지원 부문 카드 -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow col-span-2" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">V. 사업 지원 부문</h3>
+              <p class="text-sm text-gray-500 mb-4 font-medium">Support & Maintenance</p>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <div class="text-base font-medium text-gray-700">5.1 교육 훈련 계획</div>
+                  <div class="text-base font-medium text-gray-700">5.2 기술 이전 계획</div>
+                </div>
+                <div class="space-y-2">
+                  <div class="text-base font-medium text-gray-700">5.3 유지보수 및 하자보수</div>
+                  <div class="text-base font-medium text-gray-700">5.4 비상 대책</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
