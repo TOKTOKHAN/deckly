@@ -381,15 +381,17 @@ export function generateHTMLWrapper(
         padding: 0; 
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important; 
+        orphans: 3;
+        widows: 3;
       }
       .a4-page {
         width: 210mm;
         min-height: 297mm;
-        max-height: 297mm;
+        height: auto;
         page-break-after: always;
-        page-break-inside: avoid;
+        page-break-inside: auto;
         margin: 0;
-        padding: 20mm;
+        padding: 10mm;
         box-sizing: border-box;
         border: none;
         box-shadow: none;
@@ -414,18 +416,54 @@ export function generateHTMLWrapper(
         justify-content: center !important;
         text-align: center !important;
       }
-      .section-content {
+      /* 제목이 페이지 끝에 혼자 남지 않도록 */
+      h2, h3 {
+        page-break-after: avoid;
+        break-after: avoid;
+        orphans: 3;
+        widows: 3;
+      }
+      /* 제목과 다음 내용이 분리되지 않도록 */
+      h2 + *, h3 + * {
+        page-break-before: avoid;
+        break-before: avoid;
+      }
+      /* 제목 바로 다음에 페이지 브레이크가 오지 않도록 */
+      h2, h3 {
         page-break-inside: avoid;
         break-inside: avoid;
       }
-      /* 섹션이 길 경우 자동으로 다음 페이지로 넘어가도록 */
+      /* 섹션 내용이 자연스럽게 분할되도록 */
+      .section-content {
+        page-break-inside: auto;
+        break-inside: auto;
+      }
+      /* proposal-section은 내용이 길면 자동으로 다음 페이지로 넘어가도록 */
       .proposal-section {
+        page-break-inside: auto;
+        break-inside: auto;
+        orphans: 3;
+        widows: 3;
+      }
+      /* 리스트나 테이블이 페이지를 넘어갈 때 자연스럽게 분할 */
+      ul, ol, li {
+        page-break-inside: auto;
+        break-inside: auto;
+      }
+      /* 단락이 페이지 끝에서 잘리지 않도록 */
+      p {
+        orphans: 3;
+        widows: 3;
         page-break-inside: avoid;
-        break-inside: avoid-page;
+        break-inside: avoid;
       }
       /* 마지막 페이지는 page-break-after 제거 */
       .a4-page:last-child {
         page-break-after: auto;
+      }
+      /* 내용이 넘치면 자동으로 다음 페이지로 */
+      .a4-page {
+        overflow: visible !important;
       }
     }
   </style>

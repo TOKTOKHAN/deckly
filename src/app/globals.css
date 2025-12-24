@@ -158,15 +158,26 @@ body {
     outline: none;
   }
 
+  /* 페이지 설정 - orphans와 widows로 자연스러운 페이지 분할 */
+  @page {
+    orphans: 3;
+    widows: 3;
+  }
+
+  body {
+    orphans: 3;
+    widows: 3;
+  }
+
   /* A4 페이지 구분 - 인쇄 시 A4 크기로 조정 */
   .a4-page {
     width: 210mm;
     min-height: 297mm;
-    max-height: 297mm;
+    height: auto;
     page-break-after: always;
-    page-break-inside: avoid;
+    page-break-inside: auto;
     margin: 0;
-    padding: 20mm;
+    padding: 10mm;
     box-sizing: border-box;
     overflow: visible;
     display: block !important;
@@ -185,6 +196,71 @@ body {
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
+  }
+
+  /* 제목이 페이지 끝에 혼자 남지 않도록 */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* 제목과 다음 내용이 분리되지 않도록 */
+  h1 + *,
+  h2 + *,
+  h3 + *,
+  h4 + *,
+  h5 + *,
+  h6 + * {
+    page-break-before: avoid;
+    break-before: avoid;
+  }
+
+  /* 제목 바로 다음에 페이지 브레이크가 오지 않도록 */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 단락이 페이지 끝에서 잘리지 않도록 */
+  p {
+    orphans: 3;
+    widows: 3;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 리스트가 자연스럽게 분할되도록 */
+  ul,
+  ol {
+    page-break-inside: auto;
+    break-inside: auto;
+  }
+
+  li {
+    page-break-inside: auto;
+    break-inside: auto;
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* 섹션이 자연스럽게 분할되도록 */
+  .proposal-section {
+    page-break-inside: auto;
+    break-inside: auto;
+    orphans: 3;
+    widows: 3;
   }
 
   /* 마지막 페이지는 page-break-after 제거 */
