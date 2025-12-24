@@ -40,9 +40,9 @@ V. 사업 지원 부문
 
 **타이포그래피 (변경 금지):**
 - 폰트: font-sans (Pretendard) - 자동 적용됨
-- 제목: text-3xl font-bold mb-6 (h2에 필수) + style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
-- 부제목: text-xl font-semibold (필요시 사용)
-- 본문: text-base (기본 텍스트)
+- 제목: text-2xl font-bold mb-6 (h2에 필수) + style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
+- 부제목: text-lg font-semibold (필요시 사용)
+- 본문: text-sm (기본 텍스트)
 
 ### 본문 구조 (필수 포함 - 엄격 준수)
 **중요**: 표지와 끝마무리 템플릿과 동일한 스타일을 사용해야 합니다. 다음 구조를 정확히 따라야 합니다.
@@ -56,7 +56,7 @@ V. 사업 지원 부문
 - 배경색: 반드시 bg-white 클래스 사용
 - 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-none p-8 클래스 필수
 - 제목 색상: 반드시 style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
-- 제목 크기: text-3xl font-bold 클래스 사용
+- 제목 크기: text-2xl font-bold 클래스 사용
 - 패딩: p-8 클래스 사용
 
 섹션 내용이 한 페이지를 넘어갈 경우, 자동으로 다음 페이지로 넘어가도록 여러 개의 a4-page div로 나누어 구성하세요.
@@ -66,8 +66,8 @@ V. 사업 지원 부문
 각 섹션은 다음 형식을 정확히 따라야 합니다:
 - 외부: div class="a4-page"
 - 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
-- 메인 제목: h2 class="text-3xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
-- 하위 제목: h3 class="text-xl font-semibold mb-4" style="color: {brandColor1}" 또는 style="color: var(--primary)"
+- 메인 제목: h2 class="text-2xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
+- 하위 제목: h3 class="text-lg font-semibold mb-4" style="color: {brandColor1}" 또는 style="color: var(--primary)"
 
 **I. 제안 개요 (Introduction)**
    - 메인 제목: "I. 제안 개요"
@@ -188,10 +188,10 @@ V. 사업 지원 부문
 3. 각 섹션은 반드시 다음 형식으로 감싸기 (변경 금지):
    - 외부: div class="a4-page"
    - 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
-   - 제목: h2 class="text-3xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
+   - 제목: h2 class="text-2xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
 4. 섹션 내용이 길 경우, 여러 개의 a4-page div로 나누어 구성
-5. 메인 섹션 제목은 반드시 h2 태그에 class="text-3xl font-bold mb-6" + style="color: {brandColor1}" 형식 사용
-6. 하위 섹션 제목은 h3 태그에 class="text-xl font-semibold mb-4" + style="color: {brandColor1}" 형식 사용
+5. 메인 섹션 제목은 반드시 h2 태그에 class="text-2xl font-bold mb-6" + style="color: {brandColor1}" 형식 사용
+6. 하위 섹션 제목은 h3 태그에 class="text-lg font-semibold mb-4" + style="color: {brandColor1}" 형식 사용
 7. "I. 제안 개요"로 시작하고 "V. 사업 지원 부문"으로 끝나야 합니다.
 8. 각 메인 섹션의 하위 항목(1.1, 1.2, 2.1, 2.2 등)을 반드시 포함해야 합니다.
 
@@ -289,7 +289,7 @@ export const PROPOSAL_TEMPLATE = `
 
 2) 본문 섹션 (5개 필수)
    - 각 섹션은 <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-none p-8">로 감싸기
-   - 제목은 h2 태그에 class="text-3xl font-bold mb-6" + style="color: {BRAND_COLOR1}" 사용
+   - 제목은 h2 태그에 class="text-2xl font-bold mb-6" + style="color: {BRAND_COLOR1}" 사용
    1) 프로젝트 개요 (Overview): 목적, 문제점, 타겟 니즈
    2) 요구사항 이해 (Requirements): 요구사항 리스트, 리스크, 핵심 기준
    3) 제안하는 방향성 (Solution): 핵심 전략 3가지, 주요 기능 구조도(Box Diagram), MVP 범위
@@ -310,7 +310,7 @@ export const PROPOSAL_TEMPLATE = `
 3) **스타일 일관성 (필수)**: Tailwind 클래스를 사용하여 일관된 스타일을 적용하세요.
    - 표지: 브랜드 컬러 {BRAND_COLOR1}와 {BRAND_COLOR2}를 사용한 그라데이션 배경
    - 목차/본문/끝마무리: bg-white
-   - 제목: text-3xl font-bold mb-6 (h2 태그) + style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)"
+   - 제목: text-2xl font-bold mb-6 (h2 태그) + style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)"
    - 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-md p-8
 4) **PDF/Print Logic (필수 - 엄격 준수):**
    - **중요**: HTML 내부에 PDF 저장 버튼을 생성하지 마세요. 외부 UI에서 제공됩니다.

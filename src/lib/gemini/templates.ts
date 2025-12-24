@@ -136,7 +136,7 @@ export function generateCoverTemplate(data: TemplateData): string {
           <!-- 회사 정보 -->
           <div>
             <div class="flex flex-col gap-2 items-start mb-5" style="margin-bottom: 1.25rem !important;">
-              <span class="text-xl font-bold text-white tracking-tight" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important; letter-spacing: -0.025em !important;">TOKTOKHAN.DEV</span>
+              <span class="text-xl font-bold text-white tracking-tight w-full text-center" style="...">TOKTOKHAN.DEV</span>
               <span class="text-[11px] opacity-60">서울특별시 마포구 동교로 12안길 39</span>
               <span class="text-[11px] opacity-60">E. sales@toktokhan.dev | W. www.toktokhan.dev</span>
               <span class="text-[11px] opacity-60">© 2025 Toktokhan.dev. All rights reserved.</span>
@@ -458,6 +458,18 @@ export function generateHTMLWrapper(
         break-inside: auto;
         orphans: 3;
         widows: 3;
+      }
+      /* 본문 섹션 텍스트 크기 축소 (공간 절약) */
+      .proposal-section h2 {
+        font-size: 1.5rem !important; /* text-2xl */
+      }
+      .proposal-section h3 {
+        font-size: 1.125rem !important; /* text-lg */
+      }
+      .proposal-section p,
+      .proposal-section li,
+      .proposal-section div:not([class*="text-"]) {
+        font-size: 0.875rem !important; /* text-sm */
       }
       /* 리스트나 테이블이 페이지를 넘어갈 때 자연스럽게 분할 */
       ul, ol, li {
