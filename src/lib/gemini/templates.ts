@@ -201,9 +201,8 @@ export function generateTableOfContentsTemplate(
               <div class="space-y-2">
                 <div class="text-base font-medium text-gray-700">3.1 시스템 목표 아키텍처</div>
                 <div class="text-base font-medium text-gray-700">3.2 기능 구현 방안</div>
-                <div class="text-base font-medium text-gray-700">3.3 UI/UX 구축 방안</div>
-                <div class="text-base font-medium text-gray-700">3.4 보안 및 데이터 관리</div>
-                <div class="text-base font-medium text-gray-700">3.5 시스템 연계 방안</div>
+                <div class="text-base font-medium text-gray-700">3.3 보안 및 데이터 관리</div>
+                <div class="text-base font-medium text-gray-700">3.4 시스템 연계 방안</div>
               </div>
             </div>
           </div>
