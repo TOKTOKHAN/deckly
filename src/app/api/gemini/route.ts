@@ -43,6 +43,23 @@ export async function POST(request: NextRequest) {
         ourContact: body.ourContact,
         proposalDate: body.proposalDate,
         meetingNotes: body.meetingNotes,
+        // Step 1 추가 필드들
+        slogan: body.slogan,
+        brandColor1: body.brandColor1,
+        brandColor2: body.brandColor2,
+        brandColor3: body.brandColor3,
+        clientLogo: body.clientLogo,
+        clientWebsite: body.clientWebsite,
+        font: body.font,
+        teamSize: body.teamSize,
+        startDate: body.startDate,
+        endDate: body.endDate,
+        reviewPeriod: body.reviewPeriod,
+        maintenancePeriod: body.maintenancePeriod,
+        openDate: body.openDate,
+        projectOverview: body.projectOverview,
+        priorityFeatures: body.requirements,
+        budgetMin: body.budget,
       });
     } else {
       // 기존 방식: 전체 제안서를 AI로 생성

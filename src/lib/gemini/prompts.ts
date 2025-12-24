@@ -125,10 +125,40 @@ export const BODY_PROMPT_TEMPLATE = `
 ### 프로젝트 정보
 - 프로젝트명: {projectName}
 - 클라이언트사: {clientCompanyName}
-<!-- 제거 예정 필드들 -->
+- 슬로건: {slogan}
+- 투입 인력: {teamSize}
+- 프로젝트 기간: {startDate} ~ {endDate}
+- 검수 기간: {reviewPeriod}
+- 유지보수 기간: {maintenancePeriod}
+- 오픈일/런칭일: {openDate}
+- 예산: {budget}
+- 프로젝트 개요: {projectOverview}
+- 우선순위 기능: {priorityFeatures}
 
 ### 회의록/메모 내용
 {meetingNotes}
+
+### 작성 가이드
+다음 정보를 적절히 활용하여 제안서를 작성하세요:
+
+1. **프로젝트 개요 섹션**:
+   - 슬로건({slogan})이 있으면 프로젝트의 지향 방향성으로 활용
+   - 프로젝트 개요({projectOverview})가 있으면 이를 기반으로 작성
+   - 예산({budget})이 있으면 예산 범위를 언급
+
+2. **제안하는 방향성 섹션**:
+   - 우선순위 기능({priorityFeatures})이 있으면 이를 핵심 기능으로 강조
+   - 프로젝트 개요({projectOverview})를 참고하여 전략 수립
+
+3. **예상 일정 및 추진 방식 섹션**:
+   - 프로젝트 기간({startDate} ~ {endDate})을 명확히 표시
+   - 투입 인력({teamSize})이 있으면 구체적으로 명시
+   - 검수 기간({reviewPeriod})이 있으면 일정에 포함
+   - 유지보수 기간({maintenancePeriod})이 있으면 유지보수 계획에 포함
+   - 오픈일({openDate})이 있으면 런칭 일정에 명시
+
+4. **기대효과 섹션**:
+   - 슬로건({slogan})이 있으면 이를 기대효과와 연결하여 설명
 `;
 
 // 전체 제안서 생성 프롬프트 템플릿 (기존 방식 - 하위 호환성)
@@ -260,11 +290,31 @@ export const PROPOSAL_TEMPLATE = `
 
 **프로젝트 정보:**
 - 프로젝트명: {TITLE}
+- 슬로건: {SLOGAN}
+- 투입 인력: {TEAM_SIZE}
+- 프로젝트 기간: {START_DATE} ~ {END_DATE}
+- 검수 기간: {REVIEW_PERIOD}
+- 유지보수 기간: {MAINTENANCE_PERIOD}
+- 오픈일/런칭일: {OPEN_DATE}
+- 예산: {BUDGET}
+- 프로젝트 개요: {PROJECT_OVERVIEW}
+- 우선순위 기능: {REQUIREMENTS}
+- 브랜드 컬러: {BRAND_COLOR1}, {BRAND_COLOR2}, {BRAND_COLOR3}
+- 폰트: {FONT}
 
 ---
 
 다음 회의록/메모 내용을 분석하여 위 요구사항에 맞는 HTML 제안서를 생성하세요.
 **중요: 설명 없이 HTML 코드만 출력하세요.**
+
+**작성 가이드:**
+1. 슬로건({SLOGAN})이 있으면 프로젝트 개요나 끝마무리에 반영하세요.
+2. 투입 인력({TEAM_SIZE})이 있으면 "예상 일정 및 추진 방식" 섹션에 구체적으로 명시하세요.
+3. 검수 기간({REVIEW_PERIOD})과 유지보수 기간({MAINTENANCE_PERIOD})이 있으면 일정 섹션에 포함하세요.
+4. 예산({BUDGET})이 있으면 프로젝트 개요나 별도 섹션에 언급하세요.
+5. 우선순위 기능({REQUIREMENTS})이 있으면 "제안하는 방향성" 섹션에서 핵심 기능으로 강조하세요.
+6. 브랜드 컬러({BRAND_COLOR1}, {BRAND_COLOR2}, {BRAND_COLOR3})가 있으면 제안서의 색상 스키마에 반영하세요.
+7. 폰트({FONT})가 있으면 HTML의 font-family에 적용하세요.
 
 회의록/메모 내용:
 `;
@@ -282,6 +332,18 @@ export function createProposalPrompt(data: {
   budget?: string;
   period?: string;
   requirements?: string;
+  // Step 1 추가 필드들
+  slogan?: string;
+  brandColor1?: string;
+  brandColor2?: string;
+  brandColor3?: string;
+  font?: string;
+  teamSize?: string;
+  startDate?: string;
+  endDate?: string;
+  reviewPeriod?: string;
+  maintenancePeriod?: string;
+  openDate?: string;
 }): string {
   // 메타데이터를 프롬프트 템플릿에 주입
   const prompt = PROPOSAL_TEMPLATE.replace('{CLIENT}', data.client || '')
@@ -289,7 +351,21 @@ export function createProposalPrompt(data: {
     .replace('{MEETING_DATE}', data.date || '')
     .replace('{OUR_CONTACT}', data.ourContact || '')
     .replace('{PROPOSAL_DATE}', data.proposalDate || '')
-    .replace('{TITLE}', data.title || '');
+    .replace('{TITLE}', data.title || '')
+    .replace('{SLOGAN}', data.slogan || '')
+    .replace('{TEAM_SIZE}', data.teamSize || '')
+    .replace('{START_DATE}', data.startDate || '')
+    .replace('{END_DATE}', data.endDate || '')
+    .replace('{REVIEW_PERIOD}', data.reviewPeriod || '')
+    .replace('{MAINTENANCE_PERIOD}', data.maintenancePeriod || '')
+    .replace('{OPEN_DATE}', data.openDate || '')
+    .replace('{BUDGET}', data.budget || '')
+    .replace('{PROJECT_OVERVIEW}', data.projectOverview || '')
+    .replace('{REQUIREMENTS}', data.requirements || '')
+    .replace('{BRAND_COLOR1}', data.brandColor1 || '#4f46e5')
+    .replace('{BRAND_COLOR2}', data.brandColor2 || '#1f2937')
+    .replace('{BRAND_COLOR3}', data.brandColor3 || '#ffffff')
+    .replace('{FONT}', data.font || 'Pretendard');
 
   let meetingContent = '';
 

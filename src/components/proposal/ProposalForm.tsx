@@ -131,7 +131,7 @@ export default function ProposalForm() {
     try {
       updateProgress(30, '제안서 구조 설계 중...');
 
-      // API 호출
+      // API 호출 - Step 1의 모든 필드 포함
       const requestData: ProposalRequest = {
         meetingNotes: data.transcriptText,
         title: data.projectName,
@@ -141,6 +141,21 @@ export default function ProposalForm() {
         period:
           data.startDate && data.openDate ? `${data.startDate} ~ ${data.openDate}` : undefined,
         requirements: data.priorityFeatures,
+
+        // Step 1 추가 필드들
+        slogan: data.slogan || undefined,
+        brandColor1: data.brandColor1 || undefined,
+        brandColor2: data.brandColor2 || undefined,
+        brandColor3: data.brandColor3 || undefined,
+        clientLogo: data.clientLogo || undefined,
+        clientWebsite: data.clientWebsite || undefined,
+        font: data.font || undefined,
+        teamSize: data.teamSize || undefined,
+        startDate: data.startDate || undefined,
+        endDate: data.endDate || undefined,
+        reviewPeriod: data.reviewPeriod || undefined,
+        maintenancePeriod: data.maintenancePeriod || undefined,
+        openDate: data.openDate || undefined,
       };
 
       updateProgress(60, 'AI가 상세 내용을 작성하는 중...');

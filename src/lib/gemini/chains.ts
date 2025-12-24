@@ -47,6 +47,16 @@ export async function generateProposalWithChains(
       meetingNotes: data.meetingNotes || '',
       projectName: data.projectName,
       clientCompanyName: data.clientCompanyName,
+      slogan: data.slogan || '',
+      teamSize: data.teamSize || '',
+      startDate: data.startDate || '',
+      endDate: data.endDate || '',
+      reviewPeriod: data.reviewPeriod || '',
+      maintenancePeriod: data.maintenancePeriod || '',
+      openDate: data.openDate || '',
+      budget: data.budgetMin || '',
+      projectOverview: data.projectOverview || '',
+      priorityFeatures: data.priorityFeatures || '',
     });
 
     const bodyResponse = await model.invoke(bodyPrompt);
@@ -82,7 +92,12 @@ export async function generateProposalWithChains(
     console.log('표지 포함 여부:', hasCover);
     console.log('끝마무리 포함 여부:', hasConclusion);
 
-    const finalHTML = generateHTMLWrapper(combinedContent);
+    const finalHTML = generateHTMLWrapper(
+      combinedContent,
+      data.font,
+      data.brandColor1,
+      data.brandColor2,
+    );
     console.log('최종 HTML 생성 완료, 총 길이:', finalHTML.length);
 
     return finalHTML;

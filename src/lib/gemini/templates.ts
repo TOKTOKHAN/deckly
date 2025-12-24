@@ -26,8 +26,11 @@ export interface TemplateData {
 
   // 기타
   includeSummary?: string;
+  projectOverview?: string; // 프로젝트 개요 (includeSummary와 동일한 용도)
   priorityFeatures?: string;
+  requirements?: string; // 우선순위 기능 (priorityFeatures와 동일한 용도)
   transcriptText?: string; // 미팅 전사록
+  meetingNotes?: string; // 미팅 전사록 (transcriptText와 동일한 용도)
   proposalDate?: string; // 제안서 작성일 (선택, 없으면 현재 날짜 사용)
 }
 
@@ -178,6 +181,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
         <div class="text-center space-y-8 py-16" style="text-align: center !important; padding-top: 4rem !important; padding-bottom: 4rem !important;">
           <div class="space-y-4" style="display: flex; flex-direction: column; gap: 1rem;">
             <p class="text-xl font-semibold text-gray-700" style="font-size: 1.5rem !important; font-weight: semibold !important; color: #374151 !important; line-height: 1.75rem;">
+              ${data.slogan ? `<strong>${data.slogan}</strong><br style="display: block; content: ''; margin-top: 0.5rem;">` : ''}
               ${data.projectName}의 성공적인 추진을 위해 최선을 다하겠습니다.
               <br style="display: block; content: ''; margin-top: 0.5rem;">
               본 제안서에 대한 추가 문의사항이 있으시면 언제든지 연락 주시기 바랍니다.
@@ -196,7 +200,28 @@ export function generateConclusionTemplate(data: TemplateData): string {
 }
 
 // HTML 래퍼 (공통 헤더/스타일)
-export function generateHTMLWrapper(bodyContent: string): string {
+export function generateHTMLWrapper(
+  bodyContent: string,
+  font?: string,
+  brandColor1?: string,
+  brandColo2?: string,
+): string {
+  // 폰트에 따른 CDN 링크 설정
+  const getFontLink = (fontName?: string): string => {
+    switch (fontName) {
+      case 'Noto Sans KR':
+        return '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">';
+      case 'Inter':
+        return '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">';
+      case 'Pretendard':
+      default:
+        return '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />';
+    }
+  };
+
+  const fontFamily = font || 'Pretendard';
+  const fontLink = getFontLink(font);
+
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -204,14 +229,14 @@ export function generateHTMLWrapper(bodyContent: string): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>제안서</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  ${fontLink}
   <style>
     * {
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-family: '${fontFamily}', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     }
     :root {
-      --primary: #4f46e5;
-      --secondary: #1f2937;
+      --primary: ${brandColor1};
+      --secondar${brandColo2};
     }
     @media print {
       @page { 

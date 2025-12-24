@@ -73,41 +73,6 @@ export default function FormView({
   onClose,
   onSubmit,
 }: FormViewProps) {
-  // 각 step별 필수 필드 체크 함수
-  const isStepValid = (stepNumber: number): boolean => {
-    switch (stepNumber) {
-      case 1:
-        // Step 1 필수 필드: projectName, clientCompanyName, brandColor1, brandColor2, brandColor3, font, startDate, endDate
-        return (
-          !!formData.projectName?.trim() &&
-          !!formData.clientCompanyName?.trim() &&
-          !!formData.brandColor1 &&
-          !!formData.brandColor2 &&
-          !!formData.brandColor3 &&
-          !!formData.font &&
-          !!formData.startDate &&
-          !!formData.endDate &&
-          !errors.projectName &&
-          !errors.clientCompanyName &&
-          !errors.brandColor1 &&
-          !errors.brandColor2 &&
-          !errors.brandColor3 &&
-          !errors.font &&
-          !errors.startDate &&
-          !errors.endDate
-        );
-      case 2:
-        // Step 2 필수 필드: transcriptText (최소 50자)
-        return (
-          !!formData.transcriptText &&
-          formData.transcriptText.length >= 50 &&
-          !errors.transcriptText
-        );
-      default:
-        return true;
-    }
-  };
-
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -429,14 +394,18 @@ export default function FormView({
               variant="secondary"
               size="lg"
               onClick={() => onStepChange(step + 1)}
-              disabled={!isStepValid(step)}
               icon={<ChevronRight size={20} />}
               iconPosition="right"
             >
               다음 단계
             </Button>
           ) : (
-            <Button variant="primary" size="lg" onClick={onSubmit} disabled={!isStepValid(step)}>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={onSubmit}
+              disabled={formData.transcriptText.length < 50}
+            >
               AI 제안서 생성하기
             </Button>
           )}
