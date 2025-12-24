@@ -164,7 +164,7 @@ export function generateTableOfContentsTemplate(
         <!-- 카드 그리드 레이아웃 -->
         <div class="grid grid-cols-2 gap-6 mt-8">
           <!-- I. 제안 개요 카드 -->
-          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
             <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">I. 제안 개요</h3>
@@ -179,7 +179,7 @@ export function generateTableOfContentsTemplate(
           </div>
 
           <!-- II. 제안 전략 카드 -->
-          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
             <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">II. 제안 전략</h3>
@@ -193,7 +193,7 @@ export function generateTableOfContentsTemplate(
           </div>
 
           <!-- III. 기술 및 기능 부문 카드 -->
-          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
             <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">III. 기술 및 기능 부문</h3>
@@ -209,7 +209,7 @@ export function generateTableOfContentsTemplate(
           </div>
 
           <!-- IV. 사업 관리 부문 카드 -->
-          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
             <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">IV. 사업 관리 부문</h3>
@@ -224,7 +224,7 @@ export function generateTableOfContentsTemplate(
           </div>
 
           <!-- V. 사업 지원 부문 카드 -->
-          <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow col-span-2" style="border: 1px solid #e5e7eb !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;">
+          <div class="bg-white rounded-xl overflow-hidden col-span-2" style="border: 1px solid #e5e7eb !important;">
             <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">V. 사업 지원 부문</h3>
@@ -415,6 +415,20 @@ export function generateHTMLWrapper(
         align-items: center !important;
         justify-content: center !important;
         text-align: center !important;
+      }
+      /* 목차 카드의 shadow만 제거 (border는 유지) */
+      .a4-page .rounded-xl,
+      .a4-page [class*="rounded-xl"] {
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        filter: none !important;
+      }
+      /* 인라인 스타일의 shadow도 무시하도록 */
+      .a4-page [style*="box-shadow"] {
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
       }
       /* 제목이 페이지 끝에 혼자 남지 않도록 */
       h2, h3 {
