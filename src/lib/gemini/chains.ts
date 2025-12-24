@@ -57,6 +57,8 @@ export async function generateProposalWithChains(
       budget: data.budgetMin || '',
       projectOverview: data.projectOverview || '',
       priorityFeatures: data.priorityFeatures || '',
+      brandColor1: data.brandColor1 || '#4f46e5',
+      brandColor2: data.brandColor2 || '#1f2937',
     });
 
     const bodyResponse = await model.invoke(bodyPrompt);

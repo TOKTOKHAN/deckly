@@ -26,9 +26,10 @@ export const BODY_PROMPT_TEMPLATE = `
 ### Tailwind 테마 기반 Gem (디자인 시스템 - 엄격 준수)
 다음 Tailwind 클래스를 정확히 사용하여 일관된 디자인을 적용하세요:
 
-**색상 (변경 금지):**
-- Primary: bg-indigo-600, text-indigo-600, border-indigo-600 (제목에 사용)
-- Secondary: bg-gray-800, text-gray-800 (사용하지 않음)
+**색상 (브랜드 컬러 사용):**
+- Primary 컬러: {brandColor1} (기본값: #4f46e5)
+- Secondary 컬러: {brandColor2} (기본값: #1f2937)
+- 제목 색상: 반드시 style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
 - Background: bg-white (모든 섹션 배경에 필수 사용)
 
 **간격 (변경 금지):**
@@ -38,7 +39,7 @@ export const BODY_PROMPT_TEMPLATE = `
 
 **타이포그래피 (변경 금지):**
 - 폰트: font-sans (Pretendard) - 자동 적용됨
-- 제목: text-3xl font-bold text-indigo-600 mb-6 (h2에 필수)
+- 제목: text-3xl font-bold mb-6 (h2에 필수) + style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
 - 부제목: text-xl font-semibold (필요시 사용)
 - 본문: text-base (기본 텍스트)
 
@@ -53,7 +54,7 @@ export const BODY_PROMPT_TEMPLATE = `
 **스타일 규칙 (엄격 준수):**
 - 배경색: 반드시 bg-white 클래스 사용
 - 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-none p-8 클래스 필수
-- 제목 색상: 반드시 text-indigo-600 클래스 사용 (다른 색상 사용 금지)
+- 제목 색상: 반드시 style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
 - 제목 크기: text-3xl font-bold 클래스 사용
 - 패딩: p-8 클래스 사용
 
@@ -64,7 +65,7 @@ export const BODY_PROMPT_TEMPLATE = `
 각 섹션은 다음 형식을 정확히 따라야 합니다:
 - 외부: div class="a4-page"
 - 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
-- 제목: h2 class="text-3xl font-bold text-indigo-600 mb-6"
+- 제목: h2 class="text-3xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
 
 1) 프로젝트 개요 (Overview)
    - 제목: "1. 프로젝트 개요"
@@ -90,7 +91,7 @@ export const BODY_PROMPT_TEMPLATE = `
 **스타일 일관성 (최우선):**
 - 표지, 목차, 끝마무리 템플릿과 동일한 스타일 사용 필수
 - 배경색: bg-white 클래스 (다른 배경색 사용 금지)
-- 제목 색상: text-indigo-600 클래스 (다른 색상 사용 금지)
+- 제목 색상: style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용 (브랜드 컬러 적용)
 - 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-none p-8 클래스 (변경 금지)
 
 **구조 규칙:**
@@ -117,14 +118,16 @@ export const BODY_PROMPT_TEMPLATE = `
 3. 각 섹션은 반드시 다음 형식으로 감싸기 (변경 금지):
    - 외부: div class="a4-page"
    - 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
-   - 제목: h2 class="text-3xl font-bold text-indigo-600 mb-6"
+   - 제목: h2 class="text-3xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
 4. 섹션 내용이 길 경우, 여러 개의 a4-page div로 나누어 구성
-5. 제목은 반드시 h2 태그에 class="text-3xl font-bold text-indigo-600 mb-6" 형식 사용
+5. 제목은 반드시 h2 태그에 class="text-3xl font-bold mb-6" + style="color: {brandColor1}" 형식 사용
 6. "1. 프로젝트 개요"로 시작하고 "5. 기대효과"로 끝나야 합니다.
 
 ### 프로젝트 정보
 - 프로젝트명: {projectName}
 - 클라이언트사: {clientCompanyName}
+- 브랜드 컬러 1: {brandColor1}
+- 브랜드 컬러 2: {brandColor2}
 - 슬로건: {slogan}
 - 투입 인력: {teamSize}
 - 프로젝트 기간: {startDate} ~ {endDate}
@@ -171,13 +174,13 @@ export const PROPOSAL_TEMPLATE = `
 **스타일 일관성 (최우선):**
 표지, 목차, 본문, 끝마무리 모두 일관된 스타일을 사용해야 합니다.
 
-**색상 규칙 (엄격 준수):**
-- 표지 배경: bg-gradient-to-br from-indigo-600 to-gray-800 (고정)
+**색상 규칙 (브랜드 컬러 사용):**
+- 표지 배경: 브랜드 컬러 {BRAND_COLOR1}와 {BRAND_COLOR2}를 사용한 그라데이션
 - 본문 배경: bg-white (모든 섹션에 필수)
-- 제목 색상: text-indigo-600 (모든 h2 제목에 필수)
+- 제목 색상: style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)" 사용 (모든 h2 제목에 필수)
 - 본문 텍스트: text-gray-900 또는 text-gray-700
 
-**중요**: indigo-600과 gray-800을 기본 색상으로 사용하세요. 다른 색상을 사용하지 마세요.
+**중요**: 브랜드 컬러 {BRAND_COLOR1}를 제목 색상으로 사용하세요. 기본값은 #4f46e5입니다.
 
 ### 2. Design & Language Guidelines
 1) Company Name: 제안 주체인 회사명은 무조건 대문자 'TOKTOKHAN.DEV'로 표기합니다.
@@ -203,7 +206,7 @@ export const PROPOSAL_TEMPLATE = `
 
 2) 본문 섹션 (5개 필수)
    - 각 섹션은 <div class="a4-page"><div class="proposal-section bg-white rounded-lg shadow-none p-8">로 감싸기
-   - 제목은 h2 태그에 class="text-3xl font-bold text-indigo-600 mb-6" 사용
+   - 제목은 h2 태그에 class="text-3xl font-bold mb-6" + style="color: {BRAND_COLOR1}" 사용
    1) 프로젝트 개요 (Overview): 목적, 문제점, 타겟 니즈
    2) 요구사항 이해 (Requirements): 요구사항 리스트, 리스크, 핵심 기준
    3) 제안하는 방향성 (Solution): 핵심 전략 3가지, 주요 기능 구조도(Box Diagram), MVP 범위
@@ -222,9 +225,9 @@ export const PROPOSAL_TEMPLATE = `
 1) Library: Tailwind CSS (CDN) 사용.
 2) Font Import: Pretendard CDN 사용.
 3) **스타일 일관성 (필수)**: Tailwind 클래스를 사용하여 일관된 스타일을 적용하세요.
-   - 표지: bg-gradient-to-br from-indigo-600 to-gray-800 text-white
+   - 표지: 브랜드 컬러 {BRAND_COLOR1}와 {BRAND_COLOR2}를 사용한 그라데이션 배경
    - 목차/본문/끝마무리: bg-white
-   - 제목: text-3xl font-bold text-indigo-600 mb-6 (h2 태그)
+   - 제목: text-3xl font-bold mb-6 (h2 태그) + style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)"
    - 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-md p-8
 4) **PDF/Print Logic (필수 - 엄격 준수):**
    - **중요**: HTML 내부에 PDF 저장 버튼을 생성하지 마세요. 외부 UI에서 제공됩니다.

@@ -5,6 +5,9 @@ export interface TemplateData {
   // 기본 정보
   projectName: string;
   clientCompanyName: string;
+  clientContact?: string; // 클라이언트 담당자명
+  meetingDate?: string; // 미팅 일자
+  ourContact?: string; // 제안사 담당자명
   slogan?: string; // 제안서 마무리 부분에 사용
   brandColor1?: string; // 브랜드 컬러 1
   brandColor2?: string; // 브랜드 컬러 2

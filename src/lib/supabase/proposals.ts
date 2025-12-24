@@ -40,10 +40,10 @@ interface ProposalRow {
   id: string;
   title: string;
   client: string;
-  client_contact: string;
-  meeting_date: string;
-  proposal_date: string;
-  our_contact: string;
+  client_contact: string | null;
+  meeting_date: string | null; // DATE 타입은 null 허용
+  proposal_date: string | null; // DATE 타입은 null 허용
+  our_contact: string | null;
   content: string | null;
   meeting_notes: string;
   metadata: ProposalMetadata;
@@ -59,11 +59,12 @@ function proposalToRow(proposal: Proposal): Omit<ProposalRow, 'id' | 'created_at
   return {
     title: proposal.projectName,
     client: proposal.clientCompanyName,
-    // 제거 예정 필드들 (빈 문자열로 처리)
-    client_contact: '',
-    meeting_date: '',
-    proposal_date: '',
-    our_contact: '',
+    // 제거 예정 필드들 (DATE 타입은 null로 처리, TEXT는 null 허용)
+    // Proposal 타입에 필드가 없으므로 직접 null 처리
+    client_contact: null,
+    meeting_date: null,
+    proposal_date: proposal.proposalDate || null,
+    our_contact: null,
     content: proposal.content || null,
     meeting_notes: proposal.transcriptText,
     metadata: {
