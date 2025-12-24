@@ -249,22 +249,81 @@ export function generateTableOfContentsTemplate(
 
 // 끝마무리 HTML 템플릿
 export function generateConclusionTemplate(data: TemplateData): string {
+  // 브랜드 컬러 추출
+  const primaryColor = data.brandColor1 || '#4f46e5'; // 기본값: indigo-600
+
+  // 브랜드 컬러를 rgba로 변환 (투명도 20%용)
+  const hexToRgba = (hex: string, alpha: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+  const primaryColorRgba = hexToRgba(primaryColor, 0.2);
+
   return `
     <div class="a4-page bg-white p-8" style="background-color: white !important; padding: 2rem !important;">
-      <div class="max-w-4xl mx-auto" style="max-width: 56rem !important; margin-left: auto !important; margin-right: auto !important;">
-        <div class="text-center space-y-8 py-16" style="text-align: center !important; padding-top: 4rem !important; padding-bottom: 4rem !important;">
-          <div class="space-y-4" style="display: flex; flex-direction: column; gap: 1rem;">
-            <p class="text-xl font-semibold text-gray-700" style="font-size: 1.5rem !important; font-weight: semibold !important; color: #374151 !important; line-height: 1.75rem;">
-              ${data.slogan ? `<strong>${data.slogan}</strong><br style="display: block; content: ''; margin-top: 0.5rem;">` : ''}
-              ${data.projectName}의 성공적인 추진을 위해 최선을 다하겠습니다.
-              <br style="display: block; content: ''; margin-top: 0.5rem;">
-              본 제안서에 대한 추가 문의사항이 있으시면 언제든지 연락 주시기 바랍니다.
-              <br style="display: block; content: ''; margin-top: 0.5rem;">
-              함께 성장하는 파트너가 되기를 기대합니다.
+      <div class="max-w-5xl mx-auto" style="max-width: 64rem !important; margin-left: auto !important; margin-right: auto !important;">
+        <div class="space-y-12 py-12" style="padding-top: 3rem !important; padding-bottom: 3rem !important;">
+          <!-- 메인 제목 -->
+          <div class="text-center">
+            <h1 class="text-5xl font-bold mb-6" style="font-size: 3rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 1.5rem !important; line-height: 1.2;">
+              귀사의 성공적인 미래,<br>TOKTOKHAN.DEV이 함께하겠습니다.
+            </h1>
+            <div class="w-24 h-1 mx-auto mb-8" style="width: 6rem !important; height: 0.25rem !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 2rem !important; background: linear-gradient(to right, ${primaryColor}, ${data.brandColor2 || '#1f2937'}) !important;"></div>
+          </div>
+
+          <!-- 강조 문구 -->
+          <div class="text-center">
+            <p class="text-2xl font-semibold text-gray-800 leading-relaxed" style="font-size: 1.75rem !important; font-weight: 600 !important; color: #1f2937 !important; line-height: 1.75;">
+              "안정적인 기술력과 책임감 있는 수행으로<br>무결점 시스템 구축을 약속합니다."
             </p>
-            <h2 class="text-2xl font-bold text-indigo-600 mb-8" style="font-size: 2.25rem !important; font-weight: bold !important; color: #4f46e5 !important; margin-bottom: 2rem !important;">감사합니다</h2>
-            <div class="mt-12 pt-8 border-t-2 border-indigo-600/20" style="margin-top: 3rem !important; padding-top: 2rem !important; border-top: 2px solid rgba(79, 70, 229, 0.2) !important;">
-              <p class="text-4xl font-bold text-indigo-600 mb-4" style="font-size: 2.25rem !important; font-weight: bold !important; color: #4f46e5 !important; margin-bottom: 1rem !important;">TOKTOKHAN.DEV</p>
+          </div>
+
+          <!-- 3가지 약속 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16" style="margin-top: 4rem !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 2rem !important;">
+            <!-- 01. 검증된 전문성 -->
+            <div class="text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="width: 4rem !important; height: 4rem !important; border-radius: 9999px !important; margin-bottom: 1rem !important; background: ${primaryColorRgba} !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;">
+                <span class="text-2xl font-bold" style="font-size: 1.5rem !important; font-weight: bold !important; color: ${primaryColor} !important;">01</span>
+              </div>
+              <h3 class="text-xl font-bold mb-3" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important;">검증된 전문성</h3>
+              <p class="text-base text-gray-700 leading-relaxed" style="font-size: 1rem !important; color: #374151 !important; line-height: 1.75;">
+                유사 사업 수행 실적 1위의 노하우를<br>본 사업에 쏟아붓겠습니다.
+              </p>
+            </div>
+
+            <!-- 02. 핵심 인력 투입 -->
+            <div class="text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="width: 4rem !important; height: 4rem !important; border-radius: 9999px !important; margin-bottom: 1rem !important; background: ${primaryColorRgba} !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;">
+                <span class="text-2xl font-bold" style="font-size: 1.5rem !important; font-weight: bold !important; color: ${primaryColor} !important;">02</span>
+              </div>
+              <h3 class="text-xl font-bold mb-3" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important;">핵심 인력 투입</h3>
+              <p class="text-base text-gray-700 leading-relaxed" style="font-size: 1rem !important; color: #374151 !important; line-height: 1.75;">
+                본사 최고의 아키텍트와 개발팀을<br>전담 배치하여 품질을 보장합니다.
+              </p>
+            </div>
+
+            <!-- 03. 상생의 파트너십 -->
+            <div class="text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="width: 4rem !important; height: 4rem !important; border-radius: 9999px !important; margin-bottom: 1rem !important; background: ${primaryColorRgba} !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;">
+                <span class="text-2xl font-bold" style="font-size: 1.5rem !important; font-weight: bold !important; color: ${primaryColor} !important;">03</span>
+              </div>
+              <h3 class="text-xl font-bold mb-3" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important;">상생의 파트너십</h3>
+              <p class="text-base text-gray-700 leading-relaxed" style="font-size: 1rem !important; color: #374151 !important; line-height: 1.75;">
+                단순 구축을 넘어 지속 가능한<br>운영 지원 체계를 약속드립니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- 회사 정보 -->
+          <div class="mt-16 pt-8 border-t-2 text-center" style="margin-top: 4rem !important; padding-top: 2rem !important; border-top: 2px solid ${primaryColorRgba} !important; text-align: center !important;">
+            ${data.clientLogo ? `<div class="mb-6"><img src="${data.clientLogo}" alt="로고" class="h-16 mx-auto" style="height: 4rem !important; margin-left: auto !important; margin-right: auto !important;" /></div>` : ''}
+            <p class="text-4xl font-bold mb-2" style="font-size: 2.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.5rem !important;">TOKTOKHAN.DEV</p>
+            <div class="text-sm text-gray-600 mt-4" style="font-size: 0.875rem !important; color: #4b5563 !important; margin-top: 1rem !important;">
+              <p>서울특별시 마포구 동교로 12안길 39</p>
+              <p class="mt-1">E. sales@toktokhan.dev | W. www.toktokhan.dev</p>
             </div>
           </div>
         </div>
