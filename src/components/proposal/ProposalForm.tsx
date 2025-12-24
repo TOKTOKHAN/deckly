@@ -69,8 +69,8 @@ export default function ProposalForm() {
   } = useForm<ProposalFormData>({
     resolver: zodResolver(proposalFormSchema),
     defaultValues: initialFormData,
-    mode: 'onChange', // 실시간 검증
-    reValidateMode: 'onChange', // 재검증도 onChange에서 실행
+    mode: 'all',
+    reValidateMode: 'onChange',
   });
 
   // formData는 watch로 실시간 추적

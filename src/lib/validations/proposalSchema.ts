@@ -8,7 +8,7 @@ export const proposalFormSchema = z
     // 기본 정보
     clientCompanyName: z.string().min(1, '클라이언트사를 입력해주세요'),
     projectName: z.string().min(1, '프로젝트명을 입력해주세요'),
-    slogan: z.string(),
+    slogan: z.string().min(1, '1자 이상 입력해주세요.'),
     brandColor1: z
       .string()
       .regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다 \n (예: #4f46e5)'),
@@ -23,15 +23,15 @@ export const proposalFormSchema = z
     font: z.string().min(1, '폰트를 선택해주세요'),
 
     // 프로젝트 정보
-    teamSize: z.string(),
+    teamSize: z.string().min(1, '투입 인력을 입력해주세요'),
     startDate: z.string().min(1, '시작일을 선택해주세요'),
     endDate: z.string().min(1, '종료일을 선택해주세요'),
-    reviewPeriod: z.string(),
-    maintenancePeriod: z.string(),
+    reviewPeriod: z.string().min(1, '검수 기간을 입력해주세요'),
+    maintenancePeriod: z.string().min(1, '유지보수 기간을 입력해주세요'),
     openDate: z.string().optional(),
 
     // 예산
-    budgetMin: z.string(),
+    budgetMin: z.string().min(1, '예산을 입력해주세요'),
 
     // 기타
     target: z.array(z.string()),

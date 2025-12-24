@@ -74,6 +74,39 @@ export default function FormView({
   onClose,
   onSubmit,
 }: FormViewProps) {
+  // Step 1 필수 필드 검증
+  const isStep1Valid = () => {
+    // Hex 색상 코드 검증
+    const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
+
+    // 필수 필드 체크
+    const hasProjectName = formData.projectName && formData.projectName.trim().length > 0;
+    const hasClientCompanyName =
+      formData.clientCompanyName && formData.clientCompanyName.trim().length > 0;
+    const hasBrandColor1 = formData.brandColor1 && hexColorRegex.test(formData.brandColor1);
+    const hasBrandColor2 = formData.brandColor2 && hexColorRegex.test(formData.brandColor2);
+    const hasBrandColor3 = formData.brandColor3 && hexColorRegex.test(formData.brandColor3);
+    const hasFont = formData.font && formData.font.trim().length > 0;
+    const hasStartDate = formData.startDate && formData.startDate.trim().length > 0;
+    const hasEndDate = formData.endDate && formData.endDate.trim().length > 0;
+
+    // 종료일이 시작일 이후인지 확인
+    const isDateValid =
+      hasStartDate && hasEndDate && new Date(formData.endDate) >= new Date(formData.startDate);
+
+    return (
+      hasProjectName &&
+      hasClientCompanyName &&
+      hasBrandColor1 &&
+      hasBrandColor2 &&
+      hasBrandColor3 &&
+      hasFont &&
+      hasStartDate &&
+      hasEndDate &&
+      isDateValid
+    );
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -346,6 +379,7 @@ export default function FormView({
               onClick={() => onStepChange(step + 1)}
               icon={<ChevronRight size={20} />}
               iconPosition="right"
+              disabled={!isStep1Valid()}
             >
               다음 단계
             </Button>
