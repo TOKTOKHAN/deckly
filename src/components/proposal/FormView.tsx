@@ -5,6 +5,7 @@ import { UseFormRegister, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { ProposalFormData } from '@/types/proposal';
 import Input from '@/components/form/Input';
 import Textarea from '@/components/form/Textarea';
+import ColorInput from '@/components/form/ColorInput';
 import Button from '@/components/ui/Button';
 
 // 아이콘 컴포넌트
@@ -117,99 +118,48 @@ export default function FormView({
                 고객사 로고나 사이트에서 참조하여 브랜드 컬러를 선택해주세요.
               </p>
               <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    컬러 1
-                    {errors.brandColor1 && (
-                      <span className="ml-2 text-xs text-red-500">
-                        {errors.brandColor1.message}
-                      </span>
-                    )}
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      id="brandColor1"
-                      value={formData.brandColor1}
-                      onChange={e => {
-                        setValue('brandColor1', e.target.value, { shouldValidate: true });
-                      }}
-                      className="h-10 w-20 cursor-pointer rounded-lg border border-gray-300"
-                    />
-                    <input
-                      type="text"
-                      {...register('brandColor1')}
-                      className={`flex-1 rounded-xl border p-2 text-sm transition focus:outline-none focus:ring-2 ${
-                        errors.brandColor1
-                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                          : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
-                      }`}
-                      placeholder="#4f46e5"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    컬러 2
-                    {errors.brandColor2 && (
-                      <span className="ml-2 text-xs text-red-500">
-                        {errors.brandColor2.message}
-                      </span>
-                    )}
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      id="brandColor2"
-                      value={formData.brandColor2}
-                      onChange={e => {
-                        setValue('brandColor2', e.target.value, { shouldValidate: true });
-                      }}
-                      className="h-10 w-20 cursor-pointer rounded-lg border border-gray-300"
-                    />
-                    <input
-                      type="text"
-                      {...register('brandColor2')}
-                      className={`flex-1 rounded-xl border p-2 text-sm transition focus:outline-none focus:ring-2 ${
-                        errors.brandColor2
-                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                          : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
-                      }`}
-                      placeholder="#1f2937"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    컬러 3
-                    {errors.brandColor3 && (
-                      <span className="ml-2 text-xs text-red-500">
-                        {errors.brandColor3.message}
-                      </span>
-                    )}
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      id="brandColor3"
-                      value={formData.brandColor3}
-                      onChange={e => {
-                        setValue('brandColor3', e.target.value, { shouldValidate: true });
-                      }}
-                      className="h-10 w-20 cursor-pointer rounded-lg border border-gray-300"
-                    />
-                    <input
-                      type="text"
-                      {...register('brandColor3')}
-                      className={`flex-1 rounded-xl border p-2 text-sm transition focus:outline-none focus:ring-2 ${
-                        errors.brandColor3
-                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                          : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
-                      }`}
-                      placeholder="#ffffff"
-                    />
-                  </div>
-                </div>
+                <ColorInput
+                  label="컬러 1"
+                  id="brandColor1"
+                  value={formData.brandColor1}
+                  error={errors.brandColor1?.message}
+                  placeholder="#4f46e5"
+                  onChange={value => setValue('brandColor1', value, { shouldValidate: true })}
+                  onTextChange={e => {
+                    register('brandColor1').onChange(e);
+                    setValue('brandColor1', e.target.value, { shouldValidate: true });
+                  }}
+                  ref={register('brandColor1').ref}
+                  required
+                />
+                <ColorInput
+                  label="컬러 2"
+                  id="brandColor2"
+                  value={formData.brandColor2}
+                  error={errors.brandColor2?.message}
+                  placeholder="#1f2937"
+                  onChange={value => setValue('brandColor2', value, { shouldValidate: true })}
+                  onTextChange={e => {
+                    register('brandColor2').onChange(e);
+                    setValue('brandColor2', e.target.value, { shouldValidate: true });
+                  }}
+                  ref={register('brandColor2').ref}
+                  required
+                />
+                <ColorInput
+                  label="컬러 3"
+                  id="brandColor3"
+                  value={formData.brandColor3}
+                  error={errors.brandColor3?.message}
+                  placeholder="#ffffff"
+                  onChange={value => setValue('brandColor3', value, { shouldValidate: true })}
+                  onTextChange={e => {
+                    register('brandColor3').onChange(e);
+                    setValue('brandColor3', e.target.value, { shouldValidate: true });
+                  }}
+                  ref={register('brandColor3').ref}
+                  required
+                />
               </div>
             </div>
 

@@ -9,9 +9,15 @@ export const proposalFormSchema = z
     clientCompanyName: z.string().min(1, '클라이언트사를 입력해주세요'),
     projectName: z.string().min(1, '프로젝트명을 입력해주세요'),
     slogan: z.string(),
-    brandColor1: z.string().regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다 (예: #4f46e5)'),
-    brandColor2: z.string().regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다 (예: #1f2937)'),
-    brandColor3: z.string().regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다 (예: #ffffff)'),
+    brandColor1: z
+      .string()
+      .regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다 \n (예: #4f46e5)'),
+    brandColor2: z
+      .string()
+      .regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다\n (예: #1f2937)'),
+    brandColor3: z
+      .string()
+      .regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다 \n(예: #ffffff)'),
     clientLogo: z.string().optional(),
     clientWebsite: z.string().url('올바른 URL 형식이 아닙니다').optional().or(z.literal('')),
     font: z.string().min(1, '폰트를 선택해주세요'),
