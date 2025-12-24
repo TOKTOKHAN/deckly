@@ -13,7 +13,8 @@ export default function PreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<'cover' | 'toc' | 'conclusion' | 'all'>(
     'all',
   );
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const printIframeRef = useRef<HTMLIFrameElement | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const sampleData: TemplateData = {
     projectName: '사업제안서 자동화 플랫폼',
@@ -22,55 +23,106 @@ export default function PreviewPage() {
     brandColor2: '#975ef2',
   };
 
-  // iframe 내용 업데이트
-  useEffect(() => {
-    if (iframeRef.current) {
-      let templateContent = '';
+  // 템플릿 내용 생성
+  const getTemplateContent = () => {
+    let templateContent = '';
 
-      switch (selectedTemplate) {
-        case 'cover':
-          templateContent = generateCoverTemplate(sampleData);
-          break;
-        case 'toc':
-          templateContent = generateTableOfContentsTemplate(
-            sampleData.brandColor1,
-            sampleData.brandColor2,
-          );
-          break;
-        case 'conclusion':
-          templateContent = generateConclusionTemplate(sampleData);
-          break;
-        case 'all':
-          const cover = generateCoverTemplate(sampleData);
-          const toc = generateTableOfContentsTemplate(
-            sampleData.brandColor1,
-            sampleData.brandColor2,
-          );
-          const conclusion = generateConclusionTemplate(sampleData);
-          templateContent = cover + toc + conclusion;
-          break;
-        default:
-          templateContent = '';
-      }
-
-      // generateHTMLWrapper로 감싸서 Tailwind CDN이 로드되도록 함
-      const fullHTML = generateHTMLWrapper(
-        templateContent,
-        sampleData.font,
-        sampleData.brandColor1,
-        sampleData.brandColor2,
-      );
-
-      const iframe = iframeRef.current;
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-      if (iframeDoc) {
-        iframeDoc.open();
-        iframeDoc.write(fullHTML);
-        iframeDoc.close();
-      }
+    switch (selectedTemplate) {
+      case 'cover':
+        templateContent = generateCoverTemplate(sampleData);
+        break;
+      case 'toc':
+        templateContent = generateTableOfContentsTemplate(
+          sampleData.brandColor1,
+          sampleData.brandColor2,
+        );
+        break;
+      case 'conclusion':
+        templateContent = generateConclusionTemplate(sampleData);
+        break;
+      case 'all':
+        const cover = generateCoverTemplate(sampleData);
+        const toc = generateTableOfContentsTemplate(sampleData.brandColor1, sampleData.brandColor2);
+        const conclusion = generateConclusionTemplate(sampleData);
+        templateContent = cover + toc + conclusion;
+        break;
+      default:
+        templateContent = '';
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTemplate]);
+
+    return templateContent;
+  };
+
+  // Tailwind CDN 및 폰트 동적 로드
+  useEffect(() => {
+    // Tailwind CDN이 이미 로드되어 있는지 확인
+    if (document.querySelector('script[src="https://cdn.tailwindcss.com"]')) {
+      return;
+    }
+
+    // Tailwind CDN 스크립트 로드
+    const tailwindScript = document.createElement('script');
+    tailwindScript.src = 'https://cdn.tailwindcss.com';
+    tailwindScript.async = true;
+    document.head.appendChild(tailwindScript);
+
+    // Pretendard 폰트 로드
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href =
+      'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css';
+    if (!document.querySelector(`link[href="${fontLink.href}"]`)) {
+      document.head.appendChild(fontLink);
+    }
+
+    return () => {};
+  }, []);
+
+  // PDF 인쇄 함수
+  const handlePrint = () => {
+    const templateContent = getTemplateContent();
+    if (!templateContent) {
+      alert('인쇄할 내용이 없습니다.');
+      return;
+    }
+
+    // generateHTMLWrapper로 감싸서 완전한 HTML 생성
+    const fullHTML = generateHTMLWrapper(
+      templateContent,
+      sampleData.font,
+      sampleData.brandColor1,
+      sampleData.brandColor2,
+    );
+
+    // 숨겨진 iframe 생성 (화면에 보이지 않음)
+    if (!printIframeRef.current) {
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = 'none';
+      document.body.appendChild(iframe);
+      printIframeRef.current = iframe;
+    }
+
+    const iframe = printIframeRef.current;
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+
+    if (iframeDoc) {
+      iframeDoc.open();
+      iframeDoc.write(fullHTML);
+      iframeDoc.close();
+
+      setTimeout(() => {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        }
+      }, 500);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -129,24 +181,17 @@ export default function PreviewPage() {
         <div className="rounded-lg bg-white p-8 shadow-xl">
           <div className="mb-4 flex justify-end gap-3">
             <button
-              onClick={() => {
-                if (iframeRef.current?.contentWindow) {
-                  iframeRef.current.contentWindow.print();
-                }
-              }}
+              onClick={handlePrint}
               className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition hover:bg-indigo-700"
             >
               📄 PDF 미리보기 (인쇄)
             </button>
           </div>
-          <div className="overflow-hidden rounded-lg border-2 border-gray-200">
-            <iframe
-              ref={iframeRef}
-              className="min-h-[800px] w-full border-0"
-              title="템플릿 미리보기"
-              sandbox="allow-same-origin allow-scripts allow-modals"
-            />
-          </div>
+          <div
+            ref={contentRef}
+            className="a4-preview-container"
+            dangerouslySetInnerHTML={{ __html: getTemplateContent() }}
+          />
         </div>
 
         <div className="mt-8 rounded-lg bg-white p-6 shadow-md">
