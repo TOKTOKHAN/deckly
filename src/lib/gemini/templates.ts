@@ -228,30 +228,14 @@ export async function generateCoverTemplate(
                 // 나머지는 두 번째 줄
                 const secondLineWords = words.slice(firstLineWords.length);
 
-                // 첫 줄 렌더링
-                const firstLine = firstLineWords
-                  .map((word, index) => {
-                    if (index === 0) {
-                      return word;
-                    } else if (index === 1) {
-                      return `<span class="text-transparent bg-clip-text" style="background: linear-gradient(to right, white, rgba(255, 255, 255, 0.5)) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;">${word}</span>`;
-                    } else {
-                      return word;
-                    }
-                  })
-                  .join(' ');
+                // 첫 줄 렌더링 (브랜드 컬러 → 흰색 그라데이션)
+                const firstLineText = firstLineWords.join(' ');
+                const firstLine = `<span class="text-transparent bg-clip-text" style="background: linear-gradient(to right, ${tertiaryColor}, white) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;">${firstLineText}</span>`;
 
-                // 두 번째 줄 렌더링 (마지막 단어는 브랜드 컬러)
-                const secondLine = secondLineWords
-                  .map((word, index) => {
-                    if (index === secondLineWords.length - 1) {
-                      return `<span style="color: ${primaryColor} !important;">${word}</span>`;
-                    }
-                    return word;
-                  })
-                  .join(' ');
+                // 두 번째 줄 렌더링 (흰색)
+                const secondLine = secondLineWords.join(' ');
 
-                return `${firstLine}<br>${secondLine}`;
+                return `${firstLine}<br><span style="display: block; margin-top: 0.4rem !important;">${secondLine}</span>`;
               }
             })()}
           </h1>
@@ -491,7 +475,8 @@ export function generateHTMLWrapper(
   bodyContent: string,
   font?: string,
   brandColor1?: string,
-  brandColo2?: string,
+  brandColor2?: string,
+  brandColor3?: string,
 ): string {
   // 폰트에 따른 CDN 링크 설정
   const getFontLink = (fontName?: string): string => {
@@ -523,7 +508,8 @@ export function generateHTMLWrapper(
     }
     :root {
       --primary: ${brandColor1};
-      --secondar${brandColo2};
+      --secondary: ${brandColor2};
+      --tertiary: ${brandColor3};
     }
     @keyframes pulse {
       0%, 100% {

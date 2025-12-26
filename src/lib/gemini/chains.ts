@@ -176,6 +176,7 @@ export async function generateProposalWithChains(
       data.font,
       data.brandColor1,
       data.brandColor2,
+      data.brandColor3,
     );
     console.log('최종 HTML 생성 완료, 총 길이:', finalHTML.length);
 

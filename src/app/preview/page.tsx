@@ -22,6 +22,7 @@ export default function PreviewPage() {
       clientCompanyName: 'TOKTOKHAN.DEV',
       brandColor1: '#52b8f2',
       brandColor2: '#975ef2',
+      brandColor3: '#f5e8e0',
     }),
     [],
   );
@@ -100,6 +101,7 @@ export default function PreviewPage() {
       sampleData.font,
       sampleData.brandColor1,
       sampleData.brandColor2,
+      sampleData.brandColor3,
     );
 
     // 숨겨진 iframe 생성 (화면에 보이지 않음)
