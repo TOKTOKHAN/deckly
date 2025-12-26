@@ -407,7 +407,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
           <!-- 메인 제목 -->
           <div class="text-center">
             <h1 class="text-5xl font-bold mb-6" style="font-size: 3rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 1.5rem !important; line-height: 1.2;">
-              귀사의 성공적인 미래,<br>TOKTOKHAN.DEV이 함께하겠습니다.
+              ${data.clientCompanyName}의 성공적인 미래,<br>TOKTOKHAN.DEV가 함께하겠습니다.
             </h1>
             <div class="w-24 h-1 mx-auto mb-8" style="width: 6rem !important; height: 0.25rem !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 2rem !important; background: linear-gradient(to right, ${primaryColor}, ${data.brandColor2 || '#1f2937'}) !important;"></div>
           </div>
@@ -428,7 +428,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
               </div>
               <h3 class="text-xl font-bold mb-3" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important;">검증된 전문성</h3>
               <p class="text-base text-gray-700 leading-relaxed" style="font-size: 1rem !important; color: #374151 !important; line-height: 1.75;">
-                유사 사업 수행 실적 1위의 노하우를<br>본 사업에 쏟아붓겠습니다.
+                유사 사업 수행 경험의 노하우를<br>본 사업에 쏟아붓겠습니다.
               </p>
             </div>
 
