@@ -13,6 +13,7 @@ export interface TemplateData {
   brandColor2?: string; // 브랜드 컬러 2
   brandColor3?: string; // 브랜드 컬러 3
   clientLogo?: string; // 고객사 로고 URL (선택)
+  ourLogo?: string; // 제안사 로고 URL (선택)
   clientWebsite?: string; // 고객사 사이트 URL (선택)
   font?: string; // 폰트 (기본값: 'Pretendard')
 
@@ -390,6 +391,9 @@ export function generateConclusionTemplate(data: TemplateData): string {
   // 브랜드 컬러 추출
   const primaryColor = data.brandColor1 || '#4f46e5'; // 기본값: indigo-600
 
+  // 제안사 로고 (기본값: tokdev-logo.jpg)
+  const ourLogo = data.ourLogo || '/images/tokdev-logo.jpg';
+
   // 브랜드 컬러를 rgba로 변환 (투명도 20%용)
   const hexToRgba = (hex: string, alpha: number): string => {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -404,6 +408,19 @@ export function generateConclusionTemplate(data: TemplateData): string {
     <div class="a4-page bg-white p-8" style="background-color: white !important; padding: 2rem !important;">
       <div class="max-w-5xl mx-auto" style="max-width: 64rem !important; margin-left: auto !important; margin-right: auto !important;">
         <div class="space-y-12 py-12" style="padding-top: 3rem !important; padding-bottom: 3rem !important;">
+          <!-- 로고 영역 (고객사 로고 × 제안사 로고) -->
+          ${
+            data.clientLogo || ourLogo
+              ? `
+          <div class="flex justify-center items-center gap-4 mb-8" style="display: flex !important; justify-content: center !important; align-items: center !important; gap: 1rem !important; margin-bottom: 2rem !important;">
+            ${data.clientLogo ? `<img src="${data.clientLogo}" alt="고객사 로고" class="h-16" style="height: 4rem !important; max-width: 100% !important; object-fit: contain !important;" />` : ''}
+            <span class="text-2xl font-bold text-gray-400" style="font-size: 2rem !important; font-weight: bold !important; color: black !important;">X</span>
+            <img src="${ourLogo}" alt="제안사 로고" class="h-16" style="height: 4rem !important; max-width: 100% !important; object-fit: contain !important;" />
+          </div>
+          `
+              : ''
+          }
+          
           <!-- 메인 제목 -->
           <div class="text-center">
             <h1 class="text-5xl font-bold mb-6" style="font-size: 3rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 1.5rem !important; line-height: 1.2;">
@@ -457,7 +474,6 @@ export function generateConclusionTemplate(data: TemplateData): string {
 
           <!-- 회사 정보 -->
           <div class="mt-16 pt-8 border-t-2 text-center" style="margin-top: 4rem !important; padding-top: 2rem !important; border-top: 2px solid ${primaryColorRgba} !important; text-align: center !important;">
-            ${data.clientLogo ? `<div class="mb-6"><img src="${data.clientLogo}" alt="로고" class="h-16 mx-auto" style="height: 4rem !important; margin-left: auto !important; margin-right: auto !important;" /></div>` : ''}
             <p class="text-4xl font-bold mb-2" style="font-size: 2.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.5rem !important;">TOKTOKHAN.DEV</p>
             <div class="text-sm text-gray-600 mt-4" style="font-size: 0.875rem !important; color: #4b5563 !important; margin-top: 1rem !important;">
               <p>서울특별시 마포구 동교로 12안길 39</p>

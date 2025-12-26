@@ -8,6 +8,7 @@ import {
   generateHTMLWrapper,
   TemplateData,
 } from '@/lib/gemini/templates';
+import clientLogo from '../../../public/images/Domino_pizza_logo.svg';
 
 export default function PreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<'cover' | 'toc' | 'conclusion' | 'all'>(
@@ -19,10 +20,11 @@ export default function PreviewPage() {
   const sampleData: TemplateData = useMemo(
     () => ({
       projectName: '사업제안서 자동화 플랫폼 기획 및 구축',
-      clientCompanyName: '신성오',
+      clientCompanyName: `Domino's Pizza`,
       brandColor1: '#52b8f2',
       brandColor2: '#975ef2',
       brandColor3: '#f5e8e0',
+      clientLogo: clientLogo.src as string,
     }),
     [],
   );
