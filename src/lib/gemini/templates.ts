@@ -413,9 +413,9 @@ export function generateConclusionTemplate(data: TemplateData): string {
             data.clientLogo || ourLogo
               ? `
           <div class="flex justify-center items-center gap-4 mb-8" style="display: flex !important; justify-content: center !important; align-items: center !important; gap: 1rem !important; margin-bottom: 2rem !important;">
-            ${data.clientLogo ? `<img src="${data.clientLogo}" alt="고객사 로고" class="h-16" style="height: 4rem !important; max-width: 100% !important; object-fit: contain !important;" />` : ''}
-            <span class="text-2xl font-bold text-gray-400" style="font-size: 2rem !important; font-weight: bold !important; color: black !important;">X</span>
-            <img src="${ourLogo}" alt="제안사 로고" class="h-16" style="height: 4rem !important; max-width: 100% !important; object-fit: contain !important;" />
+            ${data.clientLogo ? `<img src="${data.clientLogo}" alt="고객사 로고" class="h-16" style="height: 6rem !important; max-width: 100% !important; object-fit: contain !important;" />` : ''}
+            <span class="text-2xl text-gray-400" style="font-size: 2rem !important; color: black !important;">X</span>
+            <img src="${ourLogo}" alt="제안사 로고" class="h-16" style="height: 6rem !important; max-width: 100% !important; object-fit: contain !important;" />
           </div>
           `
               : ''
@@ -423,7 +423,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
           
           <!-- 메인 제목 -->
           <div class="text-center">
-            <h1 class="text-5xl font-bold mb-6" style="font-size: 3rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 1.5rem !important; line-height: 1.2;">
+            <h1 class="text-5xl font-bold mb-6" style="font-size: 2.5rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 1.5rem !important; line-height: 1.2;">
               ${data.clientCompanyName}의 성공적인 미래,<br>TOKTOKHAN.DEV가 함께하겠습니다.
             </h1>
             <div class="w-24 h-1 mx-auto mb-8" style="width: 6rem !important; height: 0.25rem !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 2rem !important; background: linear-gradient(to right, ${primaryColor}, ${data.brandColor2 || '#1f2937'}) !important;"></div>
