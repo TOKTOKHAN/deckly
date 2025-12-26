@@ -18,6 +18,7 @@ export interface ProposalRequest {
   brandColor2?: string; // 브랜드 컬러 2
   brandColor3?: string; // 브랜드 컬러 3
   clientLogo?: string; // 고객사 로고 URL
+  ourLogo?: string; // 제안사 로고 URL
   clientWebsite?: string; // 고객사 사이트 URL
   font?: string; // 폰트
   teamSize?: string; // 투입 인력

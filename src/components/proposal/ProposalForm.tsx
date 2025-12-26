@@ -23,6 +23,7 @@ const initialFormData: ProposalFormData = {
   brandColor2: '#1f2937', // gray-800 (기본 브랜드 컬러)
   brandColor3: '#ffffff', // white (기본 브랜드 컬러)
   clientLogo: undefined,
+  ourLogo: undefined,
   clientWebsite: undefined,
   font: 'Pretendard',
 
@@ -148,6 +149,7 @@ export default function ProposalForm() {
         brandColor2: data.brandColor2 || undefined,
         brandColor3: data.brandColor3 || undefined,
         clientLogo: data.clientLogo || undefined,
+        ourLogo: data.ourLogo || undefined,
         clientWebsite: data.clientWebsite || undefined,
         font: data.font || undefined,
         teamSize: data.teamSize || undefined,

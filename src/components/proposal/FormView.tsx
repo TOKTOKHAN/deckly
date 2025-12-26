@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { UseFormRegister, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { ProposalFormData } from '@/types/proposal';
 import Input from '@/components/form/Input';
@@ -74,6 +74,43 @@ export default function FormView({
   onClose,
   onSubmit,
 }: FormViewProps) {
+  // 파일 input ref
+  const clientLogoRef = useRef<HTMLInputElement>(null);
+  const ourLogoRef = useRef<HTMLInputElement>(null);
+
+  // 파일 선택 핸들러
+  const handleFileSelect = (
+    field: 'clientLogo' | 'ourLogo',
+    _ref: React.RefObject<HTMLInputElement>,
+  ) => {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          // base64 데이터 URL을 저장
+          setValue(field, result, { shouldValidate: true });
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  };
+
+  // 이미지 삭제 핸들러
+  const handleRemoveImage = (
+    field: 'clientLogo' | 'ourLogo',
+    ref: React.RefObject<HTMLInputElement>,
+  ) => {
+    return () => {
+      setValue(field, undefined, { shouldValidate: true });
+      // 파일 input 초기화
+      if (ref.current) {
+        ref.current.value = '';
+      }
+    };
+  };
+
   // Step 1 필수 필드 검증
   const isStep1Valid = () => {
     // Hex 색상 코드 검증
@@ -199,25 +236,83 @@ export default function FormView({
             {/* 브랜드 참고 자료 */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-800">브랜드 참고 자료</h3>
-              <Input
-                label="고객사 로고"
-                id="clientLogo"
-                name="clientLogo"
-                type="file"
-                accept="image/*"
-                onChange={e => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    // TODO: 파일 업로드 로직 구현 필요
-                    // 현재는 파일명만 표시
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      // 파일 업로드 후 URL을 formData.clientLogo에 저장
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                {/* 고객사 로고 */}
+                <div className="space-y-2">
+                  <label htmlFor="clientLogo" className="text-sm font-semibold text-gray-700">
+                    고객사 로고
+                    {errors.clientLogo && (
+                      <span className="ml-2 text-xs text-red-500">{errors.clientLogo.message}</span>
+                    )}
+                  </label>
+                  <input
+                    ref={clientLogoRef}
+                    id="clientLogo"
+                    name="clientLogo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect('clientLogo', clientLogoRef)}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+                  />
+                  {formData.clientLogo && (
+                    <div className="relative mt-2 inline-block">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={formData.clientLogo}
+                        alt="고객사 로고 미리보기"
+                        className="h-20 w-auto rounded border border-gray-200 object-contain"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage('clientLogo', clientLogoRef)}
+                        className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white transition hover:bg-red-600"
+                        aria-label="이미지 삭제"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {/* 제안사 로고 */}
+                <div className="space-y-2">
+                  <label htmlFor="ourLogo" className="text-sm font-semibold text-gray-700">
+                    제안사 로고
+                    {errors.ourLogo && (
+                      <span className="ml-2 text-xs text-red-500">{errors.ourLogo.message}</span>
+                    )}
+                  </label>
+                  <input
+                    ref={ourLogoRef}
+                    id="ourLogo"
+                    name="ourLogo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect('ourLogo', ourLogoRef)}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+                  />
+                  {formData.ourLogo && (
+                    <div className="relative mt-2 inline-block">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={formData.ourLogo}
+                        alt="제안사 로고 미리보기"
+                        className="h-20 w-auto rounded border border-gray-200 object-contain"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage('ourLogo', ourLogoRef)}
+                        className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white transition hover:bg-red-600"
+                        aria-label="이미지 삭제"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <p className="text-xs text-gray-500">
+                이미지 파일을 선택하면 자동으로 미리보기가 표시됩니다.
+              </p>
             </div>
 
             {/* 폰트 */}

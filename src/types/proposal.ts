@@ -11,6 +11,7 @@ export interface ProposalFormData {
   brandColor2: string; // 브랜드 컬러 2
   brandColor3: string; // 브랜드 컬러 3
   clientLogo?: string; // 고객사 로고 URL (선택)
+  ourLogo?: string; // 제안사 로고 URL (선택)
   clientWebsite?: string; // 고객사 사이트 URL (선택)
   font: string; // 폰트 (기본값: 'Pretendard')
 

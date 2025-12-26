@@ -179,8 +179,21 @@ export async function generateCoverTemplate(
         ${
           data.clientCompanyName
             ? `
-        <div class="mb-16" style="margin-bottom: 4rem !important;">
-          <div class="flex items-center space-x-3 mb-2" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.5rem !important;">
+        <div class="mb-16" style="margin-bottom: 3rem !important;">
+          <div class="flex items-center justify-center space-x-2 mb-2" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 0.2rem !important; margin-bottom: 0.5rem !important;">
+            ${
+              data.clientLogo
+                ? `
+            <!-- 고객사 로고 (연하게 표시, 왼쪽) -->
+            <img 
+              src="${data.clientLogo}" 
+              alt="${data.clientCompanyName} 로고" 
+              class="h-12 w-auto opacity-20" 
+              style="height: 4rem !important; max-width: 200px !important; object-fit: contain !important; opacity: 0.2 !important; filter: brightness(1.2) !important; flex-shrink: 0 !important;"
+            />
+            `
+                : ''
+            }
             <h2 class="text-3xl font-black tracking-tighter text-white italic" style="font-size: 1.875rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; font-style: italic !important;">
               ${data.clientCompanyName}
             </h2>

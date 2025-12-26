@@ -19,6 +19,7 @@ export const proposalFormSchema = z
       .string()
       .regex(hexColorRegex, '올바른 색상 코드 형식이 아닙니다 \n(예: #ffffff)'),
     clientLogo: z.string().optional(),
+    ourLogo: z.string().optional(),
     clientWebsite: z.string().url('올바른 URL 형식이 아닙니다').optional().or(z.literal('')),
     font: z.string().min(1, '폰트를 선택해주세요'),
 
