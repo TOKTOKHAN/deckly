@@ -18,7 +18,7 @@ export default function PreviewPage() {
 
   const sampleData: TemplateData = useMemo(
     () => ({
-      projectName: '사업제안서 자동화 플랫폼',
+      projectName: '사업제안서 자동화 플랫폼 기획 및 구축',
       clientCompanyName: 'TOKTOKHAN.DEV',
       brandColor1: '#52b8f2',
       brandColor2: '#975ef2',

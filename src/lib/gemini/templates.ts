@@ -63,6 +63,7 @@ export const TAILWIND_THEME = {
 export async function generateCoverTemplate(
   data: TemplateData,
   keywordCards?: Array<{ icon?: string; title: string }>,
+  description?: string,
 ): Promise<string> {
   // 브랜드 컬러 추출
   const primaryColor = data.brandColor1 || '#4f46e5'; // Primary - 강조, 보더
@@ -194,7 +195,7 @@ export async function generateCoverTemplate(
 
         <!-- 메인 타이틀 -->
         <div class="relative">
-          <h1 class="text-7xl font-black text-white leading-[0.9] mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 0.9 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">
+          <h1 class="text-7xl font-black text-white leading-[0.9] mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 1.3 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">
             ${(() => {
               const words = data.projectName.split(' ');
               if (words.length === 1) {
@@ -202,24 +203,65 @@ export async function generateCoverTemplate(
               } else if (words.length === 2) {
                 return `${words[0]}<br><span style="color: ${primaryColor} !important;">${words[1]}</span>`;
               } else {
-                return words
+                // 방법 3: 글자수 기반 + 균형 조정
+                const totalLength = data.projectName.length;
+                const targetLength = Math.ceil(totalLength / 2);
+
+                const firstLineWords = [];
+                let firstLineLength = 0;
+
+                // 첫 줄에 단어 추가 (절반 지점까지)
+                for (let i = 0; i < words.length; i++) {
+                  const word = words[i];
+                  const space = firstLineWords.length > 0 ? 1 : 0;
+                  const newLength = firstLineLength + space + word.length;
+
+                  // 절반 지점을 넘지 않으면 첫 줄에 추가
+                  if (newLength <= targetLength || firstLineWords.length === 0) {
+                    firstLineWords.push(word);
+                    firstLineLength = newLength;
+                  } else {
+                    break;
+                  }
+                }
+
+                // 나머지는 두 번째 줄
+                const secondLineWords = words.slice(firstLineWords.length);
+
+                // 첫 줄 렌더링
+                const firstLine = firstLineWords
                   .map((word, index) => {
                     if (index === 0) {
                       return word;
                     } else if (index === 1) {
                       return `<span class="text-transparent bg-clip-text" style="background: linear-gradient(to right, white, rgba(255, 255, 255, 0.5)) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;">${word}</span>`;
                     } else {
-                      return `<span style="color: ${primaryColor} !important;">${word}</span>`;
+                      return word;
                     }
                   })
                   .join(' ');
+
+                // 두 번째 줄 렌더링 (마지막 단어는 브랜드 컬러)
+                const secondLine = secondLineWords
+                  .map((word, index) => {
+                    if (index === secondLineWords.length - 1) {
+                      return `<span style="color: ${primaryColor} !important;">${word}</span>`;
+                    }
+                    return word;
+                  })
+                  .join(' ');
+
+                return `${firstLine}<br>${secondLine}`;
               }
             })()}
           </h1>
 
           <div class="pl-6 border-l-2" style="padding-left: 1.5rem !important; border-left: 2px solid ${primaryColor} !important;">
             <p class="text-lg font-light leading-relaxed max-w-xl" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 1.125rem !important; font-weight: 300 !important; line-height: 1.75 !important; max-width: 36rem !important;">
-              ${data.clientCompanyName ? `${data.clientCompanyName}를 위한` : ''} 구체적인 프로젝트 기획 제안서
+              ${
+                description ||
+                `${data.clientCompanyName ? `${data.clientCompanyName}를 위한` : ''} 프로젝트 기획 제안서`
+              }
             </p>
           </div>
         </div>
