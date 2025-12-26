@@ -62,11 +62,20 @@ export const TAILWIND_THEME = {
 // 표지 HTML 템플릿
 export function generateCoverTemplate(data: TemplateData): string {
   // 브랜드 컬러 추출
-  const primaryColor = data.brandColor1 || '#4f46e5'; // indigo-600
-  const secondaryColor = data.brandColor2 || '#1f2937'; // gray-800
+  const primaryColor = data.brandColor1 || '#4f46e5'; // Primary - 강조, 보더
+  const secondaryColor = data.brandColor2 || '#1f2937'; // Secondary - 배경 그라데이션
+  const tertiaryColor = data.brandColor3 || primaryColor; // Tertiary - 글로우, 오버레이
 
   // 배경 그라데이션 생성
   const backgroundGradient = `linear-gradient(to bottom right, ${primaryColor}, ${secondaryColor})`;
+
+  // HEX를 RGBA로 변환하는 함수
+  const hexToRgba = (hex: string, alpha: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
 
   // 날짜 포맷팅 함수 (proposalDate가 있으면 사용, 없으면 현재 날짜 사용)
   const formatDate = (dateString?: string): string => {
@@ -87,26 +96,69 @@ export function generateCoverTemplate(data: TemplateData): string {
 
     let date: Date;
     if (dateString) {
-      // proposalDate가 있으면 사용
       date = new Date(dateString);
     } else {
-      // 없으면 현재 날짜 사용
       date = new Date();
     }
 
     return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
   };
 
+  // Proposal Ref 생성 함수
+  const generateProposalRef = (dateString?: string): string => {
+    // 클라이언트 이니셜을 숫자로 변환 (A=1, B=2, ...)
+    const getNumericCode = (text: string): string => {
+      return text
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 3)
+        .split('')
+        .map(char => {
+          const code = char.charCodeAt(0) - 64; // A=1, B=2, ...
+          return code > 0 && code <= 26 ? String(code).padStart(2, '0') : '00';
+        })
+        .join('');
+    };
+
+    const clientCode = data.clientCompanyName ? getNumericCode(data.clientCompanyName) : '0000';
+
+    // 일자만 사용 (연도, 월 제외)
+    let date: Date;
+    if (dateString) {
+      date = new Date(dateString);
+    } else {
+      date = new Date();
+    }
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${clientCode}-${day}`;
+  };
+
   const formattedDate = formatDate(data.proposalDate);
+  const proposalRef = generateProposalRef(data.proposalDate);
+  const clientSubtitle = data.slogan || 'Digital Transformation Project';
+
+  // 배경 오버레이 그라데이션
+  const overlayGradient = `radial-gradient(circle at 100% 0%, ${hexToRgba(tertiaryColor, 0.15)} 0%, rgba(0, 0, 0, 0) 50%)`;
 
   return `
-    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col min-h-screen" style="background: ${backgroundGradient} !important; color: white !important; position: relative !important;">
+    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col min-h-screen" style="background: ${backgroundGradient} !important; color: white !important; position: relative !important; overflow: hidden !important;">
+      <!-- 배경 효과 -->
+      <div class="absolute inset-0" style="background: ${overlayGradient} !important; pointer-events: none !important;"></div>
+      <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" style="background-color: ${primaryColor} !important; opacity: 0.1 !important; pointer-events: none !important;"></div>
+
       <!-- 상단 헤더 -->
-      <div class="px-12 pt-12 flex justify-end items-start z-10" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-top: 3rem !important;">
-        <div class="text-[10px] font-bold tracking-[0.3em] text-white/60 uppercase" style="font-size: 10px !important; font-weight: bold !important; letter-spacing: 0.3em !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important;">
+      <div class="px-12 pt-12 flex justify-between gap-5 items-start z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-top: 3rem !important; display: flex !important; justify-content: space-between !important; width: 100% !important;">
+        <div class="text-[10px] font-bold tracking-[0.3em] uppercase border px-3 py-1 rounded-full" style="font-size: 10px !important; font-weight: bold !important; letter-spacing: 0.3em !important; color: rgba(255, 255, 255, 0.5) !important; text-transform: uppercase !important; border-color: rgba(255, 255, 255, 0.2) !important; padding-left: 0.75rem !important; padding-right: 0.75rem !important; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; border-radius: 9999px !important;">
+          Proposal Ref. ${proposalRef}
+        </div>
+        <div class="text-[10px] font-bold tracking-[0.3em] uppercase" style="font-size: 10px !important; font-weight: bold !important; letter-spacing: 0.3em !important; color: rgba(255, 255, 255, 0.5) !important; text-transform: uppercase !important;">
           ${formattedDate}
         </div>
       </div>
+
       <!-- 중앙 메인 영역 -->
       <div class="flex-1 px-12 flex flex-col justify-center z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important;">
         <!-- 클라이언트 회사명 영역 -->
@@ -114,32 +166,83 @@ export function generateCoverTemplate(data: TemplateData): string {
           data.clientCompanyName
             ? `
         <div class="mb-16" style="margin-bottom: 4rem !important;">
-          <h2 class="text-4xl font-black text-white tracking-tight" style="display: inline-block !important; font-size: 2.25rem !important; font-weight: 900 !important; color: white !important; letter-spacing: -0.025em !important; max-width: fit-content !important;">${data.clientCompanyName}</h2>
-          
+          <div class="flex items-center space-x-3 mb-2" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.5rem !important;">
+            <h2 class="text-3xl font-black tracking-tighter text-white italic" style="font-size: 1.875rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; font-style: italic !important;">
+              ${data.clientCompanyName}
+            </h2>
+          </div>
+          <div class="h-[1px] w-12 bg-gray-700 mt-4 mb-2" style="height: 1px !important; width: 3rem !important; background-color: rgba(255, 255, 255, 0.3) !important; margin-top: 1rem !important; margin-bottom: 0.5rem !important;"></div>
+          <p class="text-xs font-medium tracking-[0.2em] uppercase" style="font-size: 0.75rem !important; font-weight: 500 !important; letter-spacing: 0.2em !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important;">
+            ${clientSubtitle}
+          </p>
         </div>
         `
             : ''
         }
+
         <!-- 메인 타이틀 -->
         <div class="relative">
-          <h1 class="text-7xl font-black text-white leading-tight mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">${data.projectName}</h1>
-          <div class="pl-6 border-l-2 border-white" style="padding-left: 0.5rem !important; border-left: 2px solid rgb(244, 238, 238) !important;">
+          <h1 class="text-7xl font-black text-white leading-[0.9] mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 0.9 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">
+            ${(() => {
+              const words = data.projectName.split(' ');
+              if (words.length === 1) {
+                return `<span style="color: ${primaryColor} !important;">${words[0]}</span>`;
+              } else if (words.length === 2) {
+                return `${words[0]}<br><span style="color: ${primaryColor} !important;">${words[1]}</span>`;
+              } else {
+                return words
+                  .map((word, index) => {
+                    if (index === 0) {
+                      return word;
+                    } else if (index === 1) {
+                      return `<span class="text-transparent bg-clip-text" style="background: linear-gradient(to right, white, rgba(255, 255, 255, 0.5)) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;">${word}</span>`;
+                    } else {
+                      return `<span style="color: ${primaryColor} !important;">${word}</span>`;
+                    }
+                  })
+                  .join(' ');
+              }
+            })()}
+          </h1>
+
+          <div class="pl-6 border-l-2" style="padding-left: 1.5rem !important; border-left: 2px solid ${primaryColor} !important;">
             <p class="text-lg font-light leading-relaxed max-w-xl" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 1.125rem !important; font-weight: 300 !important; line-height: 1.75 !important; max-width: 36rem !important;">
               ${data.clientCompanyName ? `${data.clientCompanyName}를 위한` : ''} 구체적인 프로젝트 기획 제안서
             </p>
           </div>
         </div>
+
+        <!-- 기술 키워드 카드 -->
+        <div class="mt-16 grid grid-cols-3 gap-4 max-w-lg" style="margin-top: 4rem !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 1rem !important; max-width: 32rem !important;">
+          <div class="border p-4 rounded-lg backdrop-blur-sm" style="background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; padding: 1rem !important; border-radius: 0.5rem !important;">
+            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">🎨</div>
+            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">UX Renewal</p>
+          </div>
+          <div class="border p-4 rounded-lg backdrop-blur-sm" style="background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; padding: 1rem !important; border-radius: 0.5rem !important;">
+            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">💻</div>
+            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">Tech Stack</p>
+          </div>
+          <div class="border p-4 rounded-lg backdrop-blur-sm" style="background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; padding: 1rem !important; border-radius: 0.5rem !important;">
+            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">📈</div>
+            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">Growth</p>
+          </div>
+        </div>
       </div>
+
       <!-- 하단 푸터 -->
-      <div class="px-12 pb-12 z-10" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-bottom: 3rem !important;">
-        <div class="border-t border-white pt-8 flex justify-between items-end" style="border-top: 1px solid rgba(255, 255, 255, 0.2) !important; padding-top: 2rem !important;">
+      <div class="px-12 pb-12 z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-bottom: 3rem !important;">
+        <div class="border-t pt-8" style="border-top: 1px solid rgba(255, 255, 255, 0.2) !important; padding-top: 2rem !important;">
           <!-- 회사 정보 -->
           <div>
-            <div class="flex flex-col gap-2 items-start mb-5" style="margin-bottom: 1.25rem !important;">
-              <span class="text-xl font-bold text-white tracking-tight w-full text-center" style="...">TOKTOKHAN.DEV</span>
-              <span class="text-[11px] opacity-60">서울특별시 마포구 동교로 12안길 39</span>
-              <span class="text-[11px] opacity-60">E. sales@toktokhan.dev | W. www.toktokhan.dev</span>
-              <span class="text-[11px] opacity-60">© 2025 Toktokhan.dev. All rights reserved.</span>
+            <div class="flex items-center justify-center space-x-3 mb-5" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 1.25rem !important;">
+              <span class="text-xl font-bold text-white tracking-tight" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important; letter-spacing: -0.025em !important;">TOKTOKHAN.DEV</span>
+            </div>
+            <div class="text-[10px] space-y-1.5 text-left font-light tracking-wide" style="font-size: 10px !important; color: rgba(255, 255, 255, 0.5) !important; font-weight: 300 !important; letter-spacing: 0.025em !important;">
+              <p>서울시 마포구 동교로 12안길 39 | T. 010-2493-2906</p>
+              <p>E. sales@toktokhan.dev | W. www.toktokhan.dev</p>
+              <p class="text-[9px]" style="font-size: 9px !important; color: rgba(255, 255, 255, 0.4) !important; margin-top: 0.5rem !important;">
+                © 2025 Toktokhan.dev. All rights reserved.
+              </p>
             </div>
           </div>
         </div>
@@ -369,6 +472,14 @@ export function generateHTMLWrapper(
     :root {
       --primary: ${brandColor1};
       --secondar${brandColo2};
+    }
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
     }
     @media print {
       @page { 
