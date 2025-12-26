@@ -6,7 +6,7 @@ import {
   generateHTMLWrapper,
   TemplateData,
 } from './templates';
-import { BODY_PROMPT_TEMPLATE } from './prompts';
+import { BODY_PROMPT_TEMPLATE, KEYWORD_EXTRACTION_PROMPT } from './prompts';
 
 // Gemini 모델 초기화
 const getModel = () => {
@@ -27,13 +27,73 @@ function formatPrompt(template: string, variables: Record<string, string>): stri
   return prompt;
 }
 
+// 전사록에서 키워드 추출
+export async function extractKeywordsFromTranscript(
+  transcriptText?: string,
+  meetingNotes?: string,
+): Promise<Array<{ icon?: string; title: string }>> {
+  // 전사록이나 미팅 노트가 없으면 기본값 반환
+  const text = transcriptText || meetingNotes;
+  if (!text || text.trim().length === 0) {
+    return [
+      { icon: '🎨', title: 'UX Renewal' },
+      { icon: '💻', title: 'Tech Stack' },
+      { icon: '📈', title: 'Growth' },
+    ];
+  }
+
+  try {
+    const model = getModel();
+    const prompt = formatPrompt(KEYWORD_EXTRACTION_PROMPT, {
+      transcriptText: text,
+    });
+
+    const response = await model.invoke(prompt);
+    const content =
+      typeof response.content === 'string' ? response.content : JSON.stringify(response.content);
+
+    // JSON 파싱 시도
+    const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/) || content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const jsonStr = jsonMatch[1] || jsonMatch[0];
+      const parsed = JSON.parse(jsonStr);
+      if (parsed.keywords && Array.isArray(parsed.keywords) && parsed.keywords.length > 0) {
+        return parsed.keywords.slice(0, 3); // 최대 3개만 반환
+      }
+    }
+
+    // JSON 파싱 실패 시 기본값 반환
+    console.warn('키워드 추출 실패, 기본값 사용');
+    return [
+      { icon: '🎨', title: 'UX Renewal' },
+      { icon: '💻', title: 'Tech Stack' },
+      { icon: '📈', title: 'Growth' },
+    ];
+  } catch (error) {
+    console.error('키워드 추출 오류:', error);
+    // 오류 발생 시 기본값 반환
+    return [
+      { icon: '🎨', title: 'UX Renewal' },
+      { icon: '💻', title: 'Tech Stack' },
+      { icon: '📈', title: 'Growth' },
+    ];
+  }
+}
+
 // 제안서 생성 체인 (표지 + 본문 + 끝마무리)
 export async function generateProposalWithChains(
   data: TemplateData & { meetingNotes?: string },
 ): Promise<string> {
   try {
-    // 1. 표지 생성 (템플릿)
-    const cover = generateCoverTemplate(data);
+    // 0. 키워드 추출 (전사록 기반)
+    const keywordCards = await extractKeywordsFromTranscript(
+      data.transcriptText,
+      data.meetingNotes,
+    );
+    console.log('키워드 추출 완료:', keywordCards);
+
+    // 1. 표지 생성 (템플릿 + AI 키워드)
+    const cover = await generateCoverTemplate(data, keywordCards);
     console.log('표지 생성 완료, 길이:', cover.length);
     console.log('표지 미리보기:', cover.substring(0, 200));
 

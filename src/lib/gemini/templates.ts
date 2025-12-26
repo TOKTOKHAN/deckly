@@ -60,7 +60,10 @@ export const TAILWIND_THEME = {
 };
 
 // 표지 HTML 템플릿
-export function generateCoverTemplate(data: TemplateData): string {
+export async function generateCoverTemplate(
+  data: TemplateData,
+  keywordCards?: Array<{ icon?: string; title: string }>,
+): Promise<string> {
   // 브랜드 컬러 추출
   const primaryColor = data.brandColor1 || '#4f46e5'; // Primary - 강조, 보더
   const secondaryColor = data.brandColor2 || '#1f2937'; // Secondary - 배경 그라데이션
@@ -140,6 +143,15 @@ export function generateCoverTemplate(data: TemplateData): string {
   const proposalRef = generateProposalRef(data.proposalDate);
   const clientSubtitle = data.slogan || 'Digital Transformation Project';
 
+  // 키워드 카드 (기본값 또는 전달받은 값 사용)
+  const defaultKeywords = [
+    { icon: '🎨', title: 'UX Renewal' },
+    { icon: '💻', title: 'Tech Stack' },
+    { icon: '📈', title: 'Growth' },
+  ];
+  const keywords =
+    keywordCards && keywordCards.length > 0 ? keywordCards.slice(0, 3) : defaultKeywords;
+
   // 배경 오버레이 그라데이션
   const overlayGradient = `radial-gradient(circle at 100% 0%, ${hexToRgba(tertiaryColor, 0.15)} 0%, rgba(0, 0, 0, 0) 50%)`;
 
@@ -214,18 +226,16 @@ export function generateCoverTemplate(data: TemplateData): string {
 
         <!-- 기술 키워드 카드 -->
         <div class="mt-16 grid grid-cols-3 gap-4 max-w-lg" style="margin-top: 4rem !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 1rem !important; max-width: 32rem !important;">
+          ${keywords
+            .map(
+              keyword => `
           <div class="border p-4 rounded-lg backdrop-blur-sm" style="background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; padding: 1rem !important; border-radius: 0.5rem !important;">
-            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">🎨</div>
-            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">UX Renewal</p>
+            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">${keyword.icon || '✨'}</div>
+            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">${keyword.title}</p>
           </div>
-          <div class="border p-4 rounded-lg backdrop-blur-sm" style="background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; padding: 1rem !important; border-radius: 0.5rem !important;">
-            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">💻</div>
-            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">Tech Stack</p>
-          </div>
-          <div class="border p-4 rounded-lg backdrop-blur-sm" style="background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; padding: 1rem !important; border-radius: 0.5rem !important;">
-            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">📈</div>
-            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">Growth</p>
-          </div>
+          `,
+            )
+            .join('')}
         </div>
       </div>
 

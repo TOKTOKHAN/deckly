@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import {
   generateCoverTemplate,
   generateTableOfContentsTemplate,
@@ -16,42 +16,51 @@ export default function PreviewPage() {
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const sampleData: TemplateData = {
-    projectName: '사업제안서 자동화 플랫폼',
-    clientCompanyName: 'TOKTOKHAN.DEV',
-    brandColor1: '#52b8f2',
-    brandColor2: '#975ef2',
-  };
+  const sampleData: TemplateData = useMemo(
+    () => ({
+      projectName: '사업제안서 자동화 플랫폼',
+      clientCompanyName: 'TOKTOKHAN.DEV',
+      brandColor1: '#52b8f2',
+      brandColor2: '#975ef2',
+    }),
+    [],
+  );
 
   // 템플릿 내용 생성
-  const getTemplateContent = () => {
-    let templateContent = '';
+  const [templateContent, setTemplateContent] = useState('');
 
-    switch (selectedTemplate) {
-      case 'cover':
-        templateContent = generateCoverTemplate(sampleData);
-        break;
-      case 'toc':
-        templateContent = generateTableOfContentsTemplate(
-          sampleData.brandColor1,
-          sampleData.brandColor2,
-        );
-        break;
-      case 'conclusion':
-        templateContent = generateConclusionTemplate(sampleData);
-        break;
-      case 'all':
-        const cover = generateCoverTemplate(sampleData);
-        const toc = generateTableOfContentsTemplate(sampleData.brandColor1, sampleData.brandColor2);
-        const conclusion = generateConclusionTemplate(sampleData);
-        templateContent = cover + toc + conclusion;
-        break;
-      default:
-        templateContent = '';
-    }
+  useEffect(() => {
+    const loadTemplateContent = async () => {
+      let content = '';
 
-    return templateContent;
-  };
+      switch (selectedTemplate) {
+        case 'cover':
+          content = await generateCoverTemplate(sampleData);
+          break;
+        case 'toc':
+          content = generateTableOfContentsTemplate(sampleData.brandColor1, sampleData.brandColor2);
+          break;
+        case 'conclusion':
+          content = generateConclusionTemplate(sampleData);
+          break;
+        case 'all':
+          const cover = await generateCoverTemplate(sampleData);
+          const toc = generateTableOfContentsTemplate(
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+          );
+          const conclusion = generateConclusionTemplate(sampleData);
+          content = cover + toc + conclusion;
+          break;
+        default:
+          content = '';
+      }
+
+      setTemplateContent(content);
+    };
+
+    loadTemplateContent();
+  }, [selectedTemplate, sampleData]);
 
   // Tailwind CDN 및 폰트 동적 로드
   useEffect(() => {
@@ -79,8 +88,7 @@ export default function PreviewPage() {
   }, []);
 
   // PDF 인쇄 함수
-  const handlePrint = () => {
-    const templateContent = getTemplateContent();
+  const handlePrint = async () => {
     if (!templateContent) {
       alert('인쇄할 내용이 없습니다.');
       return;
@@ -190,7 +198,7 @@ export default function PreviewPage() {
           <div
             ref={contentRef}
             className="a4-preview-container"
-            dangerouslySetInnerHTML={{ __html: getTemplateContent() }}
+            dangerouslySetInnerHTML={{ __html: templateContent }}
           />
         </div>
 
