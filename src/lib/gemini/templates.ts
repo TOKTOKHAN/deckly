@@ -63,18 +63,15 @@ export const TAILWIND_THEME = {
 // 표지 HTML 템플릿
 export async function generateCoverTemplate(
   data: TemplateData,
-  keywordCards?: Array<{ icon?: string; title: string }>,
+  keywordCards?: Array<{ icon?: string; title: string; sub?: string }>,
   description?: string,
 ): Promise<string> {
-  // 브랜드 컬러 추출
-  const primaryColor = data.brandColor1 || '#4f46e5'; // Primary - 강조, 보더
-  const secondaryColor = data.brandColor2 || '#1f2937'; // Secondary - 배경 그라데이션
-  const tertiaryColor = data.brandColor3 || primaryColor; // Tertiary - 글로우, 오버레이
+  // 브랜드 컬러 추출 (기본값: indigo-600, gray-800)
+  const primaryColor = data.brandColor1 || '#4f46e5'; // 기본값: indigo-600
+  const secondaryColor = data.brandColor2 || '#1f2937'; // 기본값: gray-800
+  const tertiaryColor = data.brandColor3 || '#0a0c10';
 
-  // 배경 그라데이션 생성
-  const backgroundGradient = `linear-gradient(to bottom right, ${primaryColor}, ${secondaryColor})`;
-
-  // HEX를 RGBA로 변환하는 함수
+  // Hex to RGBA 변환 함수
   const hexToRgba = (hex: string, alpha: number): string => {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -82,196 +79,175 @@ export async function generateCoverTemplate(
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  // 날짜 포맷팅 함수 (proposalDate가 있으면 사용, 없으면 현재 날짜 사용)
-  const formatDate = (dateString?: string): string => {
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-
-    let date: Date;
-    if (dateString) {
-      date = new Date(dateString);
-    } else {
-      date = new Date();
-    }
-
-    return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-  };
+  // 브랜드 컬러 기반 색상 조합
+  const cardBgColor = hexToRgba(secondaryColor, 0.4);
+  const cardBorderColor = hexToRgba(primaryColor, 0.1);
+  const subTextColor = hexToRgba(primaryColor, 0.8);
 
   // Proposal Ref 생성 함수
   const generateProposalRef = (dateString?: string): string => {
-    // 클라이언트 이니셜을 숫자로 변환 (A=1, B=2, ...)
-    const getNumericCode = (text: string): string => {
+    // 클라이언트 이니셜 추출
+    const getClientInitials = (text: string): string => {
       return text
         .split(' ')
         .map(word => word[0])
         .join('')
         .toUpperCase()
-        .slice(0, 3)
-        .split('')
-        .map(char => {
-          const code = char.charCodeAt(0) - 64; // A=1, B=2, ...
-          return code > 0 && code <= 26 ? String(code).padStart(2, '0') : '00';
-        })
-        .join('');
+        .slice(0, 6);
     };
 
-    const clientCode = data.clientCompanyName ? getNumericCode(data.clientCompanyName) : '0000';
-
-    // 일자만 사용 (연도, 월 제외)
+    const clientInitials = data.clientCompanyName
+      ? getClientInitials(data.clientCompanyName)
+      : 'CLIENT';
     let date: Date;
     if (dateString) {
       date = new Date(dateString);
     } else {
       date = new Date();
     }
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${clientCode}-${day}`;
+    const year = date.getFullYear();
+    return `${year}-${clientInitials}-SI`;
   };
 
-  const formattedDate = formatDate(data.proposalDate);
+  // 날짜 포맷팅 (YYYY. MM. DD 형식)
+  const formatIssueDate = (dateString?: string): string => {
+    let date: Date;
+    if (dateString) {
+      date = new Date(dateString);
+    } else {
+      date = new Date();
+    }
+    const year = date.getFullYear();
+    const monthNames = [
+      'JANUARY',
+      'FEBRUARY',
+      'MARCH',
+      'APRIL',
+      'MAY',
+      'JUNE',
+      'JULY',
+      'AUGUST',
+      'SEPTEMBER',
+      'OCTOBER',
+      'NOVEMBER',
+      'DECEMBER',
+    ];
+    const month = monthNames[date.getMonth()];
+    return `${month} ${year}`;
+  };
+
   const proposalRef = generateProposalRef(data.proposalDate);
-  const clientSubtitle = data.slogan || 'Digital Transformation Project';
+  const issueDate = formatIssueDate(data.proposalDate);
+  const clientSubtitle = data.slogan || 'Digital Transformation Partner';
+  const title = data.projectName || '프로젝트 제안서';
+  const subTitle =
+    description ||
+    `${data.clientCompanyName ? `<span style="color: ${primaryColor} !important;">${data.clientCompanyName}</span>를 위한` : ''} 프로젝트 기획 제안서`;
 
   // 키워드 카드 (기본값 또는 전달받은 값 사용)
   const defaultKeywords = [
-    { icon: '🎨', title: 'UX Renewal' },
-    { icon: '💻', title: 'Tech Stack' },
-    { icon: '📈', title: 'Growth' },
+    { icon: '🎨', label: 'Hyper-Personalized UX', sub: '개인화 경험 강화' },
+    { icon: '💻', label: 'Scalable Architecture', sub: '클라우드 네이티브' },
+    { icon: '📈', label: 'Data-Driven Growth', sub: '데이터 중심 성장' },
   ];
   const keywords =
-    keywordCards && keywordCards.length > 0 ? keywordCards.slice(0, 3) : defaultKeywords;
-
-  // 배경 오버레이 그라데이션
-  const overlayGradient = `radial-gradient(circle at 100% 0%, ${hexToRgba(tertiaryColor, 0.15)} 0%, rgba(0, 0, 0, 0) 50%)`;
+    keywordCards && keywordCards.length > 0
+      ? keywordCards.slice(0, 3).map((k, i) => ({
+          icon: k.icon || defaultKeywords[i]?.icon || '✨',
+          label: k.title,
+          sub: k.sub || defaultKeywords[i]?.sub || '',
+        }))
+      : defaultKeywords;
 
   return `
-    <div class="a4-page bg-gradient-to-br from-indigo-600 to-gray-800 text-white flex flex-col min-h-screen" style="background: ${backgroundGradient} !important; color: white !important; position: relative !important; overflow: hidden !important;">
-      <!-- 배경 효과 -->
-      <div class="absolute inset-0" style="background: ${overlayGradient} !important; pointer-events: none !important;"></div>
-      <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" style="background-color: ${primaryColor} !important; opacity: 0.1 !important; pointer-events: none !important;"></div>
+    <div class="a4-page flex flex-col relative" style="background-color: ${tertiaryColor} !important; color: white !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
+      
+      <!-- Decorative Background Elements -->
+      <div class="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none" style="pointer-events: none !important;">
+        <div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full blur-[120px]" style="background-color: ${primaryColor} !important; opacity: 0.07 !important; position: absolute !important; top: -10% !important; right: -10% !important; width: 600px !important; height: 600px !important; border-radius: 9999px !important; filter: blur(120px) !important;"></div>
+        <div class="absolute bottom-[-5%] left-[-5%] w-[400px] h-[400px] rounded-full blur-[100px]" style="background-color: ${secondaryColor} !important; opacity: 0.05 !important; position: absolute !important; bottom: -5% !important; left: -5% !important; width: 400px !important; height: 400px !important; border-radius: 9999px !important; filter: blur(100px) !important;"></div>
+        <div class="absolute top-[20%] left-[-10%] w-px h-[40%] bg-gradient-to-b from-transparent via-blue-500/20 to-transparent" style="position: absolute !important; top: 20% !important; left: -10% !important; width: 1px !important; height: 40% !important; background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.2), transparent) !important;"></div>
+      </div>
 
-      <!-- 상단 헤더 -->
-      <div class="px-12 pt-12 flex justify-between gap-5 items-start z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-top: 3rem !important; display: flex !important; justify-content: space-between !important; width: 100% !important;">
-        <div class="text-[10px] font-bold tracking-[0.3em] uppercase border px-3 py-1 rounded-full" style="font-size: 10px !important; font-weight: bold !important; letter-spacing: 0.3em !important; color: rgba(255, 255, 255, 0.5) !important; text-transform: uppercase !important; border-color: rgba(255, 255, 255, 0.2) !important; padding-left: 0.75rem !important; padding-right: 0.75rem !important; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; border-radius: 9999px !important;">
-          Proposal Ref. ${proposalRef}
+      <!-- Top Header -->
+      <div class="cover-top-header px-16 pt-16 flex justify-between items-start z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 4rem !important; display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: baseline !important; position: relative !important; z-index: 10 !important; width: 100% !important; box-sizing: border-box !important;">
+        <div class="flex flex-col gap-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important; flex-shrink: 0 !important;">
+          <span class="text-[10px] font-black tracking-[0.4em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.4em !important; color: ${primaryColor} !important; text-transform: uppercase !important; line-height: 1 !important; display: block !important; padding: 0 !important; margin: 0 !important;">
+            Proposal Ref. ${proposalRef}
+          </span>
+          <div class="h-0.5 w-8" style="height: 2px !important; width: 2rem !important; background-color: ${primaryColor} !important; margin-top: 0.25rem !important;"></div>
         </div>
-        <div class="text-[10px] font-bold tracking-[0.3em] uppercase" style="font-size: 10px !important; font-weight: bold !important; letter-spacing: 0.3em !important; color: rgba(255, 255, 255, 0.5) !important; text-transform: uppercase !important;">
-          ${formattedDate}
+        <div class="text-[10px] font-medium tracking-[0.2em]" style="font-size: 10px !important; font-weight: 500 !important; letter-spacing: 0.2em !important; color: #71717a !important; margin-left: auto !important; flex-shrink: 0 !important; text-align: right !important; line-height: 1 !important; display: block !important; padding: 0 !important; margin: 0 !important;">
+          ${issueDate}
         </div>
       </div>
 
-      <!-- 중앙 메인 영역 -->
-      <div class="flex-1 px-12 flex flex-col justify-center z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important;">
-        <!-- 클라이언트 회사명 영역 -->
-        ${
-          data.clientCompanyName
-            ? `
-        <div class="mb-16" style="margin-bottom: 3rem !important;">
-          <div class="flex items-center justify-center space-x-2 mb-2" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 0.2rem !important; margin-bottom: 0.5rem !important;">
+      <!-- Main Content -->
+      <div class="flex-1 px-16 flex flex-col z-10 relative" style="flex: 1 !important; padding-left: 4rem !important; padding-right: 4rem !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-items: flex-start !important; position: relative !important; z-index: 10 !important; padding-top: 1rem !important; padding-bottom: 1rem !important;">
+        
+        <!-- Logo Section -->
+        <div class="mb-20" style="margin-bottom: 2rem !important;">
+          <div class="flex items-center gap-4" style="display: flex !important; align-items: center !important; gap: 1rem !important; justify-content: flex-start !important;">
             ${
               data.clientLogo
                 ? `
-            <!-- 고객사 로고 (연하게 표시, 왼쪽) -->
             <img 
               src="${data.clientLogo}" 
               alt="${data.clientCompanyName} 로고" 
-              class="h-12 w-auto opacity-20" 
-              style="height: 4rem !important; max-width: 200px !important; object-fit: contain !important; opacity: 0.8 !important; filter: brightness(1.2) !important; flex-shrink: 0 !important;"
+              class="w-[60px] h-[60px]" 
+              style="width: 60px !important; height: 60px !important; object-fit: contain !important; filter: drop-shadow(0 0 15px rgba(0, 100, 145, 0.4)) !important;"
             />
             `
-                : ''
+                : `
+            <!-- 기본 로고 SVG -->
+            <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 15px rgba(0, 100, 145, 0.4)) !important;">
+              <path d="M50 0L0 50L50 100L100 50L50 0Z" fill="${secondaryColor}"/>
+              <path d="M50 0V100L100 50L50 0Z" fill="${primaryColor}"/>
+              <circle cx="28" cy="42" r="6" fill="white"/>
+              <circle cx="28" cy="58" r="6" fill="white"/>
+              <circle cx="72" cy="50" r="6" fill="white"/>
+            </svg>
+            `
             }
-            <h2 class="text-3xl font-black tracking-tighter text-white italic" style="font-size: 1.875rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; font-style: italic !important;">
-              ${data.clientCompanyName}
-            </h2>
+            <div class="flex flex-col" style="display: flex !important; flex-direction: column !important;">
+              <h2 class="text-4xl font-black italic tracking-tighter leading-none" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; line-height: 1 !important; font-style: italic !important; color: white !important;">
+                ${data.clientCompanyName || 'Client'}<span class="font-light not-italic" style="font-weight: 300 !important; font-style: normal !important; color: ${primaryColor} !important;"> ${data.clientCompanyName ? '' : 'Company'}</span>
+              </h2>
+              <p class="text-[10px] tracking-[0.3em] mt-2 font-bold uppercase" style="font-size: 10px !important; letter-spacing: 0.3em !important; color: #a1a1aa !important; margin-top: 0.5rem !important; font-weight: bold !important; text-transform: uppercase !important;">
+                ${clientSubtitle}
+              </p>
+            </div>
           </div>
-          <div class="h-[1px] w-12 bg-gray-700 mt-4 mb-2" style="height: 1px !important; width: 3rem !important; background-color: rgba(255, 255, 255, 0.3) !important; margin-top: 1rem !important; margin-bottom: 0.5rem !important;"></div>
-          <p class="text-xs font-medium tracking-[0.2em] uppercase" style="font-size: 0.75rem !important; font-weight: 500 !important; letter-spacing: 0.2em !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important;">
-            ${clientSubtitle}
-          </p>
         </div>
-        `
-            : ''
-        }
 
-        <!-- 메인 타이틀 -->
-        <div class="relative">
-          <h1 class="text-7xl font-black text-white leading-[0.9] mb-8 tracking-tight" style="color: white !important; font-size: 4.5rem !important; font-weight: 900 !important; line-height: 1.3 !important; letter-spacing: -0.025em !important; margin-bottom: 2rem !important;">
-            ${(() => {
-              const words = data.projectName.split(' ');
-              if (words.length === 1) {
-                return `<span style="color: ${primaryColor} !important;">${words[0]}</span>`;
-              } else if (words.length === 2) {
-                return `${words[0]}<br><span style="color: ${primaryColor} !important;">${words[1]}</span>`;
-              } else {
-                // 방법 3: 글자수 기반 + 균형 조정
-                const totalLength = data.projectName.length;
-                const targetLength = Math.ceil(totalLength / 2);
-
-                const firstLineWords = [];
-                let firstLineLength = 0;
-
-                // 첫 줄에 단어 추가 (절반 지점까지)
-                for (let i = 0; i < words.length; i++) {
-                  const word = words[i];
-                  const space = firstLineWords.length > 0 ? 1 : 0;
-                  const newLength = firstLineLength + space + word.length;
-
-                  // 절반 지점을 넘지 않으면 첫 줄에 추가
-                  if (newLength <= targetLength || firstLineWords.length === 0) {
-                    firstLineWords.push(word);
-                    firstLineLength = newLength;
-                  } else {
-                    break;
-                  }
-                }
-
-                // 나머지는 두 번째 줄
-                const secondLineWords = words.slice(firstLineWords.length);
-
-                // 첫 줄 렌더링 (브랜드 컬러 → 흰색 그라데이션)
-                const firstLineText = firstLineWords.join(' ');
-                const firstLine = `<span class="text-transparent bg-clip-text" style="background: linear-gradient(to right, ${tertiaryColor}, white) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;">${firstLineText}</span>`;
-
-                // 두 번째 줄 렌더링 (흰색)
-                const secondLine = secondLineWords.join(' ');
-
-                return `${firstLine}<br><span style="display: block; margin-top: 0.4rem !important;">${secondLine}</span>`;
-              }
-            })()}
+        <!-- Title Section -->
+        <div class="relative mb-24" style="margin-bottom: 3rem !important; margin-top: 0 !important; position: relative !important;">
+          <h1 class="text-[80px] font-black leading-[0.95] tracking-tighter mb-10" style="font-size: 80px !important; font-weight: 900 !important; line-height: 0.95 !important; letter-spacing: -0.05em !important; margin-bottom: 1.5rem !important; margin-top: 0 !important; padding-top: 0 !important; text-align: left !important;">
+            <span class="block text-white drop-shadow-sm leading-tight uppercase whitespace-pre-line" style="display: block !important; color: white !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important; line-height: 1.1 !important; text-transform: uppercase !important; white-space: pre-line !important; text-align: left !important; margin-top: 0rem !important; padding-top: 0 !important; word-break: keep-all !important; overflow-wrap: break-word !important; hyphens: auto !important;">
+              ${title}
+            </span>
           </h1>
 
-          <div class="pl-6 border-l-2" style="padding-left: 1.5rem !important; border-left: 2px solid ${primaryColor} !important;">
-            <p class="text-lg font-light leading-relaxed max-w-xl" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 1.125rem !important; font-weight: 300 !important; line-height: 1.75 !important; max-width: 36rem !important;">
-              ${
-                description ||
-                `${data.clientCompanyName ? `${data.clientCompanyName}를 위한` : ''} 프로젝트 기획 제안서`
-              }
+          <div class="pl-8 border-l-[3px]" style="padding-left: 2rem !important; border-left: 3px solid ${primaryColor} !important;">
+            <p class="text-2xl text-zinc-300 font-light leading-snug break-keep max-w-2xl" style="font-size: 1.5rem !important; color: #d4d4d8 !important; font-weight: 300 !important; line-height: 1.375 !important; word-break: keep-all !important; max-width: 42rem !important; text-align: left !important;">
+              ${subTitle}
             </p>
           </div>
         </div>
 
-        <!-- 기술 키워드 카드 -->
-        <div class="mt-16 grid grid-cols-3 gap-4 max-w-lg" style="margin-top: 4rem !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 1rem !important; max-width: 32rem !important;">
+        <!-- Strategy Icons -->
+        <div class="grid grid-cols-3 gap-10 max-w-2xl" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 2.5rem !important; max-width: 42rem !important; margin-left: 0 !important; margin-right: auto !important; margin-top: 1rem !important;">
           ${keywords
             .map(
               keyword => `
-          <div class="border p-4 rounded-lg backdrop-blur-sm" style="background-color: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; padding: 1rem !important; border-radius: 0.5rem !important;">
-            <div class="mb-2 text-xl" style="color: ${primaryColor} !important; font-size: 1.25rem !important; margin-bottom: 0.5rem !important;">${keyword.icon || '✨'}</div>
-            <p class="text-xs uppercase font-bold tracking-wider" style="font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.6) !important; text-transform: uppercase !important; font-weight: bold !important; letter-spacing: 0.05em !important;">${keyword.title}</p>
+          <div class="border p-6 rounded-2xl backdrop-blur-sm" style="background-color: ${cardBgColor} !important; border: 1px solid ${cardBorderColor} !important; padding: 1.5rem !important; border-radius: 1rem !important; backdrop-filter: blur(4px) !important;">
+            <div class="mb-4" style="margin-bottom: 1rem !important; font-size: 1.75rem !important; color: ${primaryColor} !important;">${keyword.icon || '✨'}</div>
+            <p class="text-[11px] font-bold uppercase tracking-wider mb-1" style="font-size: 11px !important; color: ${subTextColor} !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; margin-bottom: 0.25rem !important;">
+              ${keyword.label}
+            </p>
+            <p class="text-sm font-medium" style="font-size: 0.875rem !important; color: white !important; font-weight: 500 !important;">
+              ${keyword.sub}
+            </p>
           </div>
           `,
             )
@@ -279,21 +255,52 @@ export async function generateCoverTemplate(
         </div>
       </div>
 
-      <!-- 하단 푸터 -->
-      <div class="px-12 pb-12 z-10 relative" style="padding-left: 3rem !important; padding-right: 3rem !important; padding-bottom: 3rem !important;">
-        <div class="border-t pt-8" style="border-top: 1px solid rgba(255, 255, 255, 0.2) !important; padding-top: 2rem !important;">
-          <!-- 회사 정보 -->
-          <div>
-            <div class="flex items-center justify-center space-x-3 mb-5" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 1.25rem !important;">
-              <span class="text-xl font-bold text-white tracking-tight" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important; letter-spacing: -0.025em !important;">TOKTOKHAN.DEV</span>
+      <!-- Footer Area -->
+      <div class="cover-footer px-16 pb-16 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-bottom: 2rem !important; padding-top: 1rem !important; position: relative !important; z-index: 10 !important;">
+        <div class="h-px w-full mb-10" style="height: 1px !important; width: 100% !important; background: linear-gradient(to right, rgba(30, 58, 138, 0.5), rgba(39, 39, 42, 0.8), transparent) !important; margin-bottom: 1.5rem !important;"></div>
+        
+        <div class="flex justify-between items-end" style="display: flex !important; justify-content: space-between !important; align-items: flex-end !important;">
+          <!-- Agency Info -->
+          <div class="space-y-6" style="display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
+            <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">
+              <img src="${data.ourLogo || '/images/tokdev-logo.jpg'}" alt="TOKTOKHAN.DEV 로고" class="w-8 h-8 rounded-lg" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; object-fit: contain !important;" />
+              <span class="text-xl font-black tracking-tighter text-white" style="font-size: 1.25rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important;">TOKTOKHAN.DEV</span>
             </div>
-            <div class="text-[10px] space-y-1.5 text-left font-light tracking-wide" style="font-size: 10px !important; color: rgba(255, 255, 255, 0.5) !important; font-weight: 300 !important; letter-spacing: 0.025em !important;">
-              <p>서울시 마포구 동교로 12안길 39 | T. 010-2493-2906</p>
-              <p>E. sales@toktokhan.dev | W. www.toktokhan.dev</p>
-              <p class="text-[9px]" style="font-size: 9px !important; color: rgba(255, 255, 255, 0.4) !important; margin-top: 0.5rem !important;">
-                © 2025 Toktokhan.dev. All rights reserved.
-              </p>
+            
+            <div class="flex gap-5" style="display: flex !important; gap: 1rem !important;">
+              <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                  <span style="color: ${secondaryColor} !important;">📍</span> Address
+                </p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">서울시 마포구 동교로 12안길 39</p>
+              </div>
+              <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                  <span style="color: ${primaryColor} !important;">🌐</span> Contact
+                </p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">sales@toktokhan.dev</p>
+              </div>
+              <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                  <span style="color: #71717a !important;">📞</span> Phone
+                </p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">010-2493-2906</p>
+              </div>
             </div>
+          </div>
+
+          <!-- Security & Copyright -->
+          <div class="text-right flex flex-col items-end gap-3" style="text-align: right !important; display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 0.75rem !important;">
+            <div class="inline-flex items-center px-4 py-1.5 rounded-full border gap-2" style="display: inline-flex !important; align-items: center !important; padding-left: 1rem !important; padding-right: 1rem !important; padding-top: 0.375rem !important; padding-bottom: 0.375rem !important; background-color: rgba(39, 39, 42, 1) !important; border: 1px solid rgba(30, 58, 138, 0.3) !important; border-radius: 9999px !important; gap: 0.5rem !important;">
+              <span style="color: ${primaryColor} !important;">🔒</span>
+              <span class="text-[10px] font-black uppercase tracking-[0.2em]" style="font-size: 10px !important; color: rgba(191, 219, 254, 1) !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.2em !important;">
+                Strictly Confidential
+              </span>
+            </div>
+            <p class="text-[9px] leading-relaxed font-medium" style="font-size: 9px !important; color: #52525b !important; line-height: 1.625 !important; font-weight: 500 !important;">
+              본 문서는 기술적/영업적 기밀을 포함하고 있으므로 무단 복제 및 유출을 금합니다.<br/>
+              © 2025 Toktokhan.dev. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
@@ -305,93 +312,151 @@ export async function generateCoverTemplate(
 export function generateTableOfContentsTemplate(
   brandColor1?: string,
   brandColor2?: string,
+  brandColor3?: string,
 ): string {
   const primaryColor = brandColor1 || '#4f46e5'; // 기본값: indigo-600
   const secondaryColor = brandColor2 || '#1f2937'; // 기본값: gray-800
+  const tertiaryColor = brandColor3 || '#E31837';
+  const darkBg = '#0a0c10';
+
+  // Hex to RGBA 변환 함수
+  const hexToRgba = (hex: string, alpha: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+  const primaryColorRgba = hexToRgba(primaryColor, 0.05);
+
+  // 목차 섹션 데이터
+  const sections = [
+    {
+      id: 'I',
+      title: '제안 개요',
+      enTitle: 'Introduction',
+      borderColor: primaryColor, // 파트 1: primaryColor
+      items: ['제안사 소개', '제안 배경 및 목적', '제안의 범위', '제안의 특징 및 장점'],
+    },
+    {
+      id: 'II',
+      title: '제안 전략',
+      enTitle: 'Strategy',
+      borderColor: secondaryColor, // 파트 2: secondaryColor
+      items: ['사업 이해 및 분석', '목표 모델 설계', '추진 전략', '기대 효과'],
+    },
+    {
+      id: 'III',
+      title: '기술 및 기능 부문',
+      enTitle: 'Technical Solution',
+      borderColor: primaryColor, // 파트 3: primaryColor
+      items: ['시스템 목표 아키텍처', '기능 구현 방안', '보안 및 데이터 관리', '시스템 연계 방안'],
+    },
+    {
+      id: 'IV',
+      title: '사업 관리 부문',
+      enTitle: 'Project Management',
+      borderColor: secondaryColor, // 파트 4: secondaryColor
+      items: ['추진 일정', '수행 조직 및 인력', '개발 방법론', '품질 보증 계획'],
+    },
+    {
+      id: 'V',
+      title: '사업 지원 부문',
+      enTitle: 'Support & Maintenance',
+      borderColor: tertiaryColor, // 파트 5: tertiaryColor
+      items: ['교육 훈련 계획', '기술 이전 계획', '유지보수', '비상 대책'],
+    },
+  ];
 
   return `
-    <div class="a4-page bg-white p-8" style="padding: 2rem !important;">
-      <div class="max-w-6xl mx-auto">
-        <h2 class="text-6xl font-bold mb-12 text-center" style="color: ${secondaryColor} !important;">목  차</h2>
-        
-        <!-- 카드 그리드 레이아웃 -->
-        <div class="grid grid-cols-2 gap-6 mt-8">
-          <!-- I. 제안 개요 카드 -->
-          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
-            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
-            <div class="p-6">
-              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">I. 제안 개요</h3>
-              <p class="text-sm text-gray-500 mb-4 font-medium">Introduction</p>
-              <div class="space-y-2">
-                <div class="text-base font-medium text-gray-700">1.1 제안 배경 및 목적</div>
-                <div class="text-base font-medium text-gray-700">1.2 제안의 범위</div>
-                <div class="text-base font-medium text-gray-700">1.3 제안의 특징 및 장점</div>
-                <div class="text-base font-medium text-gray-700">1.4 기대 효과</div>
+    <div class="a4-page flex flex-col relative" style="background-color: ${darkBg} !important; color: white !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
+      
+      <!-- Background Effects -->
+      <div class="absolute top-0 left-0 w-full h-full pointer-events-none" style="pointer-events: none !important;">
+        <div class="absolute top-[-5%] left-[-5%] w-[400px] h-[400px] rounded-full blur-[100px]" style="background-color: ${primaryColorRgba} !important; position: absolute !important; top: -5% !important; left: -5% !important; width: 400px !important; height: 400px !important; border-radius: 9999px !important; filter: blur(100px) !important;"></div>
+        <div class="absolute bottom-[-5%] right-[-5%] w-[400px] h-[400px] rounded-full blur-[100px]" style="background-color: ${hexToRgba(secondaryColor, 0.05)} !important; position: absolute !important; bottom: -5% !important; right: -5% !important; width: 400px !important; height: 400px !important; border-radius: 9999px !important; filter: blur(100px) !important;"></div>
+      </div>
+
+      <!-- Header -->
+      <div class="px-16 pt-16 pb-8 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 3rem !important; padding-bottom: 1.5rem !important; position: relative !important; z-index: 10 !important;">
+        <div class="flex items-center gap-4 mb-2" style="display: flex !important; align-items: center !important; gap: 1rem !important; margin-bottom: 0.5rem !important;">
+          <div class="h-0.5 w-10" style="height: 2px !important; width: 2.5rem !important; background-color: ${primaryColor} !important;"></div>
+          <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${primaryColor} !important; text-transform: uppercase !important;">Index</span>
+        </div>
+        <div class="relative" style="position: relative !important;">
+          <h1 class="text-6xl font-black tracking-tighter uppercase italic opacity-5 absolute -top-8 -left-2" style="font-size: 3.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; text-transform: uppercase !important; font-style: italic !important; opacity: 0.05 !important; position: absolute !important; top: -2rem !important; left: -0.5rem !important;">Contents</h1>
+          <h2 class="text-4xl font-black tracking-tight text-white relative z-10 flex items-baseline gap-4" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: white !important; position: relative !important; z-index: 10 !important; display: flex !important; align-items: baseline !important; gap: 1rem !important;">
+            목 차 <span class="text-sm font-light italic tracking-widest uppercase" style="font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important;">Table of Contents</span>
+          </h2>
+        </div>
+      </div>
+
+      <!-- Table of Contents Grid -->
+      <div class="flex-1 px-16 z-10 relative" style="flex: 1 !important; padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0.5rem !important; padding-bottom: 0 !important; position: relative !important; z-index: 10 !important;">
+        <div class="grid grid-cols-2 gap-x-12 gap-y-8" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 3rem 2rem !important;">
+          ${sections
+            .map(
+              section => `
+          <div class="relative" style="position: relative !important;">
+            <!-- Roman Numeral Background -->
+            <span class="absolute -top-5 -left-3 text-7xl font-black italic pointer-events-none" style="position: absolute !important; top: -1.25rem !important; left: -0.75rem !important; font-size: 4.5rem !important; font-weight: 900 !important; font-style: italic !important; color: rgba(255, 255, 255, 0.03) !important; pointer-events: none !important;">
+              ${section.id}
+            </span>
+            
+            <div class="relative border-l-[3px] pl-5 py-1" style="border-left: 3px solid ${section.borderColor} !important; padding-left: 1.25rem !important; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; position: relative !important;">
+              <div class="flex items-center gap-2 mb-1" style="display: flex !important; align-items: center !important; gap: 0.5rem !important; margin-bottom: 0.25rem !important;">
+                <span class="text-[9px] font-bold uppercase tracking-widest leading-none" style="font-size: 9px !important; font-weight: bold !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; line-height: 1 !important;">
+                  Part ${section.id}
+                </span>
               </div>
+              <h3 class="text-xl font-black text-white mb-5" style="font-size: 1.25rem !important; font-weight: 900 !important; color: white !important; margin-bottom: 1rem !important;">
+                ${section.title}
+                <span class="block text-[9px] font-medium mt-0.5 uppercase tracking-tighter" style="display: block !important; font-size: 9px !important; font-weight: 500 !important; color: #71717a !important; margin-top: 0.125rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">
+                  ${section.enTitle}
+                </span>
+              </h3>
+
+              <ul class="space-y-3" style="display: flex !important; flex-direction: column !important; gap: 0.5rem !important;">
+                ${section.items
+                  .map(
+                    (item, idx) => `
+                <li class="flex items-center justify-between" style="display: flex !important; align-items: center !important; justify-content: space-between !important;">
+                  <div class="flex items-center gap-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important;">
+                    <span class="text-[9px] font-black" style="font-size: 9px !important; font-weight: 900 !important; color: #3f3f46 !important;">
+                      ${section.id.toLowerCase()}.${idx + 1}
+                    </span>
+                    <span class="text-[14px] font-medium" style="font-size: 0.875rem !important; font-weight: 500 !important; color: #a1a1aa !important;">
+                      ${item}
+                    </span>
+                  </div>
+                  <span style="color: #27272a !important; font-size: 0.75rem !important;">→</span>
+                </li>
+                `,
+                  )
+                  .join('')}
+              </ul>
             </div>
           </div>
+          `,
+            )
+            .join('')}
+        </div>
+      </div>
 
-          <!-- II. 제안 전략 카드 -->
-          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
-            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
-            <div class="p-6">
-              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">II. 제안 전략</h3>
-              <p class="text-sm text-gray-500 mb-4 font-medium">Strategy</p>
-              <div class="space-y-2">
-                <div class="text-base font-medium text-gray-700">2.1 사업 이해 및 분석</div>
-                <div class="text-base font-medium text-gray-700">2.2 목표 모델 설계</div>
-                <div class="text-base font-medium text-gray-700">2.3 추진 전략</div>
-              </div>
-            </div>
+      <!-- Footer Area -->
+      <div class="px-16 pb-12 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0.5rem !important; padding-bottom: 1.5rem !important; position: relative !important; z-index: 10 !important;">
+        <div class="h-px w-full mb-6 opacity-30" style="height: 1px !important; width: 100% !important; background-color: #27272a !important; margin-bottom: 0.75rem !important; opacity: 0.3 !important;"></div>
+        <div class="flex justify-between items-center opacity-40" style="display: flex !important; justify-content: space-between !important; align-items: center !important; opacity: 0.4 !important;">
+          <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">
+            <span class="text-xs font-black tracking-tighter uppercase" style="font-size: 0.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; text-transform: uppercase !important;">TOKTOKHAN.DEV</span>
           </div>
-
-          <!-- III. 기술 및 기능 부문 카드 -->
-          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
-            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
-            <div class="p-6">
-              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">III. 기술 및 기능 부문</h3>
-              <p class="text-sm text-gray-500 mb-4 font-medium">Technical Solution</p>
-              <div class="space-y-2">
-                <div class="text-base font-medium text-gray-700">3.1 시스템 목표 아키텍처</div>
-                <div class="text-base font-medium text-gray-700">3.2 기능 구현 방안</div>
-                <div class="text-base font-medium text-gray-700">3.3 보안 및 데이터 관리</div>
-                <div class="text-base font-medium text-gray-700">3.4 시스템 연계 방안</div>
-              </div>
+          <div class="flex items-center gap-6" style="display: flex !important; align-items: center !important; gap: 1.5rem !important;">
+            <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">
+              <span style="color: ${primaryColor} !important;">🔒</span>
+              <span class="text-[8px] font-black uppercase tracking-widest leading-none" style="font-size: 8px !important; color: #71717a !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; line-height: 1 !important;">Confidential Document</span>
             </div>
-          </div>
-
-          <!-- IV. 사업 관리 부문 카드 -->
-          <div class="bg-white rounded-xl overflow-hidden" style="border: 1px solid #e5e7eb !important;">
-            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
-            <div class="p-6">
-              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">IV. 사업 관리 부문</h3>
-              <p class="text-sm text-gray-500 mb-4 font-medium">Project Management</p>
-              <div class="space-y-2">
-                <div class="text-base font-medium text-gray-700">4.1 추진 일정</div>
-                <div class="text-base font-medium text-gray-700">4.2 수행 조직 및 인력</div>
-                <div class="text-base font-medium text-gray-700">4.3 개발 방법론</div>
-                <div class="text-base font-medium text-gray-700">4.4 품질 보증 계획</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- V. 사업 지원 부문 카드 -->
-          <div class="bg-white rounded-xl overflow-hidden col-span-2" style="border: 1px solid #e5e7eb !important;">
-            <div class="h-2" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});"></div>
-            <div class="p-6">
-              <h3 class="text-2xl font-bold mb-4" style="color: ${primaryColor} !important;">V. 사업 지원 부문</h3>
-              <p class="text-sm text-gray-500 mb-4 font-medium">Support & Maintenance</p>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
-                  <div class="text-base font-medium text-gray-700">5.1 교육 훈련 계획</div>
-                  <div class="text-base font-medium text-gray-700">5.2 기술 이전 계획</div>
-                </div>
-                <div class="space-y-2">
-                  <div class="text-base font-medium text-gray-700">5.3 유지보수 및 하자보수</div>
-                  <div class="text-base font-medium text-gray-700">5.4 비상 대책</div>
-                </div>
-              </div>
-            </div>
+            <div class="w-px h-3" style="width: 1px !important; height: 0.75rem !important; background-color: #27272a !important;"></div>
+            <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 8px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important;">Page 02</span>
           </div>
         </div>
       </div>
@@ -403,9 +468,9 @@ export function generateTableOfContentsTemplate(
 export function generateConclusionTemplate(data: TemplateData): string {
   // 브랜드 컬러 추출
   const primaryColor = data.brandColor1 || '#4f46e5'; // 기본값: indigo-600
-
-  // 제안사 로고 (기본값: tokdev-logo.jpg)
-  const ourLogo = data.ourLogo || '/images/tokdev-logo.jpg';
+  const secondaryColor = data.brandColor2 || '#1f2937'; // 기본값: gray-800
+  const tertiaryColor = data.brandColor3 || '#0a0c10';
+  const darkBg = '#0a0c10';
 
   // 브랜드 컬러를 rgba로 변환 (투명도 20%용)
   const hexToRgba = (hex: string, alpha: number): string => {
@@ -415,83 +480,162 @@ export function generateConclusionTemplate(data: TemplateData): string {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  const primaryColorRgba = hexToRgba(primaryColor, 0.2);
+  const primaryColorRgba = hexToRgba(primaryColor, 0.05);
+  const secondaryColorRgba = hexToRgba(secondaryColor, 0.05);
+
+  // Promise 데이터
+  const promises = [
+    {
+      id: '01',
+      title: '검증된 전문성',
+      desc: '다년간의 프로젝트 경험과\n검증된 기술력으로\n안정적인 시스템 구축',
+      bgColor: `bg-[${hexToRgba(primaryColor, 0.2)}]`,
+      color: primaryColor,
+    },
+    {
+      id: '02',
+      title: '핵심 인력 투입',
+      desc: '최고의 전문가들이\n직접 참여하여\n품질을 보장합니다',
+      bgColor: `bg-[${hexToRgba(primaryColor, 0.2)}]`,
+      color: primaryColor,
+    },
+    {
+      id: '03',
+      title: '상생의 파트너십',
+      desc: '단순 계약이 아닌\n장기적인 파트너로서\n함께 성장합니다',
+      bgColor: `bg-[${hexToRgba(primaryColor, 0.2)}]`,
+      color: primaryColor,
+    },
+  ];
 
   return `
-    <div class="a4-page bg-white p-8" style="background-color: white !important; padding: 2rem !important;">
-      <div class="max-w-5xl mx-auto" style="max-width: 64rem !important; margin-left: auto !important; margin-right: auto !important;">
-        <div class="space-y-12 py-12" style="padding-top: 3rem !important; padding-bottom: 3rem !important;">
-          <!-- 로고 영역 (고객사 로고 × 제안사 로고) -->
-          ${
-            data.clientLogo || ourLogo
-              ? `
-          <div class="flex justify-center items-center gap-4 mb-8" style="display: flex !important; justify-content: center !important; align-items: center !important; gap: 1rem !important; margin-bottom: 2rem !important;">
-            ${data.clientLogo ? `<img src="${data.clientLogo}" alt="고객사 로고" class="h-16" style="height: 6rem !important; max-width: 100% !important; object-fit: contain !important;" />` : ''}
-            <span class="text-2xl text-gray-400" style="font-size: 2rem !important; color: black !important;">X</span>
-            <img src="${ourLogo}" alt="제안사 로고" class="h-16" style="height: 6rem !important; max-width: 100% !important; object-fit: contain !important;" />
-          </div>
-          `
-              : ''
-          }
-          
-          <!-- 메인 제목 -->
-          <div class="text-center">
-            <h1 class="text-5xl font-bold mb-6" style="font-size: 2.5rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 1.5rem !important; line-height: 1.2;">
-              ${data.clientCompanyName}의 성공적인 미래,<br>TOKTOKHAN.DEV가 함께하겠습니다.
-            </h1>
-            <div class="w-24 h-1 mx-auto mb-8" style="width: 6rem !important; height: 0.25rem !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 2rem !important; background: linear-gradient(to right, ${primaryColor}, ${data.brandColor2 || '#1f2937'}) !important;"></div>
-          </div>
+    <div class="a4-page flex flex-col relative" style="background-color: ${darkBg} !important; color: white !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
+      
+      <!-- Background Effects -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden" style="position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; pointer-events: none !important; overflow: hidden !important;">
+        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full blur-[120px]" style="position: absolute !important; top: -10% !important; right: -10% !important; width: 500px !important; height: 500px !important; border-radius: 9999px !important; filter: blur(120px) !important; background-color: ${primaryColorRgba} !important;"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full blur-[100px]" style="position: absolute !important; bottom: -10% !important; left: -10% !important; width: 500px !important; height: 500px !important; border-radius: 9999px !important; filter: blur(100px) !important; background-color: ${secondaryColorRgba} !important;"></div>
+      </div>
 
-          <!-- 강조 문구 -->
-          <div class="text-center">
-            <p class="text-2xl font-semibold text-gray-800 leading-relaxed" style="font-size: 1.75rem !important; font-weight: 600 !important; color: #1f2937 !important; line-height: 1.75;">
-              "안정적인 기술력과 책임감 있는 수행으로<br>무결점 시스템 구축을 약속합니다."
+      <!-- Main Content Area -->
+      <div class="flex-1 px-16 pt-20 flex flex-col justify-center items-center z-10 text-center" style="flex: 1 !important; padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 5rem !important; display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; position: relative !important; z-index: 10 !important;">
+        
+        <!-- Logo Collaboration Section -->
+        <div class="flex items-center justify-center gap-8 mb-12" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 2rem !important; margin-bottom: 3rem !important;">
+          <div class="flex flex-col items-center gap-2" style="display: flex !important; flex-direction: column !important; align-items: center !important; gap: 0.5rem !important;">
+            ${
+              data.clientLogo
+                ? `<img src="${data.clientLogo}" alt="${data.clientCompanyName} 로고" class="w-16 h-16" style="width: 4rem !important; height: 4rem !important; object-fit: contain !important;" />`
+                : `<svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 4rem !important; height: 4rem !important;">
+                    <path d="M50 0L0 50L50 100L100 50L50 0Z" fill="${tertiaryColor}"/>
+                    <path d="M50 0V100L100 50L50 0Z" fill="${primaryColor}"/>
+                    <circle cx="28" cy="42" r="6" fill="white"/>
+                    <circle cx="28" cy="58" r="6" fill="white"/>
+                    <circle cx="72" cy="50" r="6" fill="white"/>
+                  </svg>`
+            }
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase" style="font-size: 9px !important; font-weight: bold !important; letter-spacing: 0.2em !important; color: #71717a !important; text-transform: uppercase !important;">${data.clientCompanyName || 'Client'}</span>
+          </div>
+          
+          <div class="h-6 w-px rotate-12" style="height: 1.5rem !important; width: 1px !important; background-color: #27272a !important; transform: rotate(12deg) !important;"></div>
+          <span class="text-lg font-light" style="font-size: 1.125rem !important; font-weight: 300 !important; color: #52525b !important;">X</span>
+          <div class="h-6 w-px rotate-12" style="height: 1.5rem !important; width: 1px !important; background-color: #27272a !important; transform: rotate(12deg) !important;"></div>
+
+          <div class="flex flex-col items-center gap-2" style="display: flex !important; flex-direction: column !important; align-items: center !important; gap: 0.5rem !important;">
+            <img src="${data.ourLogo || '/images/tokdev-logo.jpg'}" alt="TOKTOKHAN.DEV 로고" class="w-16 h-16 rounded-lg" style="width: 4rem !important; height: 4rem !important; border-radius: 0.5rem !important; object-fit: contain !important;" />
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase" style="font-size: 9px !important; font-weight: bold !important; letter-spacing: 0.2em !important; color: #71717a !important; text-transform: uppercase !important;">Toktokhan</span>
+          </div>
+        </div>
+
+        <!-- Main Title -->
+        <div class="mb-8" style="margin-bottom: 2rem !important;">
+          <h1 class="text-4xl font-black leading-[1.2] tracking-tight mb-5" style="font-size: 2.25rem !important; font-weight: 900 !important; line-height: 1.2 !important; letter-spacing: -0.025em !important; margin-bottom: 1.25rem !important; color: white !important;">
+            ${data.clientCompanyName || '고객사'}의 <span style="color: ${primaryColor} !important; font-style: italic !important;">성공적인 미래,</span><br />
+            <span style="text-decoration: underline !important; text-decoration-color: ${tertiaryColor} !important; text-decoration-thickness: 3px !important; text-underline-offset: 0.5rem !important; color: white !important;">TOKTOKHAN.DEV</span>가 함께하겠습니다.
+          </h1>
+          <div class="h-1 w-20 mx-auto rounded-full" style="height: 0.25rem !important; width: 5rem !important; margin-left: auto !important; margin-right: auto !important; border-radius: 9999px !important; background: linear-gradient(to right, ${primaryColor}, ${tertiaryColor}) !important;"></div>
+        </div>
+
+        <!-- Core Message -->
+        <p class="text-xl font-light leading-relaxed mb-14 max-w-2xl" style="font-size: 1.25rem !important; font-weight: 300 !important; color: #a1a1aa !important; line-height: 1.75 !important; margin-bottom: 3.5rem !important; max-width: 42rem !important;">
+          "안정적인 <span style="color: white !important; font-weight: 500 !important;">기술력</span>과 책임감 있는 <span style="color: white !important; font-weight: 500 !important;">수행</span>으로<br />
+          무결점 시스템 구축을 약속합니다."
+        </p>
+
+        <!-- Three Promises Grid -->
+        <div class="grid grid-cols-3 gap-5 w-full max-w-4xl mb-16" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 1.25rem !important; width: 100% !important; max-width: 56rem !important; margin-bottom: 4rem !important;">
+          ${promises
+            .map(
+              p => `
+          <div class="relative group p-6 rounded-2xl border backdrop-blur-sm" style="position: relative !important; padding: 1.5rem !important; border-radius: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.3)} !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; backdrop-filter: blur(4px) !important;">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-5" style="width: 3rem !important; height: 3rem !important; border-radius: 0.75rem !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 1.25rem !important; background-color: ${hexToRgba(p.color, 0.2)} !important;">
+              <span style="font-size: 1.5rem !important; font-weight: 900 !important; color: ${p.color} !important;">${p.id}</span>
+            </div>
+            <span class="text-[9px] font-black tracking-[0.3em] mb-2 block uppercase" style="font-size: 9px !important; font-weight: 900 !important; letter-spacing: 0.3em !important; color: #52525b !important; margin-bottom: 0.5rem !important; display: block !important; text-transform: uppercase !important;">Promise ${p.id}</span>
+            <h3 class="text-base font-bold text-white mb-3" style="font-size: 1rem !important; font-weight: bold !important; color: white !important; margin-bottom: 0.75rem !important;">${p.title}</h3>
+            <p class="text-[13px] leading-relaxed whitespace-pre-line font-medium" style="font-size: 13px !important; color: #71717a !important; line-height: 1.75 !important; white-space: pre-line !important; font-weight: 500 !important;">
+              ${p.desc}
             </p>
           </div>
+          `,
+            )
+            .join('')}
+        </div>
 
-          <!-- 3가지 약속 -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16" style="margin-top: 4rem !important; display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 2rem !important;">
-            <!-- 01. 검증된 전문성 -->
-            <div class="text-center">
-              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="width: 4rem !important; height: 4rem !important; border-radius: 9999px !important; margin-bottom: 1rem !important; background: ${primaryColorRgba} !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;">
-                <span class="text-2xl font-bold" style="font-size: 1.5rem !important; font-weight: bold !important; color: ${primaryColor} !important;">01</span>
-              </div>
-              <h3 class="text-xl font-bold mb-3" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important;">검증된 전문성</h3>
-              <p class="text-base text-gray-700 leading-relaxed" style="font-size: 1rem !important; color: #374151 !important; line-height: 1.75;">
-                유사 사업 수행 경험의 노하우를<br>본 사업에 쏟아붓겠습니다.
-              </p>
-            </div>
+        <!-- Signature Area -->
+        <div class="relative group" style="position: relative !important;">
+          <p class="text-[10px] tracking-[0.4em] uppercase mb-3 font-bold" style="font-size: 10px !important; letter-spacing: 0.4em !important; color: #71717a !important; margin-bottom: 0.75rem !important; text-transform: uppercase !important; font-weight: bold !important;">Trusted Partner</p>
+          <h2 class="text-3xl font-black tracking-tighter text-white mb-2 leading-none" style="font-size: 1.875rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; margin-bottom: 0.5rem !important; line-height: 1 !important;">TOKTOKHAN.DEV</h2>
+          <div class="flex items-center justify-center gap-1.5 mt-4" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 0.375rem !important; margin-top: 1rem !important;">
+            <div class="w-1 h-1 rounded-full" style="width: 0.25rem !important; height: 0.25rem !important; border-radius: 9999px !important; background-color: ${primaryColor} !important;"></div>
+            <div class="w-10 h-[1px]" style="width: 2.5rem !important; height: 1px !important; background-color: #27272a !important;"></div>
+            <div class="w-1 h-1 rounded-full" style="width: 0.25rem !important; height: 0.25rem !important; border-radius: 9999px !important; background-color: ${tertiaryColor} !important;"></div>
+          </div>
+        </div>
+      </div>
 
-            <!-- 02. 핵심 인력 투입 -->
-            <div class="text-center">
-              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="width: 4rem !important; height: 4rem !important; border-radius: 9999px !important; margin-bottom: 1rem !important; background: ${primaryColorRgba} !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;">
-                <span class="text-2xl font-bold" style="font-size: 1.5rem !important; font-weight: bold !important; color: ${primaryColor} !important;">02</span>
+      <!-- Footer Area -->
+      <div class="cover-footer px-16 pb-16 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-bottom: 2rem !important; padding-top: 1rem !important; position: relative !important; z-index: 10 !important;">
+        <div class="h-px w-full mb-10" style="height: 1px !important; width: 100% !important; background: linear-gradient(to right, rgba(30, 58, 138, 0.5), rgba(39, 39, 42, 0.8), transparent) !important; margin-bottom: 1.5rem !important;"></div>
+        
+        <div class="flex justify-between items-end" style="display: flex !important; justify-content: space-between !important; align-items: flex-end !important;">
+          <!-- Agency Info -->
+          <div class="space-y-6" style="display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
+            
+            
+            <div class="flex gap-5" style="display: flex !important; gap: 1rem !important;">
+              <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                  <span style="color: ${tertiaryColor} !important;">📍</span> Address
+                </p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">서울시 마포구 동교로 12안길 39</p>
               </div>
-              <h3 class="text-xl font-bold mb-3" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important;">핵심 인력 투입</h3>
-              <p class="text-base text-gray-700 leading-relaxed" style="font-size: 1rem !important; color: #374151 !important; line-height: 1.75;">
-                본사 최고의 아키텍트와 개발팀을<br>전담 배치하여 품질을 보장합니다.
-              </p>
-            </div>
-
-            <!-- 03. 상생의 파트너십 -->
-            <div class="text-center">
-              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="width: 4rem !important; height: 4rem !important; border-radius: 9999px !important; margin-bottom: 1rem !important; background: ${primaryColorRgba} !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;">
-                <span class="text-2xl font-bold" style="font-size: 1.5rem !important; font-weight: bold !important; color: ${primaryColor} !important;">03</span>
+              <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                  <span style="color: ${primaryColor} !important;">🌐</span> Contact
+                </p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">sales@toktokhan.dev</p>
               </div>
-              <h3 class="text-xl font-bold mb-3" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important;">상생의 파트너십</h3>
-              <p class="text-base text-gray-700 leading-relaxed" style="font-size: 1rem !important; color: #374151 !important; line-height: 1.75;">
-                단순 구축을 넘어 지속 가능한<br>운영 지원 체계를 약속드립니다.
-              </p>
+              <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                  <span style="color: #71717a !important;">📞</span> Phone
+                </p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">010-2493-2906</p>
+              </div>
             </div>
           </div>
 
-          <!-- 회사 정보 -->
-          <div class="mt-16 pt-8 border-t-2 text-center" style="margin-top: 4rem !important; padding-top: 2rem !important; border-top: 2px solid ${primaryColorRgba} !important; text-align: center !important;">
-            <p class="text-4xl font-bold mb-2" style="font-size: 2.25rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.5rem !important;">TOKTOKHAN.DEV</p>
-            <div class="text-sm text-gray-600 mt-4" style="font-size: 0.875rem !important; color: #4b5563 !important; margin-top: 1rem !important;">
-              <p>서울특별시 마포구 동교로 12안길 39</p>
-              <p class="mt-1">E. sales@toktokhan.dev | W. www.toktokhan.dev</p>
+          <!-- Security & Copyright -->
+          <div class="text-right flex flex-col items-end gap-3" style="text-align: right !important; display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 0.75rem !important;">
+            <div class="inline-flex items-center px-4 py-1.5 rounded-full border gap-2" style="display: inline-flex !important; align-items: center !important; padding-left: 1rem !important; padding-right: 1rem !important; padding-top: 0.375rem !important; padding-bottom: 0.375rem !important; background-color: rgba(39, 39, 42, 1) !important; border: 1px solid rgba(30, 58, 138, 0.3) !important; border-radius: 9999px !important; gap: 0.5rem !important;">
+              <span class="text-[10px] font-black uppercase tracking-[0.2em]" style="font-size: 10px !important; color: rgba(191, 219, 254, 1) !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.2em !important;">
+                Confidential Partnership
+              </span>
             </div>
+            <p class="text-[9px] leading-relaxed font-medium" style="font-size: 9px !important; color: #52525b !important; line-height: 1.625 !important; font-weight: 500 !important;">
+              본 문서는 기술적/영업적 기밀을 포함하고 있으므로 무단 복제 및 유출을 금합니다.<br/>
+              © 2025 Toktokhan.dev. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
@@ -592,6 +736,63 @@ export function generateHTMLWrapper(
         align-items: center !important;
         justify-content: center !important;
         text-align: center !important;
+      }
+      /* 표지 Top Header는 양쪽 끝 정렬 유지 */
+      .a4-page:first-child .cover-top-header {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: baseline !important;
+        justify-content: space-between !important;
+        text-align: left !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .a4-page:first-child .cover-top-header > div:first-child {
+        flex-shrink: 0 !important;
+      }
+      .a4-page:first-child .cover-top-header > div:last-child {
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+        text-align: right !important;
+      }
+      /* 표지 Footer는 양쪽 끝 정렬 유지 */
+      .a4-page:first-child .cover-footer {
+        display: block !important;
+        text-align: left !important;
+      }
+      .a4-page:first-child .cover-footer > div:first-of-type {
+        display: block !important;
+      }
+      .a4-page:first-child .cover-footer > div:last-of-type {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        text-align: left !important;
+      }
+      /* 마무리 페이지 (세 번째 a4-page) - 표지와 동일한 패딩 처리 */
+      .a4-page:nth-child(3) {
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .a4-page:nth-child(3) > div {
+        width: 100% !important;
+      }
+      /* 마무리 Footer는 표지와 동일하게 처리 */
+      .a4-page:nth-child(3) .cover-footer {
+        display: block !important;
+        text-align: left !important;
+      }
+      .a4-page:nth-child(3) .cover-footer > div:first-of-type {
+        display: block !important;
+      }
+      .a4-page:nth-child(3) .cover-footer > div:last-of-type {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        text-align: left !important;
       }
       /* 목차 카드의 shadow만 제거 (border는 유지) */
       .a4-page .rounded-xl,

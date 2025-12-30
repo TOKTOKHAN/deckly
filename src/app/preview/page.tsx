@@ -19,11 +19,11 @@ export default function PreviewPage() {
 
   const sampleData: TemplateData = useMemo(
     () => ({
-      projectName: '사업제안서 자동화 플랫폼 기획 및 구축',
+      projectName: '사업제안서 자동화 플랫폼',
       clientCompanyName: `Domino's Pizza`,
-      brandColor1: '#52b8f2',
-      brandColor2: '#975ef2',
-      brandColor3: '#f5e8e0',
+      brandColor1: '#4f46e5',
+      brandColor2: '#1f2937',
+      brandColor3: '#0a0c10',
       clientLogo: clientLogo.src as string,
     }),
     [],

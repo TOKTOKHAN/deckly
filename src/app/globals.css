@@ -54,11 +54,6 @@ body {
 
 .a4-preview-container .a4-page:first-child {
   padding: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
 }
 
 .a4-preview-container .a4-page:last-child {
@@ -164,14 +159,19 @@ body {
     padding: 0 !important; /* 표지 패딩 제거 - 레이아웃 관련만 */
   }
 
-  /* 표지 내부 컨테이너 중앙 정렬 - 레이아웃만 정의 */
+  /* 표지 내부 컨테이너 - 레이아웃은 templates.ts의 인라인 스타일로 제어 */
   .a4-page:first-child > div {
     width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
+  }
+
+  /* 목차 페이지 (두 번째 a4-page) - 패딩 제거하여 내용이 잘리지 않도록 */
+  .a4-page:nth-child(2) {
+    padding: 0 !important;
+  }
+
+  /* 끝마무리 페이지 (세 번째 a4-page) - 패딩 제거하여 내용이 잘리지 않도록 */
+  .a4-page:nth-child(3) {
+    padding: 0 !important;
   }
 
   /* 제목이 페이지 끝에 혼자 남지 않도록 */
