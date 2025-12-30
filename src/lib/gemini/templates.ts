@@ -387,7 +387,7 @@ export function generateTableOfContentsTemplate(
                   <div class="text-base font-medium text-gray-700">5.2 기술 이전 계획</div>
                 </div>
                 <div class="space-y-2">
-                  <div class="text-base font-medium text-gray-700">5.3 유지보수</div>
+                  <div class="text-base font-medium text-gray-700">5.3 유지보수 및 하자보수</div>
                   <div class="text-base font-medium text-gray-700">5.4 비상 대책</div>
                 </div>
               </div>
@@ -551,7 +551,7 @@ export function generateHTMLWrapper(
     @media print {
       @page { 
         margin: 0; 
-        size: A4 landscape; 
+        size: A4; 
       }
       body { 
         margin: 0; 
@@ -562,8 +562,8 @@ export function generateHTMLWrapper(
         widows: 3;
       }
       .a4-page {
-        width: 297mm;
-        min-height: 210mm;
+        width: 210mm;
+        min-height: 297mm;
         height: auto;
         page-break-after: always;
         page-break-inside: auto;
