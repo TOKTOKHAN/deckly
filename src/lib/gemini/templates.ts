@@ -189,7 +189,7 @@ export async function generateCoverTemplate(
               src="${data.clientLogo}" 
               alt="${data.clientCompanyName} 로고" 
               class="h-12 w-auto opacity-20" 
-              style="height: 4rem !important; max-width: 200px !important; object-fit: contain !important; opacity: 0.2 !important; filter: brightness(1.2) !important; flex-shrink: 0 !important;"
+              style="height: 4rem !important; max-width: 200px !important; object-fit: contain !important; opacity: 0.8 !important; filter: brightness(1.2) !important; flex-shrink: 0 !important;"
             />
             `
                 : ''
@@ -387,7 +387,7 @@ export function generateTableOfContentsTemplate(
                   <div class="text-base font-medium text-gray-700">5.2 기술 이전 계획</div>
                 </div>
                 <div class="space-y-2">
-                  <div class="text-base font-medium text-gray-700">5.3 유지보수 및 하자보수</div>
+                  <div class="text-base font-medium text-gray-700">5.3 유지보수</div>
                   <div class="text-base font-medium text-gray-700">5.4 비상 대책</div>
                 </div>
               </div>
@@ -551,7 +551,7 @@ export function generateHTMLWrapper(
     @media print {
       @page { 
         margin: 0; 
-        size: A4; 
+        size: A4 landscape; 
       }
       body { 
         margin: 0; 
@@ -562,8 +562,8 @@ export function generateHTMLWrapper(
         widows: 3;
       }
       .a4-page {
-        width: 210mm;
-        min-height: 297mm;
+        width: 297mm;
+        min-height: 210mm;
         height: auto;
         page-break-after: always;
         page-break-inside: auto;

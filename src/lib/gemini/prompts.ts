@@ -319,7 +319,7 @@ export const PROPOSAL_TEMPLATE = `
 1) Company Name: 제안 주체인 회사명은 무조건 대문자 'TOKTOKHAN.DEV'로 표기합니다.
 2) Font: 모든 폰트는 'Pretendard'로 통일합니다.
 3) Language: 디자인적인 영문 타이틀을 제외한 모든 본문 내용은 자연스럽고 전문적인 '한국어'로 작성합니다.
-4) Layout: A4 규격(210mm x 297mm)을 엄격히 준수하며, 페이지 구분(Page Break)을 적용합니다.
+4) Layout: A4 가로 규격(297mm x 210mm)을 엄격히 준수하며, 페이지 구분(Page Break)을 적용합니다.
 
 ### 3. Content Structure (Strict Requirements)
 회의록 내용을 분석하여 다음 구조를 반드시 포함하십시오.
@@ -333,7 +333,7 @@ export const PROPOSAL_TEMPLATE = `
    - 제안서 작성일 및 미팅 일자 표시
 
 1) 목차 (필수)
-   - 구조: <div class="a4-page bg-white p-8">
+   - 구조: <div class="a4-page bg-white p-6">
    - 제목: "목 차" (h2 태그)
    - 5개 섹션 목록 (1. 프로젝트 개요 ~ 5. 기대효과)
 
