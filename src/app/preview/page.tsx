@@ -7,16 +7,18 @@ import {
   generateConclusionTemplate,
   generateBodySection1Template,
   generateBodySection2Template,
+  generateBodySection3Template,
   generateHTMLWrapper,
   TemplateData,
   BodySection1Data,
   BodySection2Data,
+  BodySection3Data,
 } from '@/lib/gemini/templates';
 import clientLogo from '../../../public/images/Domino_pizza_logo.svg';
 
 export default function PreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<
-    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'all'
+    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'body3' | 'all'
   >('all');
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -96,6 +98,23 @@ export default function PreviewPage() {
           };
           content = generateBodySection2Template(bodySection2Data, sampleData.brandColor1);
           break;
+        case 'body3':
+          const bodySection3Data: BodySection3Data = {
+            architecture: {
+              frontend: ['Mobile App', 'Web Platform'],
+              coreHub: 'CORE HUB',
+              backend: ['Microservices', 'Scalable DB'],
+            },
+            features: [
+              '반응형 웹 및 하이브리드 앱 고도화',
+              'AI 기반 스마트 주문 시스템 연동',
+              '실시간 배달 트래킹 GPS 인터페이스',
+            ],
+            security: ['End-to-End 데이터 암호화', 'WAF 및 DDoS 방어 체계 구축'],
+            integrations: ['POS SYSTEM', 'CRM', 'ERP', '3RD PARTY API'],
+          };
+          content = generateBodySection3Template(bodySection3Data, sampleData.brandColor1);
+          break;
         case 'all':
           const cover = await generateCoverTemplate(sampleData);
           const toc = generateTableOfContentsTemplate(
@@ -142,10 +161,25 @@ export default function PreviewPage() {
               churnRate: '-40%',
             },
           };
+          const bodySection3DataAll: BodySection3Data = {
+            architecture: {
+              frontend: ['Mobile App', 'Web Platform'],
+              coreHub: 'CORE HUB',
+              backend: ['Microservices', 'Scalable DB'],
+            },
+            features: [
+              '반응형 웹 및 하이브리드 앱 고도화',
+              'AI 기반 스마트 주문 시스템 연동',
+              '실시간 배달 트래킹 GPS 인터페이스',
+            ],
+            security: ['End-to-End 데이터 암호화', 'WAF 및 DDoS 방어 체계 구축'],
+            integrations: ['POS SYSTEM', 'CRM', 'ERP', '3RD PARTY API'],
+          };
           const body1 = generateBodySection1Template(bodySection1DataAll, sampleData.brandColor1);
           const body2 = generateBodySection2Template(bodySection2DataAll, sampleData.brandColor1);
+          const body3 = generateBodySection3Template(bodySection3DataAll, sampleData.brandColor1);
           const conclusion = generateConclusionTemplate(sampleData);
-          content = cover + toc + body1 + body2 + conclusion;
+          content = cover + toc + body1 + body2 + body3 + conclusion;
           break;
         default:
           content = '';
@@ -288,6 +322,16 @@ export default function PreviewPage() {
               }`}
             >
               본문 섹션 2
+            </button>
+            <button
+              onClick={() => setSelectedTemplate('body3')}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                selectedTemplate === 'body3'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              본문 섹션 3
             </button>
             <button
               onClick={() => setSelectedTemplate('all')}
