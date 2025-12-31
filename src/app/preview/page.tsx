@@ -6,15 +6,17 @@ import {
   generateTableOfContentsTemplate,
   generateConclusionTemplate,
   generateBodySection1Template,
+  generateBodySection2Template,
   generateHTMLWrapper,
   TemplateData,
   BodySection1Data,
+  BodySection2Data,
 } from '@/lib/gemini/templates';
 import clientLogo from '../../../public/images/Domino_pizza_logo.svg';
 
 export default function PreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<
-    'cover' | 'toc' | 'conclusion' | 'body1' | 'all'
+    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'all'
   >('all');
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -67,6 +69,33 @@ export default function PreviewPage() {
           };
           content = generateBodySection1Template(bodySection1Data, sampleData.brandColor1);
           break;
+        case 'body2':
+          const bodySection2Data: BodySection2Data = {
+            marketAnalysis: {
+              trends: [
+                '비대면 주문 채널 고도화',
+                'AI 기반 최적 배차 시스템',
+                '구독형 모델을 통한 고객 락인',
+              ],
+              coreValue: 'CX-CENTRIC',
+            },
+            targetModel: {
+              legacy: 'LEGACY',
+              target: "Intelligent Domino's Hub",
+              nextGen: 'NEXT-GEN',
+            },
+            strategies: [
+              '사용자 중심 UI/UX 전면 개편',
+              '클라우드 기반 서버 안정성 확보',
+              '마케팅 오토메이션 도구 통합',
+            ],
+            benefits: {
+              conversion: '+25%',
+              churnRate: '-40%',
+            },
+          };
+          content = generateBodySection2Template(bodySection2Data, sampleData.brandColor1);
+          break;
         case 'all':
           const cover = await generateCoverTemplate(sampleData);
           const toc = generateTableOfContentsTemplate(
@@ -89,9 +118,34 @@ export default function PreviewPage() {
               { title: 'Scalable Tech', description: '확장 가능한\n클라우드 아키텍처' },
             ],
           };
+          const bodySection2DataAll: BodySection2Data = {
+            marketAnalysis: {
+              trends: [
+                '비대면 주문 채널 고도화',
+                'AI 기반 최적 배차 시스템',
+                '구독형 모델을 통한 고객 락인',
+              ],
+              coreValue: 'CX-CENTRIC',
+            },
+            targetModel: {
+              legacy: 'LEGACY',
+              target: "Intelligent Domino's Hub",
+              nextGen: 'NEXT-GEN',
+            },
+            strategies: [
+              '사용자 중심 UI/UX 전면 개편',
+              '클라우드 기반 서버 안정성 확보',
+              '마케팅 오토메이션 도구 통합',
+            ],
+            benefits: {
+              conversion: '+25%',
+              churnRate: '-40%',
+            },
+          };
           const body1 = generateBodySection1Template(bodySection1DataAll, sampleData.brandColor1);
+          const body2 = generateBodySection2Template(bodySection2DataAll, sampleData.brandColor1);
           const conclusion = generateConclusionTemplate(sampleData);
-          content = cover + toc + body1 + conclusion;
+          content = cover + toc + body1 + body2 + conclusion;
           break;
         default:
           content = '';
@@ -224,6 +278,16 @@ export default function PreviewPage() {
               }`}
             >
               본문 섹션 1
+            </button>
+            <button
+              onClick={() => setSelectedTemplate('body2')}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                selectedTemplate === 'body2'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              본문 섹션 2
             </button>
             <button
               onClick={() => setSelectedTemplate('all')}
