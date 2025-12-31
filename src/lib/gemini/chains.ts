@@ -125,7 +125,11 @@ export async function generateProposalWithChains(
     console.log('표지 미리보기:', cover.substring(0, 200));
 
     // 2. 목차 생성 (템플릿)
-    const tableOfContents = generateTableOfContentsTemplate(data.brandColor1);
+    const tableOfContents = generateTableOfContentsTemplate(
+      data.brandColor1,
+      data.brandColor2,
+      data.brandColor3,
+    );
     console.log('목차 생성 완료, 길이:', tableOfContents.length);
 
     // 3. 본문 생성 (AI)
@@ -144,8 +148,6 @@ export async function generateProposalWithChains(
       budget: data.budgetMin || '',
       projectOverview: data.projectOverview || '',
       priorityFeatures: data.priorityFeatures || '',
-      brandColor1: data.brandColor1 || '#4f46e5',
-      brandColor2: data.brandColor2 || '#1f2937',
     });
 
     const bodyResponse = await model.invoke(bodyPrompt);
