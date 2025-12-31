@@ -1,4 +1,6 @@
 /* 제안서 목차 템플릿 프로젝트 제안서의 목차 페이지를 생성하는 템플릿입니다. */
+import { getContrastTextColorWithGray, getContrastBorderColor } from './constants';
+
 export function generateTableOfContentsTemplate(
   brandColor1?: string,
   brandColor2?: string,
@@ -7,7 +9,9 @@ export function generateTableOfContentsTemplate(
   const primaryColor = brandColor1 || '#4f46e5'; // 기본값: indigo-600
   const secondaryColor = brandColor2 || '#1f2937'; // 기본값: gray-800
   const tertiaryColor = brandColor3 || '#E31837';
-  const darkBg = '#0a0c10';
+
+  // 배경색 밝기에 따라 텍스트 색상 결정
+  const textColors = getContrastTextColorWithGray(tertiaryColor);
 
   // Hex to RGBA 변환 함수
   const hexToRgba = (hex: string, alpha: number): string => {
@@ -20,6 +24,9 @@ export function generateTableOfContentsTemplate(
   const primaryColorRgba = hexToRgba(primaryColor, 0.05);
 
   // 목차 섹션 데이터
+  // Part 5의 border 색상은 배경색(tertiaryColor)과 겹칠 수 있으므로 보색 사용
+  const part5BorderColor = getContrastBorderColor(tertiaryColor, tertiaryColor);
+
   const sections = [
     {
       id: 'I',
@@ -53,13 +60,13 @@ export function generateTableOfContentsTemplate(
       id: 'V',
       title: '사업 지원 부문',
       enTitle: 'Support & Maintenance',
-      borderColor: tertiaryColor, // 파트 5: tertiaryColor
+      borderColor: part5BorderColor, // 파트 5: 배경색의 보색 사용
       items: ['교육 훈련 계획', '기술 이전 계획', '유지보수', '비상 대책'],
     },
   ];
 
   return `
-    <div class="a4-page flex flex-col relative" style="background-color: ${darkBg} !important; color: white !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
+    <div class="a4-page flex flex-col relative" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
       
       <!-- Background Effects -->
       <div class="absolute top-0 left-0 w-full h-full pointer-events-none" style="pointer-events: none !important;">
@@ -74,8 +81,8 @@ export function generateTableOfContentsTemplate(
           <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${primaryColor} !important; text-transform: uppercase !important;">Index</span>
         </div>
         <div class="relative" style="position: relative !important;">
-          <h1 class="text-6xl font-black tracking-tighter uppercase italic opacity-5 absolute -top-8 -left-2" style="font-size: 3.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; text-transform: uppercase !important; font-style: italic !important; opacity: 0.05 !important; position: absolute !important; top: -2rem !important; left: -0.5rem !important;">Contents</h1>
-          <h2 class="text-4xl font-black tracking-tight text-white relative z-10 flex items-baseline gap-4" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: white !important; position: relative !important; z-index: 10 !important; display: flex !important; align-items: baseline !important; gap: 1rem !important;">
+          <h1 class="text-6xl font-black tracking-tighter uppercase italic opacity-5 absolute -top-8 -left-2" style="font-size: 3.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: ${textColors.primary} !important; text-transform: uppercase !important; font-style: italic !important; opacity: 0.05 !important; position: absolute !important; top: -2rem !important; left: -0.5rem !important;">Contents</h1>
+          <h2 class="text-4xl font-black tracking-tight text-white relative z-10 flex items-baseline gap-4" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; position: relative !important; z-index: 10 !important; display: flex !important; align-items: baseline !important; gap: 1rem !important;">
             목 차 <span class="text-sm font-light italic tracking-widest uppercase" style="font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important;">Table of Contents</span>
           </h2>
         </div>
@@ -99,7 +106,7 @@ export function generateTableOfContentsTemplate(
                   Part ${section.id}
                 </span>
               </div>
-              <h3 class="text-xl font-black text-white mb-5" style="font-size: 1.25rem !important; font-weight: 900 !important; color: white !important; margin-bottom: 1rem !important;">
+              <h3 class="text-xl font-black text-white mb-5" style="font-size: 1.25rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; margin-bottom: 1rem !important;">
                 ${section.title}
                 <span class="block text-[9px] font-medium mt-0.5 uppercase tracking-tighter" style="display: block !important; font-size: 9px !important; font-weight: 500 !important; color: #71717a !important; margin-top: 0.125rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">
                   ${section.enTitle}
@@ -138,7 +145,7 @@ export function generateTableOfContentsTemplate(
         <div class="h-px w-full mb-6 opacity-30" style="height: 1px !important; width: 100% !important; background-color: #27272a !important; margin-bottom: 0.75rem !important; opacity: 0.3 !important;"></div>
         <div class="flex justify-between items-center opacity-40" style="display: flex !important; justify-content: space-between !important; align-items: center !important; opacity: 0.4 !important;">
           <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">
-            <span class="text-xs font-black tracking-tighter uppercase" style="font-size: 0.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; text-transform: uppercase !important;">TOKTOKHAN.DEV</span>
+            <span class="text-xs font-black tracking-tighter uppercase" style="font-size: 0.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: ${textColors.primary} !important; text-transform: uppercase !important;">TOKTOKHAN.DEV</span>
           </div>
           <div class="flex items-center gap-6" style="display: flex !important; align-items: center !important; gap: 1.5rem !important;">
             <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">

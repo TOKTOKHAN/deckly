@@ -1,5 +1,10 @@
 /* 본문 섹션 5: 사업 지원 부문 (Part V: Sustainability & Support) */
 import type { BodySection5Data } from '../types';
+import {
+  getContrastTextColorWithGray,
+  getCardTextColor,
+  getContrastBorderColor,
+} from '../constants';
 
 export function generateBodySection5Template(
   data: BodySection5Data,
@@ -11,6 +16,16 @@ export function generateBodySection5Template(
   const primaryColor = brandColor1 || '#4f46e5'; // 주요 강조, 제목, 아이콘
   const secondaryColor = brandColor2 || '#1f2937'; // 카드 배경, 보조 강조
   const tertiaryColor = brandColor3 || '#0a0c10'; // 경계선, 미묘한 배경
+
+  // 배경색 밝기에 따라 텍스트 색상 결정
+  const textColors = getContrastTextColorWithGray(tertiaryColor);
+
+  // 카드 배경색에 따른 텍스트 색상 계산
+  const cardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
+  const darkCardTextColors = getCardTextColor(tertiaryColor, tertiaryColor, 0.3);
+
+  // Part V 색상: 목차의 border 색상과 동일하게 보색 사용
+  const part5Color = getContrastBorderColor(tertiaryColor, tertiaryColor);
 
   // Hex to RGBA 변환 함수
   const hexToRgba = (hex: string, alpha: number): string => {
@@ -34,15 +49,15 @@ export function generateBodySection5Template(
   };
 
   return `
-    <div class="a4-page flex flex-col" style="background-color: #0a0c10 !important; color: white !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
+    <div class="a4-page body-section flex flex-col" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
       
       <!-- Main Title -->
       <div class="mb-6" style="margin-bottom: 1.5rem !important;">
         <div class="flex items-center gap-4 mb-2" style="display: flex !important; align-items: center !important; gap: 1rem !important; margin-bottom: 0.5rem !important;">
-          <div class="h-0.5 w-10" style="height: 2px !important; width: 2.5rem !important; background-color: ${primaryColor} !important;"></div>
-          <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${primaryColor} !important; text-transform: uppercase !important;">Part V</span>
+          <div class="h-0.5 w-10" style="height: 2px !important; width: 2.5rem !important; background-color: ${part5Color} !important;"></div>
+          <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${part5Color} !important; text-transform: uppercase !important;">Part V</span>
         </div>
-        <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: white !important; margin-bottom: 0.5rem !important;">
+        <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important;">
           사업 지원 부문
           <span class="block text-sm font-light italic tracking-widest uppercase mt-1" style="display: block !important; font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important; margin-top: 0.25rem !important;">Sustainability & Support</span>
         </h1>
@@ -58,11 +73,11 @@ export function generateBodySection5Template(
           <!-- 5.1 교육 훈련 계획 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
                 <span style="font-size: 1.25rem !important;">📖</span>
               </div>
               <div>
-                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                   5.1 교육 훈련 계획
                 </h2>
                 <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Operation Training</p>
@@ -75,7 +90,7 @@ export function generateBodySection5Template(
                     ?.slice(0, 3)
                     .map(
                       item => `
-                <li class="flex gap-3 text-sm text-zinc-400" style="display: flex !important; gap: 0.75rem !important; font-size: 0.875rem !important; color: #a1a1aa !important;">
+                <li class="flex gap-3 text-sm text-zinc-400" style="display: flex !important; gap: 0.75rem !important; font-size: 0.875rem !important; color: ${cardTextColors.secondary} !important;">
                   <div class="w-1 h-1 bg-blue-500 rounded-full mt-2 shrink-0" style="width: 0.25rem !important; height: 0.25rem !important; background-color: ${primaryColor} !important; border-radius: 9999px !important; margin-top: 0.5rem !important; flex-shrink: 0 !important;"></div>
                   <span>${item}</span>
                 </li>
@@ -90,18 +105,18 @@ export function generateBodySection5Template(
           <!-- 5.2 기술 이전 계획 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
                 <span style="font-size: 1.25rem !important;">👥</span>
               </div>
               <div>
-                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                   5.2 기술 이전 계획
                 </h2>
                 <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Knowledge Transfer</p>
               </div>
             </div>
             <div class="bg-zinc-900/40 p-6 rounded-2xl h-full flex flex-col justify-center" style="background-color: rgba(24, 24, 27, 0.4) !important; padding: 1.5rem !important; border-radius: 1rem !important; height: 100% !important; display: flex !important; flex-direction: column !important; justify-content: center !important; width: 100% !important;">
-              <p class="text-sm text-zinc-400 leading-relaxed font-light italic border-l-2 border-zinc-700 pl-4" style="font-size: 0.875rem !important; color: #a1a1aa !important; line-height: 1.5 !important; font-weight: 300 !important; font-style: italic !important; border-left: 2px solid ${hexToRgba(primaryColor, 0.3)} !important; padding-left: 1rem !important;">${knowledgeTransfer}</p>
+              <p class="text-sm text-zinc-400 leading-relaxed font-light italic border-l-2 border-zinc-700 pl-4" style="font-size: 0.875rem !important; color: ${cardTextColors.secondary} !important; line-height: 1.5 !important; font-weight: 300 !important; font-style: italic !important; border-left: 2px solid ${part5Color} !important; padding-left: 1rem !important;">${knowledgeTransfer}</p>
             </div>
           </div>
         </section>
@@ -109,11 +124,11 @@ export function generateBodySection5Template(
         <!-- 5.3 유지보수 및 운영 지원 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
               <span style="font-size: 1.25rem !important;">⚙️</span>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                 5.3 유지보수 및 운영 지원
               </h2>
               <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Maintenance Service</p>
@@ -125,9 +140,9 @@ export function generateBodySection5Template(
               .slice(0, 3)
               .map(
                 item => `
-            <div class="p-5 bg-zinc-950 rounded-xl border border-white/5 text-center" style="padding: 1.25rem !important; background-color: ${hexToRgba(tertiaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; text-align: center !important;">
+            <div class="p-5 bg-zinc-950 rounded-xl border border-white/5 text-center" style="padding: 1.25rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(part5Color, 0.12)} !important; text-align: center !important;">
               <h5 class="font-bold mb-2" style="font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.5rem !important;">${item.title}</h5>
-              <p class="text-xs text-zinc-500" style="font-size: 0.75rem !important; color: #71717a !important;">${item.description}</p>
+              <p class="text-xs text-zinc-500" style="font-size: 0.75rem !important; color: ${darkCardTextColors.tertiary} !important;">${item.description}</p>
             </div>
             `,
               )
@@ -138,23 +153,23 @@ export function generateBodySection5Template(
         <!-- 5.4 비상 대책 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
               <span style="font-size: 1.25rem !important;">⚠️</span>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                 5.4 비상 대책
               </h2>
               <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Emergency Protocol</p>
             </div>
           </div>
           
-          <div class="bg-red-600/5 border border-red-600/20 p-6 rounded-2xl flex items-center justify-between" style="background-color: ${hexToRgba(primaryColor, 0.05)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.2)} !important; padding: 1.5rem !important; border-radius: 1rem !important; display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important;">
+          <div class="bg-red-600/5 border border-red-600/20 p-6 rounded-2xl flex items-center justify-between" style="background-color: ${hexToRgba(tertiaryColor, 0.15)} !important; border: 1px solid ${hexToRgba(part5Color, 0.12)} !important; padding: 1.5rem !important; border-radius: 1rem !important; display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important;">
             <div class="w-2/3" style="width: 66.666667% !important;">
-              <p class="text-base font-bold text-white mb-2" style="font-size: 1rem !important; font-weight: bold !important; color: white !important; margin-bottom: 0.5rem !important;">${emergency.title}</p>
-              <p class="text-xs text-zinc-500" style="font-size: 0.75rem !important; color: #71717a !important;">${emergency.description}</p>
+              <p class="text-base font-bold text-white mb-2" style="font-size: 1rem !important; font-weight: bold !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important;">${emergency.title}</p>
+              <p class="text-xs text-zinc-500" style="font-size: 0.75rem !important; color: ${cardTextColors.tertiary} !important;">${emergency.description}</p>
             </div>
-            <div class="px-6 py-2.5 bg-red-600 rounded-xl text-xs font-black text-white italic tracking-widest uppercase shadow-lg shadow-red-900/40" style="padding-left: 1.5rem !important; padding-right: 1.5rem !important; padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; background-color: ${primaryColor} !important; border-radius: 0.75rem !important; font-size: 0.75rem !important; font-weight: 900 !important; color: white !important; font-style: italic !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; box-shadow: 0 10px 15px -3px ${hexToRgba(primaryColor, 0.4)} !important;">
+            <div class="px-6 py-2.5 bg-red-600 rounded-xl text-xs font-black text-white italic tracking-widest uppercase" style="padding-left: 1.5rem !important; padding-right: 1.5rem !important; padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; background-color: ${primaryColor} !important; border-radius: 0.75rem !important; font-size: 0.75rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; font-style: italic !important; letter-spacing: 0.1em !important; text-transform: uppercase !important;">
               ${emergency.badge}
             </div>
           </div>

@@ -27,16 +27,21 @@ export default function PreviewPage() {
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  // 브랜드 컬러 상태 관리
+  const [brandColor1, setBrandColor1] = useState('#4f46e5');
+  const [brandColor2, setBrandColor2] = useState('#1f2937');
+  const [brandColor3, setBrandColor3] = useState('#0a0c10');
+
   const sampleData: TemplateData = useMemo(
     () => ({
       projectName: '사업제안서 자동화 플랫폼',
       clientCompanyName: `Domino's Pizza`,
-      brandColor1: '#4f46e5',
-      brandColor2: '#1f2937',
-      brandColor3: '#0a0c10',
+      brandColor1,
+      brandColor2,
+      brandColor3,
       clientLogo: clientLogo.src as string,
     }),
-    [],
+    [brandColor1, brandColor2, brandColor3],
   );
 
   // 템플릿 내용 생성
@@ -51,7 +56,11 @@ export default function PreviewPage() {
           content = await generateCoverTemplate(sampleData);
           break;
         case 'toc':
-          content = generateTableOfContentsTemplate(sampleData.brandColor1, sampleData.brandColor2);
+          content = generateTableOfContentsTemplate(
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
           break;
         case 'conclusion':
           content = generateConclusionTemplate(sampleData);
@@ -73,7 +82,12 @@ export default function PreviewPage() {
               { title: 'Scalable Tech', description: '확장 가능한\n클라우드 아키텍처' },
             ],
           };
-          content = generateBodySection1Template(bodySection1Data, sampleData.brandColor1);
+          content = generateBodySection1Template(
+            bodySection1Data,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
           break;
         case 'body2':
           const bodySection2Data: BodySection2Data = {
@@ -100,7 +114,12 @@ export default function PreviewPage() {
               churnRate: '-40%',
             },
           };
-          content = generateBodySection2Template(bodySection2Data, sampleData.brandColor1);
+          content = generateBodySection2Template(
+            bodySection2Data,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
           break;
         case 'body3':
           const bodySection3Data: BodySection3Data = {
@@ -117,7 +136,12 @@ export default function PreviewPage() {
             security: ['End-to-End 데이터 암호화', 'WAF 및 DDoS 방어 체계 구축'],
             integrations: ['POS SYSTEM', 'CRM', 'ERP', '3RD PARTY API'],
           };
-          content = generateBodySection3Template(bodySection3Data, sampleData.brandColor1);
+          content = generateBodySection3Template(
+            bodySection3Data,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
           break;
         case 'body4':
           const bodySection4Data: BodySection4Data = {
@@ -156,7 +180,12 @@ export default function PreviewPage() {
             },
             qualityAssurance: ['정기 단위 테스트', '사용자 시나리오 검증', '부하 테스트 실시'],
           };
-          content = generateBodySection4Template(bodySection4Data, sampleData.brandColor1);
+          content = generateBodySection4Template(
+            bodySection4Data,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
           break;
         case 'body5':
           const bodySection5Data: BodySection5Data = {
@@ -178,13 +207,19 @@ export default function PreviewPage() {
               badge: 'DR System Active',
             },
           };
-          content = generateBodySection5Template(bodySection5Data, sampleData.brandColor1);
+          content = generateBodySection5Template(
+            bodySection5Data,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
           break;
         case 'all':
           const cover = await generateCoverTemplate(sampleData);
           const toc = generateTableOfContentsTemplate(
             sampleData.brandColor1,
             sampleData.brandColor2,
+            sampleData.brandColor3,
           );
           const bodySection1DataAll: BodySection1Data = {
             background: {
@@ -295,11 +330,36 @@ export default function PreviewPage() {
               badge: 'DR System Active',
             },
           };
-          const body1 = generateBodySection1Template(bodySection1DataAll, sampleData.brandColor1);
-          const body2 = generateBodySection2Template(bodySection2DataAll, sampleData.brandColor1);
-          const body3 = generateBodySection3Template(bodySection3DataAll, sampleData.brandColor1);
-          const body4 = generateBodySection4Template(bodySection4DataAll, sampleData.brandColor1);
-          const body5 = generateBodySection5Template(bodySection5DataAll, sampleData.brandColor1);
+          const body1 = generateBodySection1Template(
+            bodySection1DataAll,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
+          const body2 = generateBodySection2Template(
+            bodySection2DataAll,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
+          const body3 = generateBodySection3Template(
+            bodySection3DataAll,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
+          const body4 = generateBodySection4Template(
+            bodySection4DataAll,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
+          const body5 = generateBodySection5Template(
+            bodySection5DataAll,
+            sampleData.brandColor1,
+            sampleData.brandColor2,
+            sampleData.brandColor3,
+          );
           const conclusion = generateConclusionTemplate(sampleData);
           content = cover + toc + body1 + body2 + body3 + body4 + body5 + conclusion;
           break;
@@ -393,6 +453,76 @@ export default function PreviewPage() {
             제안서 템플릿의 스타일을 확인할 수 있습니다. 아래 버튼을 클릭하여 각 템플릿을
             확인하세요.
           </p>
+
+          {/* 브랜드 컬러 입력 필드 */}
+          <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <h2 className="mb-3 text-lg font-semibold text-gray-900">브랜드 컬러 설정</h2>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Primary Color (주요 강조)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={brandColor1}
+                    onChange={e => setBrandColor1(e.target.value)}
+                    className="h-10 w-20 cursor-pointer rounded border border-gray-300"
+                  />
+                  <input
+                    type="text"
+                    value={brandColor1}
+                    onChange={e => setBrandColor1(e.target.value)}
+                    className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="#4f46e5"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Secondary Color (카드 배경)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={brandColor2}
+                    onChange={e => setBrandColor2(e.target.value)}
+                    className="h-10 w-20 cursor-pointer rounded border border-gray-300"
+                  />
+                  <input
+                    type="text"
+                    value={brandColor2}
+                    onChange={e => setBrandColor2(e.target.value)}
+                    className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="#1f2937"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Tertiary Color (경계선/미묘한 배경)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={brandColor3}
+                    onChange={e => setBrandColor3(e.target.value)}
+                    className="h-10 w-20 cursor-pointer rounded border border-gray-300"
+                  />
+                  <input
+                    type="text"
+                    value={brandColor3}
+                    onChange={e => setBrandColor3(e.target.value)}
+                    className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="#0a0c10"
+                  />
+                </div>
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-gray-500">
+              💡 브랜드 컬러를 변경하면 템플릿에 실시간으로 반영됩니다.
+            </p>
+          </div>
 
           <div className="flex flex-wrap gap-3">
             <button

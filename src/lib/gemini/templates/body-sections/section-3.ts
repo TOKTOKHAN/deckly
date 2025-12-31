@@ -1,5 +1,6 @@
 /*본문 섹션 3: 기술 및 기능 부문 (Part III: Technical Solution)*/
 import type { BodySection3Data } from '../types';
+import { getContrastTextColorWithGray, getCardTextColor } from '../constants';
 
 export function generateBodySection3Template(
   data: BodySection3Data,
@@ -11,6 +12,13 @@ export function generateBodySection3Template(
   const primaryColor = brandColor1 || '#4f46e5'; // 주요 강조, 제목, 아이콘
   const secondaryColor = brandColor2 || '#1f2937'; // 카드 배경, 보조 강조
   const tertiaryColor = brandColor3 || '#0a0c10'; // 경계선, 미묘한 배경
+
+  // 배경색 밝기에 따라 텍스트 색상 결정
+  const textColors = getContrastTextColorWithGray(tertiaryColor);
+
+  // 카드 배경색에 따른 텍스트 색상 계산
+  const cardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
+  const darkCardTextColors = getCardTextColor(tertiaryColor, tertiaryColor, 0.3);
 
   // Hex to RGBA 변환 함수
   const hexToRgba = (hex: string, alpha: number): string => {
@@ -34,7 +42,7 @@ export function generateBodySection3Template(
   const integrations = data.integrations || [];
 
   return `
-    <div class="a4-page flex flex-col" style="background-color: #0a0c10 !important; color: white !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
+    <div class="a4-page body-section flex flex-col" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
       
       <!-- Main Title -->
       <div class="mb-6" style="margin-bottom: 1.5rem !important;">
@@ -42,7 +50,7 @@ export function generateBodySection3Template(
           <div class="h-0.5 w-10" style="height: 2px !important; width: 2.5rem !important; background-color: ${primaryColor} !important;"></div>
           <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${primaryColor} !important; text-transform: uppercase !important;">Part III</span>
         </div>
-        <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: white !important; margin-bottom: 0.5rem !important;">
+        <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important;">
           기술 및 기능 부문
           <span class="block text-sm font-light italic tracking-widest uppercase mt-1" style="display: block !important; font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important; margin-top: 0.25rem !important;">Technical Solution</span>
         </h1>
@@ -56,18 +64,18 @@ export function generateBodySection3Template(
         <!-- 3.1 시스템 목표 아키텍처 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
               <span style="font-size: 1.25rem !important;">📚</span>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                 3.1 시스템 목표 아키텍처
               </h2>
               <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Cloud-Native Structure</p>
             </div>
           </div>
           
-          <div class="bg-zinc-900/20 border border-dashed border-zinc-800 rounded-2xl p-8 flex justify-center" style="background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border: 1px dashed ${hexToRgba(tertiaryColor, 0.5)} !important; border-radius: 1rem !important; padding: 2rem !important; display: flex !important; justify-content: center !important; width: 100% !important;">
+          <div class="bg-zinc-900/20 border border-dashed border-zinc-800 rounded-2xl p-8 flex justify-center" style="background-color: ${hexToRgba(tertiaryColor, 0.15)} !important; border: 1px dashed ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 1rem !important; padding: 2rem !important; display: flex !important; justify-content: center !important; width: 100% !important;">
             <div class="flex items-center gap-6" style="display: flex !important; align-items: center !important; gap: 1.5rem !important;">
               <div class="flex flex-col gap-3" style="display: flex !important; flex-direction: column !important; gap: 0.75rem !important;">
                 ${
@@ -75,7 +83,7 @@ export function generateBodySection3Template(
                     ?.slice(0, 2)
                     .map(
                       (item, i) => `
-                <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 4rem !important; height: 4rem !important; background-color: ${hexToRgba(secondaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.3)} !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;">
+                <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 4rem !important; height: 4rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${i === 0 ? primaryColor : '#71717a'} !important;">
                     ${
                       i === 0
@@ -93,14 +101,14 @@ export function generateBodySection3Template(
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
-              <div class="w-36 h-36 rounded-full border-4 border-blue-600/10 flex items-center justify-center relative" style="width: 9rem !important; height: 9rem !important; border-radius: 9999px !important; border: 4px solid ${hexToRgba(primaryColor, 0.1)} !important; display: flex !important; align-items: center !important; justify-content: center !important; position: relative !important;">
-                <div class="w-28 h-28 bg-zinc-950 border-2 border-blue-600 rounded-2xl flex flex-col items-center justify-center gap-2" style="width: 7rem !important; height: 7rem !important; background-color: ${hexToRgba(tertiaryColor, 0.5)} !important; border: 2px solid ${primaryColor} !important; border-radius: 1rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important; box-shadow: 0 0 40px ${hexToRgba(primaryColor, 0.2)} !important;">
+              <div class="w-36 h-36 rounded-full border-4 border-blue-600/10 flex items-center justify-center relative" style="width: 9rem !important; height: 9rem !important; border-radius: 9999px !important; border: 4px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; align-items: center !important; justify-content: center !important; position: relative !important;">
+                <div class="w-28 h-28 bg-zinc-950 border-2 border-blue-600 rounded-2xl flex flex-col items-center justify-center gap-2" style="width: 7rem !important; height: 7rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border: 2px solid ${primaryColor} !important; border-radius: 1rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important;">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                     <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
                     <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
                     <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
                   </svg>
-                  <span class="text-[9px] font-black text-white italic tracking-[0.2em]" style="font-size: 9px !important; font-weight: 900 !important; color: white !important; font-style: italic !important; letter-spacing: 0.2em !important;">${architecture.coreHub}</span>
+                  <span class="text-[9px] font-black text-white italic tracking-[0.2em]" style="font-size: 9px !important; font-weight: 900 !important; color: ${textColors.primary} !important; font-style: italic !important; letter-spacing: 0.2em !important;">${architecture.coreHub}</span>
                 </div>
               </div>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #27272a !important;">
@@ -113,7 +121,7 @@ export function generateBodySection3Template(
                     ?.slice(0, 2)
                     .map(
                       item => `
-                <div class="w-32 p-3 bg-zinc-900 rounded-xl border border-white/5 text-center text-xs font-bold text-zinc-400" style="width: 8rem !important; padding: 0.75rem !important; background-color: ${hexToRgba(secondaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; text-align: center !important; font-size: 0.75rem !important; font-weight: bold !important; color: #a1a1aa !important;">${item}</div>
+                <div class="w-32 p-3 bg-zinc-900 rounded-xl border border-white/5 text-center text-xs font-bold text-zinc-400" style="width: 8rem !important; padding: 0.75rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; text-align: center !important; font-size: 0.75rem !important; font-weight: bold !important; color: ${cardTextColors.secondary} !important;">${item}</div>
                 `,
                     )
                     .join('') || ''
@@ -128,11 +136,11 @@ export function generateBodySection3Template(
           <!-- 3.2 기능 구현 방안 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
                 <span style="font-size: 1.25rem !important;">💻</span>
               </div>
               <div>
-                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                   3.2 기능 구현 방안
                 </h2>
                 <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Functional Implementation</p>
@@ -144,12 +152,12 @@ export function generateBodySection3Template(
                   ?.slice(0, 3)
                   .map(
                     feature => `
-              <li class="flex items-start gap-3 p-3 bg-zinc-900/20 border border-white/5 rounded-xl" style="display: flex !important; align-items: flex-start !important; gap: 0.75rem !important; padding: 0.75rem !important; background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; border-radius: 0.75rem !important;">
+              <li class="flex items-start gap-3 p-3 bg-zinc-900/20 border border-white/5 rounded-xl" style="display: flex !important; align-items: flex-start !important; gap: 0.75rem !important; padding: 0.75rem !important; background-color: ${hexToRgba(secondaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important; margin-top: 0.125rem !important; flex-shrink: 0 !important;">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
-                <span class="text-xs font-medium text-zinc-400" style="font-size: 0.75rem !important; font-weight: 500 !important; color: #a1a1aa !important;">${feature}</span>
+                <span class="text-xs font-medium text-zinc-400" style="font-size: 0.75rem !important; font-weight: 500 !important; color: ${cardTextColors.secondary} !important;">${feature}</span>
               </li>
               `,
                   )
@@ -161,11 +169,11 @@ export function generateBodySection3Template(
           <!-- 3.3 보안 및 데이터 관리 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
                 <span style="font-size: 1.25rem !important;">🛡️</span>
               </div>
               <div>
-                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+                <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                   3.3 보안 및 데이터 관리
                 </h2>
                 <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Security Framework</p>
@@ -177,9 +185,9 @@ export function generateBodySection3Template(
                   ?.slice(0, 2)
                   .map(
                     item => `
-              <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex items-center gap-3" style="padding: 1rem !important; background-color: ${hexToRgba(tertiaryColor, 0.5)} !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; border-radius: 0.75rem !important; display: flex !important; align-items: center !important; gap: 0.75rem !important;">
+              <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex items-center gap-3" style="padding: 1rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; display: flex !important; align-items: center !important; gap: 0.75rem !important;">
                 <div class="w-2 h-2 rounded-full bg-blue-500" style="width: 0.5rem !important; height: 0.5rem !important; border-radius: 9999px !important; background-color: ${primaryColor} !important;"></div>
-                <span class="text-xs text-zinc-300 font-bold" style="font-size: 0.75rem !important; color: #d4d4d8 !important; font-weight: bold !important;">${item}</span>
+                <span class="text-xs text-zinc-300 font-bold" style="font-size: 0.75rem !important; color: ${darkCardTextColors.secondary} !important; font-weight: bold !important;">${item}</span>
               </div>
               `,
                   )
@@ -192,18 +200,18 @@ export function generateBodySection3Template(
         <!-- 3.4 시스템 연계 방안 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
               <span style="font-size: 1.25rem !important;">⚙️</span>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: white !important;">
+              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
                 3.4 시스템 연계 방안
               </h2>
               <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Internal & External Integration</p>
             </div>
           </div>
           
-          <div class="bg-zinc-900/30 p-6 rounded-2xl flex justify-around items-center border border-white/5 italic text-zinc-500 font-black text-xs tracking-widest" style="background-color: ${hexToRgba(secondaryColor, 0.3)} !important; padding: 1.5rem !important; border-radius: 1rem !important; display: flex !important; justify-content: space-around !important; align-items: center !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; font-style: italic !important; color: #71717a !important; font-weight: 900 !important; font-size: 0.75rem !important; letter-spacing: 0.1em !important; width: 100% !important;">
+          <div class="bg-zinc-900/30 p-6 rounded-2xl flex justify-around items-center border border-white/5 italic text-zinc-500 font-black text-xs tracking-widest" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; padding: 1.5rem !important; border-radius: 1rem !important; display: flex !important; justify-content: space-around !important; align-items: center !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; font-style: italic !important; color: ${cardTextColors.tertiary} !important; font-weight: 900 !important; font-size: 0.75rem !important; letter-spacing: 0.1em !important; width: 100% !important;">
             ${integrations
               .map(
                 (item, i) => `

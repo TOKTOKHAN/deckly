@@ -224,8 +224,8 @@ export function generateHTMLWrapper(
       .a4-page {
         overflow: visible !important;
       }
-      /* 본문 섹션 1 (제안 개요) - 내용이 길면 자동으로 다음 페이지로 */
-      .a4-page[style*="background-color: #0a0c10"] {
+      /* 본문 섹션 - 내용이 길면 자동으로 다음 페이지로 */
+      .a4-page.body-section {
         page-break-after: auto !important;
         min-height: auto !important;
         height: auto !important;
@@ -236,26 +236,26 @@ export function generateHTMLWrapper(
         width: 210mm !important;
         max-width: 210mm !important;
       }
-      /* 본문 섹션 1 내부 컨테이너 중앙정렬 제거 */
-      .a4-page[style*="background-color: #0a0c10"] > div {
+      /* 본문 섹션 내부 컨테이너 중앙정렬 제거 */
+      .a4-page.body-section > div {
         align-items: flex-start !important;
         justify-content: flex-start !important;
         text-align: left !important;
         width: 100% !important;
       }
       /* 본문 섹션 내부 섹션들이 페이지 중간에서 잘리지 않도록 */
-      .a4-page[style*="background-color: #0a0c10"] section {
+      .a4-page.body-section section {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
         width: 100% !important;
       }
-      /* 본문 섹션 1의 그리드 컨테이너가 전체 너비 사용 */
-      .a4-page[style*="background-color: #0a0c10"] .grid {
+      /* 본문 섹션의 그리드 컨테이너가 전체 너비 사용 */
+      .a4-page.body-section .grid {
         width: 100% !important;
         max-width: 100% !important;
       }
-      /* 본문 섹션 1의 내용이 한 페이지를 넘으면 자동으로 다음 페이지로 */
-      .a4-page[style*="background-color: #0a0c10"] > div:last-child {
+      /* 본문 섹션의 내용이 한 페이지를 넘으면 자동으로 다음 페이지로 */
+      .a4-page.body-section > div:last-child {
         page-break-inside: auto !important;
         break-inside: auto !important;
       }

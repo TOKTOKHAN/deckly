@@ -19,3 +19,195 @@ export const TAILWIND_THEME = {
     body: 'text-base',
   },
 };
+
+/**
+ * HEX 색상의 밝기를 계산합니다 (0-255)
+ * @param hex HEX 색상 코드 (예: #4f46e5)
+ * @returns 밝기 값 (0-255, 높을수록 밝음)
+ */
+export function getColorBrightness(hex: string): number {
+  // # 제거
+  const cleanHex = hex.replace('#', '');
+
+  // RGB 값 추출
+  const r = parseInt(cleanHex.slice(0, 2), 16);
+  const g = parseInt(cleanHex.slice(2, 4), 16);
+  const b = parseInt(cleanHex.slice(4, 6), 16);
+
+  // 상대적 밝기 계산 (WCAG 기준)
+  // 0.2126 * R + 0.7152 * G + 0.0722 * B
+  const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+  return brightness;
+}
+
+/**
+ * 배경색에 따라 적절한 텍스트 색상을 반환합니다
+ * @param backgroundColor 배경색 HEX 코드
+ * @returns 텍스트 색상 HEX 코드 (#ffffff 또는 #000000)
+ */
+export function getContrastTextColor(backgroundColor: string): string {
+  const brightness = getColorBrightness(backgroundColor);
+
+  // 밝기 기준값: 128 (중간값)
+  // 밝은 배경(>128) → 어두운 텍스트, 어두운 배경(≤128) → 밝은 텍스트
+  return brightness > 128 ? '#000000' : '#ffffff';
+}
+
+/**
+ * 배경색에 따라 적절한 텍스트 색상을 반환합니다 (회색 톤 포함)
+ * @param backgroundColor 배경색 HEX 코드
+ * @returns 텍스트 색상 HEX 코드
+ */
+export function getContrastTextColorWithGray(backgroundColor: string): {
+  primary: string; // 주요 텍스트 색상
+  secondary: string; // 보조 텍스트 색상 (더 연한 톤)
+  tertiary: string; // 3차 텍스트 색상 (가장 연한 톤)
+} {
+  const brightness = getColorBrightness(backgroundColor);
+
+  if (brightness > 128) {
+    // 밝은 배경 → 어두운 텍스트
+    return {
+      primary: '#000000', // 검정
+      secondary: '#1a1a1a', // 매우 어두운 회색
+      tertiary: '#3f3f46', // 어두운 회색
+    };
+  } else {
+    // 어두운 배경 → 밝은 텍스트
+    return {
+      primary: '#ffffff', // 흰색
+      secondary: '#f5f5f5', // 매우 밝은 회색
+      tertiary: '#a1a1aa', // 밝은 회색
+    };
+  }
+}
+
+/**
+ * 투명도가 적용된 색상을 배경색 위에 블렌딩한 실제 색상을 계산합니다
+ * @param foregroundColor 전경색 HEX 코드
+ * @param backgroundColor 배경색 HEX 코드
+ * @param alpha 투명도 (0-1)
+ * @returns 블렌딩된 실제 색상 HEX 코드
+ */
+export function blendColors(
+  foregroundColor: string,
+  backgroundColor: string,
+  alpha: number,
+): string {
+  // HEX를 RGB로 변환
+  const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
+    const cleanHex = hex.replace('#', '');
+    return {
+      r: parseInt(cleanHex.slice(0, 2), 16),
+      g: parseInt(cleanHex.slice(2, 4), 16),
+      b: parseInt(cleanHex.slice(4, 6), 16),
+    };
+  };
+
+  const fg = hexToRgb(foregroundColor);
+  const bg = hexToRgb(backgroundColor);
+
+  // 블렌딩 공식: result = (foreground * alpha) + (background * (1 - alpha))
+  const r = Math.round(fg.r * alpha + bg.r * (1 - alpha));
+  const g = Math.round(fg.g * alpha + bg.g * (1 - alpha));
+  const b = Math.round(fg.b * alpha + bg.b * (1 - alpha));
+
+  // RGB를 HEX로 변환
+  const toHex = (n: number): string => {
+    const hex = n.toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+/**
+ * 카드 배경색에 따라 적절한 텍스트 색상을 반환합니다
+ * @param cardColor 카드 배경색 HEX 코드
+ * @param pageBackgroundColor 페이지 배경색 HEX 코드
+ * @param alpha 카드 배경색의 투명도 (0-1)
+ * @returns 텍스트 색상 객체
+ */
+export function getCardTextColor(
+  cardColor: string,
+  pageBackgroundColor: string,
+  alpha: number,
+): {
+  primary: string;
+  secondary: string;
+  tertiary: string;
+} {
+  // 실제 카드 배경색 계산 (투명도 적용)
+  const actualCardColor = blendColors(cardColor, pageBackgroundColor, alpha);
+  return getContrastTextColorWithGray(actualCardColor);
+}
+
+/**
+ * 배경색에 대한 보색(complementary color)을 계산합니다
+ * 보색은 색상환에서 정반대에 위치한 색상으로, 강한 대비를 제공합니다.
+ * @param backgroundColor 배경색 HEX 코드
+ * @returns 보색 HEX 코드
+ */
+export function getComplementaryColor(backgroundColor: string): string {
+  // HEX를 RGB로 변환
+  const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
+    const cleanHex = hex.replace('#', '');
+    return {
+      r: parseInt(cleanHex.slice(0, 2), 16),
+      g: parseInt(cleanHex.slice(2, 4), 16),
+      b: parseInt(cleanHex.slice(4, 6), 16),
+    };
+  };
+
+  const rgb = hexToRgb(backgroundColor);
+
+  // 보색 계산: 각 RGB 값을 255에서 빼기
+  const complementary = {
+    r: 255 - rgb.r,
+    g: 255 - rgb.g,
+    b: 255 - rgb.b,
+  };
+
+  // RGB를 HEX로 변환
+  const toHex = (n: number): string => {
+    const hex = Math.max(0, Math.min(255, n)).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+
+  return `#${toHex(complementary.r)}${toHex(complementary.g)}${toHex(complementary.b)}`;
+}
+
+/**
+ * 배경색과 충분한 대비를 가지는 border 색상을 반환합니다
+ * 보색을 사용하되, 대비가 충분하지 않으면 밝기를 조정합니다.
+ * @param backgroundColor 배경색 HEX 코드
+ * @param _originalColor 원래 border 색상 HEX 코드 (선택적, 향후 사용 예정)
+ * @returns 대비가 충분한 border 색상 HEX 코드
+ */
+export function getContrastBorderColor(backgroundColor: string, _originalColor?: string): string {
+  // 보색 계산
+  const complementary = getComplementaryColor(backgroundColor);
+
+  // 배경색과 보색의 밝기 계산
+  const bgBrightness = getColorBrightness(backgroundColor);
+  const compBrightness = getColorBrightness(complementary);
+
+  // 밝기 차이가 충분한지 확인 (최소 50 이상)
+  const brightnessDiff = Math.abs(bgBrightness - compBrightness);
+
+  if (brightnessDiff >= 50) {
+    // 대비가 충분하면 보색 사용
+    return complementary;
+  } else {
+    // 대비가 부족하면 밝기 조정
+    // 배경이 어두우면 밝은 색, 밝으면 어두운 색
+    if (bgBrightness < 128) {
+      // 어두운 배경 → 밝은 border
+      return '#ffffff';
+    } else {
+      // 밝은 배경 → 어두운 border
+      return '#000000';
+    }
+  }
+}

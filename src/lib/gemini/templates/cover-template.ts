@@ -1,5 +1,6 @@
 /* 제안서 표지 템플릿 */
 import type { TemplateData } from './types';
+import { getContrastTextColorWithGray } from './constants';
 
 export async function generateCoverTemplate(
   data: TemplateData,
@@ -10,6 +11,9 @@ export async function generateCoverTemplate(
   const primaryColor = data.brandColor1 || '#4f46e5'; // 기본값: indigo-600
   const secondaryColor = data.brandColor2 || '#1f2937'; // 기본값: gray-800
   const tertiaryColor = data.brandColor3 || '#0a0c10';
+
+  // 배경색 밝기에 따라 텍스트 색상 결정
+  const textColors = getContrastTextColorWithGray(tertiaryColor);
 
   // Hex to RGBA 변환 함수
   const hexToRgba = (hex: string, alpha: number): string => {
@@ -100,7 +104,7 @@ export async function generateCoverTemplate(
       : defaultKeywords;
 
   return `
-    <div class="a4-page flex flex-col relative" style="background-color: ${tertiaryColor} !important; color: white !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
+    <div class="a4-page flex flex-col relative" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
       
       <!-- Decorative Background Elements -->
       <div class="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none" style="pointer-events: none !important;">
@@ -150,7 +154,7 @@ export async function generateCoverTemplate(
             `
             }
             <div class="flex flex-col" style="display: flex !important; flex-direction: column !important;">
-              <h2 class="text-4xl font-black italic tracking-tighter leading-none" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; line-height: 1 !important; font-style: italic !important; color: white !important;">
+              <h2 class="text-4xl font-black italic tracking-tighter leading-none" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; line-height: 1 !important; font-style: italic !important; color: ${textColors.primary} !important;">
                 ${data.clientCompanyName || 'Client'}<span class="font-light not-italic" style="font-weight: 300 !important; font-style: normal !important; color: ${primaryColor} !important;"> ${data.clientCompanyName ? '' : 'Company'}</span>
               </h2>
               <p class="text-[10px] tracking-[0.3em] mt-2 font-bold uppercase" style="font-size: 10px !important; letter-spacing: 0.3em !important; color: #a1a1aa !important; margin-top: 0.5rem !important; font-weight: bold !important; text-transform: uppercase !important;">
@@ -163,7 +167,7 @@ export async function generateCoverTemplate(
         <!-- Title Section -->
         <div class="relative mb-24" style="margin-bottom: 3rem !important; margin-top: 0 !important; position: relative !important;">
           <h1 class="text-[80px] font-black leading-[0.95] tracking-tighter mb-10" style="font-size: 80px !important; font-weight: 900 !important; line-height: 0.95 !important; letter-spacing: -0.05em !important; margin-bottom: 1.5rem !important; margin-top: 0 !important; padding-top: 0 !important; text-align: left !important;">
-            <span class="block text-white drop-shadow-sm leading-tight uppercase whitespace-pre-line" style="display: block !important; color: white !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important; line-height: 1.1 !important; text-transform: uppercase !important; white-space: pre-line !important; text-align: left !important; margin-top: 0rem !important; padding-top: 0 !important; word-break: keep-all !important; overflow-wrap: break-word !important; hyphens: auto !important;">
+            <span class="block text-white drop-shadow-sm leading-tight uppercase whitespace-pre-line" style="display: block !important; color: ${textColors.primary} !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important; line-height: 1.1 !important; text-transform: uppercase !important; white-space: pre-line !important; text-align: left !important; margin-top: 0rem !important; padding-top: 0 !important; word-break: keep-all !important; overflow-wrap: break-word !important; hyphens: auto !important;">
               ${title}
             </span>
           </h1>
@@ -185,7 +189,7 @@ export async function generateCoverTemplate(
             <p class="text-[11px] font-bold uppercase tracking-wider mb-1" style="font-size: 11px !important; color: ${subTextColor} !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; margin-bottom: 0.25rem !important;">
               ${keyword.label}
             </p>
-            <p class="text-sm font-medium" style="font-size: 0.875rem !important; color: white !important; font-weight: 500 !important;">
+            <p class="text-sm font-medium" style="font-size: 0.875rem !important; color: ${textColors.secondary} !important; font-weight: 500 !important;">
               ${keyword.sub}
             </p>
           </div>
@@ -204,7 +208,7 @@ export async function generateCoverTemplate(
           <div class="space-y-6" style="display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
             <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">
               <img src="${data.ourLogo || '/images/tokdev-logo.jpg'}" alt="TOKTOKHAN.DEV 로고" class="w-8 h-8 rounded-lg" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; object-fit: contain !important;" />
-              <span class="text-xl font-black tracking-tighter text-white" style="font-size: 1.25rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important;">TOKTOKHAN.DEV</span>
+              <span class="text-xl font-black tracking-tighter text-white" style="font-size: 1.25rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: ${textColors.primary} !important;">TOKTOKHAN.DEV</span>
             </div>
             
             <div class="flex gap-5" style="display: flex !important; gap: 1rem !important;">

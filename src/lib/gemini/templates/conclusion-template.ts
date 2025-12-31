@@ -1,12 +1,15 @@
 /* 제안서 끝마무리 템플릿 */
 import type { TemplateData } from './types';
+import { getContrastTextColorWithGray } from './constants';
 
 export function generateConclusionTemplate(data: TemplateData): string {
   // 브랜드 컬러 추출
   const primaryColor = data.brandColor1 || '#4f46e5'; // 기본값: indigo-600
   const secondaryColor = data.brandColor2 || '#1f2937'; // 기본값: gray-800
   const tertiaryColor = data.brandColor3 || '#0a0c10';
-  const darkBg = '#0a0c10';
+
+  // 배경색 밝기에 따라 텍스트 색상 결정
+  const textColors = getContrastTextColorWithGray(tertiaryColor);
 
   // 브랜드 컬러를 rgba로 변환 (투명도 20%용)
   const hexToRgba = (hex: string, alpha: number): string => {
@@ -45,7 +48,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
   ];
 
   return `
-    <div class="a4-page flex flex-col relative" style="background-color: ${darkBg} !important; color: white !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
+    <div class="a4-page flex flex-col relative" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: hidden !important; width: 210mm !important; min-height: 297mm !important;">
       
       <!-- Background Effects -->
       <div class="absolute inset-0 pointer-events-none overflow-hidden" style="position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; pointer-events: none !important; overflow: hidden !important;">
@@ -85,16 +88,16 @@ export function generateConclusionTemplate(data: TemplateData): string {
 
         <!-- Main Title -->
         <div class="mb-8" style="margin-bottom: 2rem !important;">
-          <h1 class="text-4xl font-black leading-[1.2] tracking-tight mb-5" style="font-size: 2.25rem !important; font-weight: 900 !important; line-height: 1.2 !important; letter-spacing: -0.025em !important; margin-bottom: 1.25rem !important; color: white !important;">
+          <h1 class="text-4xl font-black leading-[1.2] tracking-tight mb-5" style="font-size: 2.25rem !important; font-weight: 900 !important; line-height: 1.2 !important; letter-spacing: -0.025em !important; margin-bottom: 1.25rem !important; color: ${textColors.primary} !important;">
             ${data.clientCompanyName || '고객사'}의 <span style="color: ${primaryColor} !important; font-style: italic !important;">성공적인 미래,</span><br />
-            <span style="text-decoration: underline !important; text-decoration-color: ${tertiaryColor} !important; text-decoration-thickness: 3px !important; text-underline-offset: 0.5rem !important; color: white !important;">TOKTOKHAN.DEV</span>가 함께하겠습니다.
+            <span style="text-decoration: underline !important; text-decoration-color: ${tertiaryColor} !important; text-decoration-thickness: 3px !important; text-underline-offset: 0.5rem !important; color: ${textColors.primary} !important;">TOKTOKHAN.DEV</span>가 함께하겠습니다.
           </h1>
           <div class="h-1 w-20 mx-auto rounded-full" style="height: 0.25rem !important; width: 5rem !important; margin-left: auto !important; margin-right: auto !important; border-radius: 9999px !important; background: linear-gradient(to right, ${primaryColor}, ${tertiaryColor}) !important;"></div>
         </div>
 
         <!-- Core Message -->
         <p class="text-xl font-light leading-relaxed mb-14 max-w-2xl" style="font-size: 1.25rem !important; font-weight: 300 !important; color: #a1a1aa !important; line-height: 1.75 !important; margin-bottom: 3.5rem !important; max-width: 42rem !important;">
-          "안정적인 <span style="color: white !important; font-weight: 500 !important;">기술력</span>과 책임감 있는 <span style="color: white !important; font-weight: 500 !important;">수행</span>으로<br />
+          "안정적인 <span style="color: ${textColors.primary} !important; font-weight: 500 !important;">기술력</span>과 책임감 있는 <span style="color: ${textColors.primary} !important; font-weight: 500 !important;">수행</span>으로<br />
           무결점 시스템 구축을 약속합니다."
         </p>
 
@@ -108,7 +111,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
               <span style="font-size: 1.5rem !important; font-weight: 900 !important; color: ${p.color} !important;">${p.id}</span>
             </div>
             <span class="text-[9px] font-black tracking-[0.3em] mb-2 block uppercase" style="font-size: 9px !important; font-weight: 900 !important; letter-spacing: 0.3em !important; color: #52525b !important; margin-bottom: 0.5rem !important; display: block !important; text-transform: uppercase !important;">Promise ${p.id}</span>
-            <h3 class="text-base font-bold text-white mb-3" style="font-size: 1rem !important; font-weight: bold !important; color: white !important; margin-bottom: 0.75rem !important;">${p.title}</h3>
+            <h3 class="text-base font-bold text-white mb-3" style="font-size: 1rem !important; font-weight: bold !important; color: ${textColors.primary} !important; margin-bottom: 0.75rem !important;">${p.title}</h3>
             <p class="text-[13px] leading-relaxed whitespace-pre-line font-medium" style="font-size: 13px !important; color: #71717a !important; line-height: 1.75 !important; white-space: pre-line !important; font-weight: 500 !important;">
               ${p.desc}
             </p>
@@ -121,7 +124,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
         <!-- Signature Area -->
         <div class="relative group" style="position: relative !important;">
           <p class="text-[10px] tracking-[0.4em] uppercase mb-3 font-bold" style="font-size: 10px !important; letter-spacing: 0.4em !important; color: #71717a !important; margin-bottom: 0.75rem !important; text-transform: uppercase !important; font-weight: bold !important;">Trusted Partner</p>
-          <h2 class="text-3xl font-black tracking-tighter text-white mb-2 leading-none" style="font-size: 1.875rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: white !important; margin-bottom: 0.5rem !important; line-height: 1 !important;">TOKTOKHAN.DEV</h2>
+          <h2 class="text-3xl font-black tracking-tighter text-white mb-2 leading-none" style="font-size: 1.875rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important; line-height: 1 !important;">TOKTOKHAN.DEV</h2>
           <div class="flex items-center justify-center gap-1.5 mt-4" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 0.375rem !important; margin-top: 1rem !important;">
             <div class="w-1 h-1 rounded-full" style="width: 0.25rem !important; height: 0.25rem !important; border-radius: 9999px !important; background-color: ${primaryColor} !important;"></div>
             <div class="w-10 h-[1px]" style="width: 2.5rem !important; height: 1px !important; background-color: #27272a !important;"></div>
