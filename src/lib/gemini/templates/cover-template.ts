@@ -180,16 +180,16 @@ export async function generateCoverTemplate(
         </div>
 
         <!-- Strategy Icons -->
-        <div class="grid grid-cols-3 gap-10 max-w-2xl" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 2.5rem !important; max-width: 42rem !important; margin-left: 0 !important; margin-right: auto !important; margin-top: 1rem !important;">
+        <div class="grid grid-cols-3 gap-10 max-w-2xl" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 2.5rem !important; max-width: 42rem !important; margin-left: auto !important; margin-right: auto !important; margin-top: 1rem !important;">
           ${keywords
             .map(
               keyword => `
-          <div class="border p-6 rounded-2xl backdrop-blur-sm" style="background-color: ${cardBgColor} !important; border: 1px solid ${cardBorderColor} !important; padding: 1.5rem !important; border-radius: 1rem !important; backdrop-filter: blur(4px) !important;">
-            <div class="mb-4" style="margin-bottom: 1rem !important; font-size: 1.75rem !important; color: ${primaryColor} !important;">${keyword.icon || '✨'}</div>
-            <p class="text-[11px] font-bold uppercase tracking-wider mb-1" style="font-size: 11px !important; color: ${subTextColor} !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; margin-bottom: 0.25rem !important;">
+          <div class="border p-6 rounded-2xl backdrop-blur-sm" style="background-color: ${cardBgColor} !important; border: 1px solid ${cardBorderColor} !important; padding: 1.5rem !important; border-radius: 1rem !important; backdrop-filter: blur(4px) !important; text-align: center !important;">
+            <div class="mb-4" style="margin-bottom: 1rem !important; font-size: 1.75rem !important; color: ${primaryColor} !important; text-align: center !important;">${keyword.icon || '✨'}</div>
+            <p class="text-[11px] font-bold uppercase tracking-wider mb-1" style="font-size: 11px !important; color: ${subTextColor} !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; margin-bottom: 0.25rem !important; text-align: center !important;">
               ${keyword.label}
             </p>
-            <p class="text-sm font-medium" style="font-size: 0.875rem !important; color: ${textColors.secondary} !important; font-weight: 500 !important;">
+            <p class="text-sm font-medium" style="font-size: 0.875rem !important; color: ${textColors.secondary} !important; font-weight: 500 !important; text-align: center !important;">
               ${keyword.sub}
             </p>
           </div>

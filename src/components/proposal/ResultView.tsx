@@ -71,28 +71,38 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
     }
 
     // 표지 그라데이션을 위한 CSS 직접 추가 (Tailwind CDN이 로드되기 전에도 작동)
+    // proposal의 브랜드 색상을 사용하여 동적으로 생성
+    const brandColor1 = proposal?.brandColor1 || '#4f46e5';
+    const brandColor2 = proposal?.brandColor2 || '#1f2937';
     const styleId = 'proposal-cover-gradient-style';
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style');
-      style.id = styleId;
-      style.textContent = `
-        /* 표지 그라데이션 스타일 (Tailwind 클래스가 로드되기 전에도 작동) */
-        .a4-page.bg-gradient-to-br,
-        .a4-page[class*="bg-gradient-to-br"][class*="from-indigo-600"][class*="to-gray-800"],
-        div.a4-page:first-child {
-          background: linear-gradient(to bottom right, #4f46e5, #1f2937) !important;
-          color: white !important;
-        }
-        /* Tailwind 클래스가 로드된 후에도 작동하도록 */
-        .bg-gradient-to-br.from-indigo-600.to-gray-800 {
-          background: linear-gradient(to bottom right, #4f46e5, #1f2937) !important;
-        }
-      `;
-      document.head.appendChild(style);
+    
+    // 기존 스타일이 있으면 제거
+    const existingStyle = document.getElementById(styleId);
+    if (existingStyle) {
+      existingStyle.remove();
     }
+    
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      /* 표지 그라데이션 스타일 (Tailwind 클래스가 로드되기 전에도 작동) */
+      .a4-page.bg-gradient-to-br,
+      .a4-page[class*="bg-gradient-to-br"],
+      div.a4-page:first-child {
+        background: linear-gradient(to bottom right, ${brandColor1}, ${brandColor2}) !important;
+        color: white !important;
+      }
+    `;
+    document.head.appendChild(style);
 
-    return () => {};
-  }, [bodyContent]);
+    return () => {
+      // 컴포넌트 언마운트 시 스타일 제거
+      const existingStyle = document.getElementById('proposal-cover-gradient-style');
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+    };
+  }, [bodyContent, proposal?.brandColor1, proposal?.brandColor2, proposal]);
 
   // 컴포넌트 언마운트 시 iframe 정리
   useEffect(() => {
@@ -145,7 +155,14 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
     }
 
     // generateHTMLWrapper로 감싸서 완전한 HTML 생성
-    const fullHTML = generateHTMLWrapper(bodyContent);
+    // proposal의 브랜드 색상과 폰트 정보 전달
+    const fullHTML = generateHTMLWrapper(
+      bodyContent,
+      proposal?.font,
+      proposal?.brandColor1,
+      proposal?.brandColor2,
+      proposal?.brandColor3,
+    );
 
     // 숨겨진 iframe 생성 (화면에 보이지 않음)
     if (!printIframeRef.current) {
