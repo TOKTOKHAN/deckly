@@ -5,15 +5,17 @@ import {
   generateCoverTemplate,
   generateTableOfContentsTemplate,
   generateConclusionTemplate,
+  generateBodySection1Template,
   generateHTMLWrapper,
   TemplateData,
+  BodySection1Data,
 } from '@/lib/gemini/templates';
 import clientLogo from '../../../public/images/Domino_pizza_logo.svg';
 
 export default function PreviewPage() {
-  const [selectedTemplate, setSelectedTemplate] = useState<'cover' | 'toc' | 'conclusion' | 'all'>(
-    'all',
-  );
+  const [selectedTemplate, setSelectedTemplate] = useState<
+    'cover' | 'toc' | 'conclusion' | 'body1' | 'all'
+  >('all');
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -46,14 +48,50 @@ export default function PreviewPage() {
         case 'conclusion':
           content = generateConclusionTemplate(sampleData);
           break;
+        case 'body1':
+          const bodySection1Data: BodySection1Data = {
+            background: {
+              quote:
+                '디지털 트랜스포메이션을 통한 고객 경험의 혁신적 재설계 및 시장 경쟁 우위 확보',
+              marketBackground:
+                '경쟁사의 공격적인 디지털 전환에 대응하고 차별화된 피자 주문 경험을 제공해야 할 시점입니다.',
+              primaryGoal:
+                '사용자 데이터 기반의 개인화 추천과 심리스한 결제 프로세스 구축으로 구매 전환율을 극대화합니다.',
+            },
+            scope: ['UI/UX Renewal', 'Platform Core Dev', 'Back-office System'],
+            strengths: [
+              { title: 'Specialized Skill', description: '국내 최고 수준의\n푸드테크 기술력' },
+              { title: 'Proven Track', description: '다수의 대형 플랫폼\n수행 실적 보유' },
+              { title: 'Scalable Tech', description: '확장 가능한\n클라우드 아키텍처' },
+            ],
+          };
+          content = generateBodySection1Template(bodySection1Data, sampleData.brandColor1);
+          break;
         case 'all':
           const cover = await generateCoverTemplate(sampleData);
           const toc = generateTableOfContentsTemplate(
             sampleData.brandColor1,
             sampleData.brandColor2,
           );
+          const bodySection1DataAll: BodySection1Data = {
+            background: {
+              quote:
+                '디지털 트랜스포메이션을 통한 고객 경험의 혁신적 재설계 및 시장 경쟁 우위 확보',
+              marketBackground:
+                '경쟁사의 공격적인 디지털 전환에 대응하고 차별화된 피자 주문 경험을 제공해야 할 시점입니다.',
+              primaryGoal:
+                '사용자 데이터 기반의 개인화 추천과 심리스한 결제 프로세스 구축으로 구매 전환율을 극대화합니다.',
+            },
+            scope: ['UI/UX Renewal', 'Platform Core Dev', 'Back-office System'],
+            strengths: [
+              { title: 'Specialized Skill', description: '국내 최고 수준의\n푸드테크 기술력' },
+              { title: 'Proven Track', description: '다수의 대형 플랫폼\n수행 실적 보유' },
+              { title: 'Scalable Tech', description: '확장 가능한\n클라우드 아키텍처' },
+            ],
+          };
+          const body1 = generateBodySection1Template(bodySection1DataAll, sampleData.brandColor1);
           const conclusion = generateConclusionTemplate(sampleData);
-          content = cover + toc + conclusion;
+          content = cover + toc + body1 + conclusion;
           break;
         default:
           content = '';
@@ -176,6 +214,16 @@ export default function PreviewPage() {
               }`}
             >
               끝마무리
+            </button>
+            <button
+              onClick={() => setSelectedTemplate('body1')}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                selectedTemplate === 'body1'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              본문 섹션 1
             </button>
             <button
               onClick={() => setSelectedTemplate('all')}
