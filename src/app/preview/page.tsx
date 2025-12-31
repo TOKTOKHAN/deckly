@@ -8,17 +8,19 @@ import {
   generateBodySection1Template,
   generateBodySection2Template,
   generateBodySection3Template,
+  generateBodySection4Template,
   generateHTMLWrapper,
   TemplateData,
   BodySection1Data,
   BodySection2Data,
   BodySection3Data,
+  BodySection4Data,
 } from '@/lib/gemini/templates';
 import clientLogo from '../../../public/images/Domino_pizza_logo.svg';
 
 export default function PreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<
-    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'body3' | 'all'
+    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'body3' | 'body4' | 'all'
   >('all');
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -115,6 +117,45 @@ export default function PreviewPage() {
           };
           content = generateBodySection3Template(bodySection3Data, sampleData.brandColor1);
           break;
+        case 'body4':
+          const bodySection4Data: BodySection4Data = {
+            timeline: [
+              {
+                period: 'M1',
+                title: 'Planning & Analysis',
+                description: '요구사항 분석, WBS 확정',
+              },
+              {
+                period: 'M2',
+                title: 'UI/UX & Prototype',
+                description: '가이드라인 수립, 메인 디자인',
+              },
+              {
+                period: 'M3-M5',
+                title: 'Development',
+                description: '프론트/백엔드 개발, 단위 테스트',
+              },
+              {
+                period: 'M6',
+                title: 'Verification & Launch',
+                description: '통합 테스트, QA, 최종 오픈',
+              },
+            ],
+            resources: [
+              { role: 'Project Manager', name: 'Domino Expert' },
+              { role: 'Lead Developer', name: 'Domino Expert' },
+              { role: 'UX/UI Designer', name: 'Domino Expert' },
+              { role: 'QA Engineer', name: 'Domino Expert' },
+            ],
+            methodology: {
+              title: '"Scrum & Sprint 기반"',
+              description:
+                '지속적인 피드백과 점진적 기능 구현으로 변화하는 요구사항에 유연하게 대응합니다.',
+            },
+            qualityAssurance: ['정기 단위 테스트', '사용자 시나리오 검증', '부하 테스트 실시'],
+          };
+          content = generateBodySection4Template(bodySection4Data, sampleData.brandColor1);
+          break;
         case 'all':
           const cover = await generateCoverTemplate(sampleData);
           const toc = generateTableOfContentsTemplate(
@@ -175,11 +216,48 @@ export default function PreviewPage() {
             security: ['End-to-End 데이터 암호화', 'WAF 및 DDoS 방어 체계 구축'],
             integrations: ['POS SYSTEM', 'CRM', 'ERP', '3RD PARTY API'],
           };
+          const bodySection4DataAll: BodySection4Data = {
+            timeline: [
+              {
+                period: 'M1',
+                title: 'Planning & Analysis',
+                description: '요구사항 분석, WBS 확정',
+              },
+              {
+                period: 'M2',
+                title: 'UI/UX & Prototype',
+                description: '가이드라인 수립, 메인 디자인',
+              },
+              {
+                period: 'M3-M5',
+                title: 'Development',
+                description: '프론트/백엔드 개발, 단위 테스트',
+              },
+              {
+                period: 'M6',
+                title: 'Verification & Launch',
+                description: '통합 테스트, QA, 최종 오픈',
+              },
+            ],
+            resources: [
+              { role: 'Project Manager', name: 'Domino Expert' },
+              { role: 'Lead Developer', name: 'Domino Expert' },
+              { role: 'UX/UI Designer', name: 'Domino Expert' },
+              { role: 'QA Engineer', name: 'Domino Expert' },
+            ],
+            methodology: {
+              title: '"Scrum & Sprint 기반"',
+              description:
+                '지속적인 피드백과 점진적 기능 구현으로 변화하는 요구사항에 유연하게 대응합니다.',
+            },
+            qualityAssurance: ['정기 단위 테스트', '사용자 시나리오 검증', '부하 테스트 실시'],
+          };
           const body1 = generateBodySection1Template(bodySection1DataAll, sampleData.brandColor1);
           const body2 = generateBodySection2Template(bodySection2DataAll, sampleData.brandColor1);
           const body3 = generateBodySection3Template(bodySection3DataAll, sampleData.brandColor1);
+          const body4 = generateBodySection4Template(bodySection4DataAll, sampleData.brandColor1);
           const conclusion = generateConclusionTemplate(sampleData);
-          content = cover + toc + body1 + body2 + body3 + conclusion;
+          content = cover + toc + body1 + body2 + body3 + body4 + conclusion;
           break;
         default:
           content = '';
@@ -332,6 +410,16 @@ export default function PreviewPage() {
               }`}
             >
               본문 섹션 3
+            </button>
+            <button
+              onClick={() => setSelectedTemplate('body4')}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                selectedTemplate === 'body4'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              본문 섹션 4
             </button>
             <button
               onClick={() => setSelectedTemplate('all')}
