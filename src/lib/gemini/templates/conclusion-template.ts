@@ -57,7 +57,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
       </div>
 
       <!-- Main Content Area -->
-      <div class="flex-1 px-16 pt-20 flex flex-col justify-center items-center z-10 text-center" style="flex: 1 !important; padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 5rem !important; display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; position: relative !important; z-index: 10 !important;">
+      <div class="flex-1 pt-20 flex flex-col justify-center items-center z-10 text-center" style="flex: 1 !important; padding-left: 2rem !important; padding-right: 2rem !important; padding-top: 5rem !important; display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; position: relative !important; z-index: 10 !important;">
         
         <!-- Logo Collaboration Section -->
         <div class="flex items-center justify-center gap-8 mb-12" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 2rem !important; margin-bottom: 3rem !important;">
@@ -134,7 +134,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
       </div>
 
       <!-- Footer Area -->
-      <div class="cover-footer px-16 pb-16 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-bottom: 2rem !important; padding-top: 1rem !important; position: relative !important; z-index: 10 !important;">
+      <div class="cover-footer px-16 pb-16 z-10 relative" style="padding-left: 2rem !important; padding-right: 2rem !important; padding-bottom: 2rem !important; padding-top: 1rem !important; position: relative !important; z-index: 10 !important;">
         <div class="h-px w-full mb-10" style="height: 1px !important; width: 100% !important; background: linear-gradient(to right, rgba(30, 58, 138, 0.5), rgba(39, 39, 42, 0.8), transparent) !important; margin-bottom: 1.5rem !important;"></div>
         
         <div class="flex justify-between items-end" style="display: flex !important; justify-content: space-between !important; align-items: flex-end !important;">
@@ -147,19 +147,19 @@ export function generateConclusionTemplate(data: TemplateData): string {
                 <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
                   <span style="color: ${tertiaryColor} !important;">📍</span> Address
                 </p>
-                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">서울시 마포구 동교로 12안길 39</p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important; white-space: nowrap !important;">서울시 마포구 동교로 12안길 39</p>
               </div>
               <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
                 <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
                   <span style="color: ${primaryColor} !important;">🌐</span> Contact
                 </p>
-                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">sales@toktokhan.dev</p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important; white-space: nowrap !important;">sales@toktokhan.dev</p>
               </div>
               <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
                 <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
                   <span style="color: #71717a !important;">📞</span> Phone
                 </p>
-                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">010-2493-2906</p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important; white-space: nowrap !important;">010-2493-2906</p>
               </div>
             </div>
           </div>
