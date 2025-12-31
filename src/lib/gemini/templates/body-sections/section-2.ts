@@ -1,31 +1,42 @@
 /* 본문 섹션 2: 제안 전략 (Part II: Strategy)*/
 import type { BodySection2Data } from '../types';
 
-export function generateBodySection2Template(data: BodySection2Data, brandColor1?: string): string {
-  const primaryColor = brandColor1 || '#4f46e5';
-  const redColor = '#ef4444'; // red-500
+export function generateBodySection2Template(
+  data: BodySection2Data,
+  brandColor1?: string,
+  brandColor2?: string,
+  brandColor3?: string,
+): string {
+  // 브랜드 컬러 설정
+  const primaryColor = brandColor1 || '#4f46e5'; // 주요 강조, 제목, 아이콘
+  const secondaryColor = brandColor2 || '#1f2937'; // 카드 배경, 보조 강조
+  const tertiaryColor = brandColor3 || '#0a0c10'; // 경계선, 미묘한 배경
 
-  // 기본값 설정
+  // Hex to RGBA 변환 함수
+  const hexToRgba = (hex: string, alpha: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+  // 미팅 전사록 기반으로 Gemini가 생성한 데이터 사용 (기본값 없음)
   const marketAnalysis = data.marketAnalysis || {
-    trends: ['비대면 주문 채널 고도화', 'AI 기반 최적 배차 시스템', '구독형 모델을 통한 고객 락인'],
-    coreValue: 'CX-CENTRIC',
+    trends: [],
+    coreValue: '',
   };
 
   const targetModel = data.targetModel || {
-    legacy: 'LEGACY',
-    target: "Intelligent Domino's Hub",
-    nextGen: 'NEXT-GEN',
+    legacy: '',
+    target: '',
+    nextGen: '',
   };
 
-  const strategies = data.strategies || [
-    '사용자 중심 UI/UX 전면 개편',
-    '클라우드 기반 서버 안정성 확보',
-    '마케팅 오토메이션 도구 통합',
-  ];
+  const strategies = data.strategies || [];
 
   const benefits = data.benefits || {
-    conversion: '+25%',
-    churnRate: '-40%',
+    conversion: '',
+    churnRate: '',
   };
 
   return `
@@ -51,7 +62,7 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
         <!-- 2.1 사업 이해 및 분석 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(239, 68, 68, 0.1) !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
               <span style="font-size: 1.25rem !important;">🔍</span>
             </div>
             <div>
@@ -63,8 +74,8 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
           </div>
           
           <div class="grid grid-cols-2 gap-4" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1rem !important; width: 100% !important;">
-            <div class="bg-zinc-900/40 p-6 rounded-2xl border border-white/5" style="background-color: rgba(24, 24, 27, 0.4) !important; padding: 1.5rem !important; border-radius: 1rem !important; border: 1px solid rgba(255, 255, 255, 0.05) !important;">
-              <h5 class="text-xs font-bold mb-3 uppercase tracking-widest" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${redColor} !important; margin-bottom: 0.75rem !important; text-transform: uppercase !important; letter-spacing: 0.1em !important;">Digital Pizza Trend</h5>
+            <div class="bg-zinc-900/40 p-6 rounded-2xl border border-white/5" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; padding: 1.5rem !important; border-radius: 1rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important;">
+              <h5 class="text-xs font-bold mb-3 uppercase tracking-widest" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.75rem !important; text-transform: uppercase !important; letter-spacing: 0.1em !important;">Digital Pizza Trend</h5>
               <div class="space-y-3" style="display: flex !important; flex-direction: column !important; gap: 0.75rem !important;">
                 ${
                   marketAnalysis.trends
@@ -84,7 +95,7 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
                 }
               </div>
             </div>
-            <div class="bg-red-600/5 p-6 rounded-2xl border border-red-600/10 flex flex-col justify-center text-center" style="background-color: rgba(220, 38, 38, 0.05) !important; padding: 1.5rem !important; border-radius: 1rem !important; border: 1px solid rgba(220, 38, 38, 0.1) !important; display: flex !important; flex-direction: column !important; justify-content: center !important; text-align: center !important;">
+            <div class="bg-red-600/5 p-6 rounded-2xl border border-red-600/10 flex flex-col justify-center text-center" style="background-color: ${hexToRgba(primaryColor, 0.05)} !important; padding: 1.5rem !important; border-radius: 1rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.1)} !important; display: flex !important; flex-direction: column !important; justify-content: center !important; text-align: center !important;">
               <p class="text-3xl font-black text-white italic mb-1.5 tracking-tighter" style="font-size: 1.875rem !important; font-weight: 900 !important; color: white !important; font-style: italic !important; letter-spacing: -0.05em !important; margin-bottom: 0.375rem !important;">"${marketAnalysis.coreValue}"</p>
               <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]" style="font-size: 10px !important; color: #71717a !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.2em !important;">Our Core Value</p>
             </div>
@@ -94,7 +105,7 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
         <!-- 2.2 목표 모델 설계 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(239, 68, 68, 0.1) !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
               <span style="font-size: 1.25rem !important;">🖥️</span>
             </div>
             <div>
@@ -105,24 +116,24 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
             </div>
           </div>
           
-          <div class="bg-zinc-950 border border-white/5 p-6 rounded-2xl relative overflow-hidden" style="background-color: #09090b !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; padding: 1.5rem !important; border-radius: 1rem !important; position: relative !important; overflow: hidden !important; width: 100% !important;">
+          <div class="bg-zinc-950 border border-white/5 p-6 rounded-2xl relative overflow-hidden" style="background-color: ${hexToRgba(tertiaryColor, 0.5)} !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; padding: 1.5rem !important; border-radius: 1rem !important; position: relative !important; overflow: hidden !important; width: 100% !important;">
             <div class="flex items-center justify-between relative z-10" style="display: flex !important; align-items: center !important; justify-content: space-between !important; position: relative !important; z-index: 10 !important;">
               <div class="text-center w-32" style="text-align: center !important; width: 8rem !important;">
-                <div class="p-4 bg-zinc-900 rounded-xl border border-white/5 text-zinc-500 text-xs font-bold italic" style="padding: 1rem !important; background-color: #18181b !important; border-radius: 0.75rem !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; color: #71717a !important; font-size: 0.75rem !important; font-weight: bold !important; font-style: italic !important;">${targetModel.legacy}</div>
+                <div class="p-4 bg-zinc-900 rounded-xl border border-white/5 text-zinc-500 text-xs font-bold italic" style="padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; color: #71717a !important; font-size: 0.75rem !important; font-weight: bold !important; font-style: italic !important;">${targetModel.legacy}</div>
               </div>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #27272a !important;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${hexToRgba(tertiaryColor, 0.5)} !important;">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
-              <div class="flex-1 mx-8 p-8 bg-red-600/10 border border-red-600/30 rounded-[30px] text-center shadow-[0_0_50px_rgba(227,24,55,0.1)]" style="flex: 1 !important; margin-left: 2rem !important; margin-right: 2rem !important; padding: 2rem !important; background-color: rgba(220, 38, 38, 0.1) !important; border: 1px solid rgba(220, 38, 38, 0.3) !important; border-radius: 1.875rem !important; text-align: center !important; box-shadow: 0 0 50px rgba(227, 24, 55, 0.1) !important;">
+              <div class="flex-1 mx-8 p-8 bg-red-600/10 border border-red-600/30 rounded-[30px] text-center shadow-[0_0_50px_rgba(227,24,55,0.1)]" style="flex: 1 !important; margin-left: 2rem !important; margin-right: 2rem !important; padding: 2rem !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.3)} !important; border-radius: 1.875rem !important; text-align: center !important; box-shadow: 0 0 50px ${hexToRgba(primaryColor, 0.1)} !important;">
                 <p class="text-xl font-black text-white italic tracking-tighter uppercase" style="font-size: 1.25rem !important; font-weight: 900 !important; color: white !important; font-style: italic !important; letter-spacing: -0.05em !important; text-transform: uppercase !important;">${targetModel.target}</p>
               </div>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #27272a !important;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${hexToRgba(tertiaryColor, 0.5)} !important;">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
               <div class="text-center w-32" style="text-align: center !important; width: 8rem !important;">
-                <div class="p-4 bg-red-600 rounded-xl text-white text-xs font-bold italic shadow-lg shadow-red-900/20" style="padding: 1rem !important; background-color: ${redColor} !important; border-radius: 0.75rem !important; color: white !important; font-size: 0.75rem !important; font-weight: bold !important; font-style: italic !important; box-shadow: 0 10px 15px -3px rgba(127, 29, 29, 0.2) !important;">${targetModel.nextGen}</div>
+                <div class="p-4 bg-red-600 rounded-xl text-white text-xs font-bold italic shadow-lg shadow-red-900/20" style="padding: 1rem !important; background-color: ${primaryColor} !important; border-radius: 0.75rem !important; color: white !important; font-size: 0.75rem !important; font-weight: bold !important; font-style: italic !important; box-shadow: 0 10px 15px -3px ${hexToRgba(primaryColor, 0.2)} !important;">${targetModel.nextGen}</div>
               </div>
             </div>
           </div>
@@ -133,7 +144,7 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
           <!-- 2.3 추진 전략 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(239, 68, 68, 0.1) !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
                 <span style="font-size: 1.25rem !important;">📈</span>
               </div>
               <div>
@@ -149,8 +160,8 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
                   ?.slice(0, 3)
                   .map(
                     strategy => `
-              <div class="flex items-center gap-3 p-3 bg-zinc-900/30 border border-white/5 rounded-xl" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; padding: 0.75rem !important; background-color: rgba(24, 24, 27, 0.3) !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; border-radius: 0.75rem !important;">
-                <div class="w-1.5 h-1.5 rounded-full bg-red-600" style="width: 0.375rem !important; height: 0.375rem !important; border-radius: 9999px !important; background-color: ${redColor} !important;"></div>
+              <div class="flex items-center gap-3 p-3 bg-zinc-900/30 border border-white/5 rounded-xl" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; padding: 0.75rem !important; background-color: ${hexToRgba(secondaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; border-radius: 0.75rem !important;">
+                <div class="w-1.5 h-1.5 rounded-full bg-red-600" style="width: 0.375rem !important; height: 0.375rem !important; border-radius: 9999px !important; background-color: ${primaryColor} !important;"></div>
                 <span class="text-xs font-medium text-zinc-300" style="font-size: 0.75rem !important; font-weight: 500 !important; color: #d4d4d8 !important;">${strategy}</span>
               </div>
               `,
@@ -163,7 +174,7 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
           <!-- 2.4 기대 효과 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(239, 68, 68, 0.1) !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
                 <span style="font-size: 1.25rem !important;">📊</span>
               </div>
               <div>
@@ -174,11 +185,11 @@ export function generateBodySection2Template(data: BodySection2Data, brandColor1
               </div>
             </div>
             <div class="grid grid-cols-2 gap-3" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.75rem !important; width: 100% !important;">
-              <div class="p-4 bg-zinc-900/50 rounded-xl border border-white/5 text-center" style="padding: 1rem !important; background-color: rgba(24, 24, 27, 0.5) !important; border-radius: 0.75rem !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; text-align: center !important;">
+              <div class="p-4 bg-zinc-900/50 rounded-xl border border-white/5 text-center" style="padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; text-align: center !important;">
                 <p class="text-2xl font-black text-white italic" style="font-size: 1.5rem !important; font-weight: 900 !important; color: white !important; font-style: italic !important;">${benefits.conversion}</p>
                 <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1" style="font-size: 10px !important; color: #71717a !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; margin-top: 0.25rem !important;">Conversion</p>
               </div>
-              <div class="p-4 bg-zinc-900/50 rounded-xl border border-white/5 text-center" style="padding: 1rem !important; background-color: rgba(24, 24, 27, 0.5) !important; border-radius: 0.75rem !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; text-align: center !important;">
+              <div class="p-4 bg-zinc-900/50 rounded-xl border border-white/5 text-center" style="padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; text-align: center !important;">
                 <p class="text-2xl font-black text-white italic" style="font-size: 1.5rem !important; font-weight: 900 !important; color: white !important; font-style: italic !important;">${benefits.churnRate}</p>
                 <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1" style="font-size: 10px !important; color: #71717a !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; margin-top: 0.25rem !important;">Churn Rate</p>
               </div>

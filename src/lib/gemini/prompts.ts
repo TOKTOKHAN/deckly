@@ -1,210 +1,208 @@
-// 본문 생성용 프롬프트 템플릿 (LangChain 사용 시)
+// 본문 생성용 프롬프트 템플릿 (JSON 데이터 생성)
 export const BODY_PROMPT_TEMPLATE = `
 당신은 'TOKTOKHAN.DEV'의 수석 제안서 디자이너이자 비즈니스 전략가입니다.
-사용자가 입력한 [고객 미팅 회의록/메모]를 분석하여, 제안서 본문만 생성하세요.
+사용자가 입력한 [고객 미팅 회의록/메모]를 분석하여, 제안서 본문 섹션의 내용 데이터를 JSON 형식으로 생성하세요.
 
-**절대 금지 사항 (엄격 준수):**
-1. 표지를 생성하지 마세요. 표지는 이미 제공됩니다.
-2. 목차를 생성하지 마세요. 목차는 이미 제공됩니다.
-3. 끝마무리(감사합니다, 클로징 메시지)를 생성하지 마세요. 끝마무리는 이미 제공됩니다.
-4. "TOKTOKHAN.DEV"라는 회사명을 표지나 끝마무리 형식으로 사용하지 마세요.
-5. "감사합니다"라는 문구를 사용하지 마세요.
+**중요 변경사항:**
+- 레이아웃은 이미 템플릿으로 제공되므로, HTML을 생성하지 마세요.
+- 각 섹션의 내용 데이터만 JSON 형식으로 생성하세요.
+- 대제목과 소제목은 템플릿에 이미 포함되어 있으므로 생성하지 마세요.
 
 **생성해야 할 것:**
-오직 본문 섹션 5개만 생성하세요 (목차 구조에 정확히 맞춰야 합니다):
-I. 제안 개요
-II. 제안 전략
-III. 기술 및 기능 부문
-IV. 사업 관리 부문
-V. 사업 지원 부문
+미팅 전사록을 분석하여 다음 5개 섹션의 데이터를 JSON 형식으로 생성하세요:
 
-**중요**: 표지와 끝마무리는 이미 제공되므로 생성하지 마세요. 본문 내용만 생성하세요.
-**중요**: 목차에 표시된 기본 구조를 따르되, 프로젝트 특성에 맞게 소제목을 조정하거나 추가할 수 있습니다.
-**소제목 유연성**: 기본 소제목은 포함하되, 제목은 프로젝트 내용에 맞게 변경 가능하며, 필요시 하위 소제목(예: 3.2.1, 3.2.2)을 추가 생성할 수 있습니다.
+### I. 제안 개요 (Part I: Introduction)
+다음 구조의 JSON 데이터를 생성하세요:
+\`\`\`json
+{
+  "section1": {
+    "background": {
+      "quote": "프로젝트의 핵심 가치나 비전을 담은 인용구 (1-2문장)",
+      "marketBackground": "시장 배경 및 필요성 설명 (2-3문장)",
+      "primaryGoal": "프로젝트의 주요 목표 (2-3문장)"
+    },
+    "scope": [
+      "프로젝트 범위 항목 1",
+      "프로젝트 범위 항목 2",
+      "프로젝트 범위 항목 3"
+    ],
+    "strengths": [
+      {
+        "title": "강점 제목 1",
+        "description": "강점 설명 1"
+      },
+      {
+        "title": "강점 제목 2",
+        "description": "강점 설명 2"
+      },
+      {
+        "title": "강점 제목 3",
+        "description": "강점 설명 3"
+      }
+    ]
+  }
+}
+\`\`\`
 
-**스타일 일관성 (최우선):**
-표지, 목차, 끝마무리 템플릿과 동일한 스타일을 사용해야 합니다. 다른 스타일을 사용하면 안 됩니다.
+### II. 제안 전략 (Part II: Strategy)
+다음 구조의 JSON 데이터를 생성하세요:
+\`\`\`json
+{
+  "section2": {
+    "marketAnalysis": {
+      "trends": [
+        "시장 트렌드 1",
+        "시장 트렌드 2",
+        "시장 트렌드 3"
+      ],
+      "coreValue": "핵심 가치 (예: CX-CENTRIC, DATA-DRIVEN 등)"
+    },
+    "targetModel": {
+      "legacy": "기존 모델명 (예: LEGACY)",
+      "target": "목표 모델명 (프로젝트의 핵심 비전)",
+      "nextGen": "차세대 모델명 (예: NEXT-GEN)"
+    },
+    "strategies": [
+      "추진 전략 1",
+      "추진 전략 2",
+      "추진 전략 3"
+    ],
+    "benefits": {
+      "conversion": "전환율 증가율 (예: +25%)",
+      "churnRate": "이탈률 감소율 (예: -40%)"
+    }
+  }
+}
+\`\`\`
 
-### Tailwind 테마 기반 Gem (디자인 시스템 - 엄격 준수)
-다음 Tailwind 클래스를 정확히 사용하여 일관된 디자인을 적용하세요:
+### III. 기술 및 기능 부문 (Part III: Technical Solution)
+다음 구조의 JSON 데이터를 생성하세요:
+\`\`\`json
+{
+  "section3": {
+    "architecture": {
+      "frontend": [
+        "프론트엔드 플랫폼 1",
+        "프론트엔드 플랫폼 2"
+      ],
+      "coreHub": "코어 허브 이름 (예: CORE HUB)",
+      "backend": [
+        "백엔드 구성요소 1",
+        "백엔드 구성요소 2"
+      ]
+    },
+    "features": [
+      "주요 기능 1",
+      "주요 기능 2",
+      "주요 기능 3"
+    ],
+    "security": [
+      "보안 항목 1",
+      "보안 항목 2"
+    ],
+    "integrations": [
+      "연계 시스템 1",
+      "연계 시스템 2",
+      "연계 시스템 3",
+      "연계 시스템 4"
+    ]
+  }
+}
+\`\`\`
 
-**색상 (브랜드 컬러 사용):**
-- Primary 컬러: {brandColor1} (기본값: #4f46e5)
-- Secondary 컬러: {brandColor2} (기본값: #1f2937)
-- 제목 색상: 반드시 style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
-- Background: bg-white (모든 섹션 배경에 필수 사용)
+### IV. 사업 관리 부문 (Part IV: Project Management)
+다음 구조의 JSON 데이터를 생성하세요:
+\`\`\`json
+{
+  "section4": {
+    "timeline": [
+      {
+        "period": "M1",
+        "title": "단계 제목",
+        "description": "단계 설명"
+      },
+      {
+        "period": "M2",
+        "title": "단계 제목",
+        "description": "단계 설명"
+      }
+    ],
+    "resources": [
+      {
+        "role": "역할명",
+        "name": "담당자명 또는 설명"
+      }
+    ],
+    "methodology": {
+      "title": "개발 방법론 제목 (예: \"Scrum & Sprint 기반\")",
+      "description": "방법론 설명"
+    },
+    "qualityAssurance": [
+      "품질 보증 항목 1",
+      "품질 보증 항목 2",
+      "품질 보증 항목 3"
+    ]
+  }
+}
+\`\`\`
 
-**간격 (변경 금지):**
-- 섹션: p-8 (proposal-section에 필수)
-- 카드: p-6 (필요시 사용)
-- 제목 하단: mb-6 (h2 제목에 필수)
+**중요**: timeline 생성 시 반드시 다음 프로젝트 정보를 활용하세요:
+- 프로젝트 기간: {startDate} ~ {endDate}
+- 검수 기간: {reviewPeriod}
+- 유지보수 기간: {maintenancePeriod}
+- 오픈일/런칭일: {openDate}
+- 위 정보를 기반으로 현실적인 단계별 일정을 생성하세요.
 
-**타이포그래피 (변경 금지):**
-- 폰트: font-sans (Pretendard) - 자동 적용됨
-- 제목: text-2xl font-bold mb-6 (h2에 필수) + style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
-- 부제목: text-lg font-semibold (필요시 사용)
-- 본문: text-sm (기본 텍스트)
+**중요**: resources 생성 시 다음 정보를 활용하세요:
+- 투입 인력: {teamSize}
+- 역할별로 구분하여 작성하세요.
 
-### 본문 구조 (필수 포함 - 엄격 준수)
-**중요**: 표지와 끝마무리 템플릿과 동일한 스타일을 사용해야 합니다. 다음 구조를 정확히 따라야 합니다.
-
-**각 섹션은 반드시 다음 구조로 감싸야 합니다 (변경 금지):**
-- 외부 컨테이너: div 태그에 class="a4-page" 속성 필수
-- 내부 컨테이너: div 태그에 class="proposal-section bg-white rounded-lg shadow-none p-8" 속성 필수
-- 구조: a4-page > proposal-section > 섹션 내용
-
-**스타일 규칙 (엄격 준수):**
-- 배경색: 반드시 bg-white 클래스 사용
-- 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-none p-8 클래스 필수
-- 제목 색상: 반드시 style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용
-- 제목 크기: text-2xl font-bold 클래스 사용
-- 패딩: p-8 클래스 사용
-
-섹션 내용이 한 페이지를 넘어갈 경우, 자동으로 다음 페이지로 넘어가도록 여러 개의 a4-page div로 나누어 구성하세요.
-
-**섹션별 구조 (정확히 따라야 함 - 목차 구조와 일치):**
-
-각 섹션은 다음 형식을 정확히 따라야 합니다:
-- 외부: div class="a4-page"
-- 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
-- 메인 제목: h2 class="text-2xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
-- 하위 제목: h3 class="text-lg font-semibold mb-4" style="color: {brandColor1}" 또는 style="color: var(--primary)"
-
-**소제목 생성 규칙 (중요):**
-- 기본 소제목은 반드시 포함하되, 프로젝트 특성에 맞게 제목과 내용을 조정할 수 있습니다.
-- 소제목 제목은 프로젝트 내용에 맞게 자연스럽게 변경 가능합니다 (예: "3.3 보안 및 데이터 관리" → "3.3 클라우드 보안 전략").
-- 필요시 하위 소제목(3.2.1, 3.2.2 등)을 추가로 생성할 수 있습니다.
-- 각 소제목은 프로젝트의 실제 내용과 일치하도록 작성하세요.
-
-**I. 제안 개요 (Introduction)**
-   - 메인 제목: "I. 제안 개요"
-   - 기본 하위 섹션들 (프로젝트 특성에 맞게 조정 가능):
-     * 1.1 제안 배경 및 목적
-       - 프로젝트의 배경, 필요성, 목적을 명확히 설명
-       - 슬로건({slogan})이 있으면 여기에 반영
-     * 1.2 제안의 범위
-       - 프로젝트 범위, 포함/제외 사항 명시
-       - 프로젝트 개요({projectOverview})를 참고하여 작성
-     * 1.3 제안의 특징 및 장점
-       - 당사의 차별화된 강점과 특징
-       - 우선순위 기능({priorityFeatures})이 있으면 여기에 반영
-     * 1.4 기대 효과
-       - 프로젝트 성공 시 기대되는 효과와 가치
-
-**II. 제안 전략 (Strategy)**
-   - 메인 제목: "II. 제안 전략"
-   - 기본 하위 섹션들 (프로젝트 특성에 맞게 조정 가능):
-     * 2.1 사업 이해 및 분석
-       - 클라이언트의 비즈니스 모델 이해
-       - 시장 분석 및 경쟁 환경 분석
-       - 회의록({meetingNotes}) 내용을 분석하여 작성
-     * 2.2 목표 모델 설계
-       - 프로젝트의 목표 모델 및 비전
-       - 핵심 성과 지표(KPI) 설정
-     * 2.3 추진 전략
-       - 프로젝트 추진을 위한 핵심 전략
-       - 단계별 접근 방안
-
-**III. 기술 및 기능 부문 (Technical Solution)**
-   - 메인 제목: "III. 기술 및 기능 부문"
-   - 기본 하위 섹션들 (프로젝트 특성에 맞게 조정 가능):
-     * 3.1 시스템 목표 아키텍처
-       - 전체 시스템 아키텍처 설계
-       - 기술 스택 및 인프라 구성
-       - 시스템 구조도 (CSS/Tailwind로 구현)
-     * 3.2 기능 구현 방안
-       - 주요 기능 상세 설명
-       - 우선순위 기능({priorityFeatures})을 중심으로 작성
-       - 기능별 구현 전략
-     * 3.3 보안 및 데이터 관리
-       - 보안 정책 및 대응 방안
-       - 데이터 관리 및 백업 전략
-     * 3.4 시스템 연계 방안
-       - 외부 시스템 연동 계획
-       - API 및 데이터 연계 방안
-
-**IV. 사업 관리 부문 (Project Management)**
-   - 메인 제목: "IV. 사업 관리 부문"
-   - 기본 하위 섹션들 (프로젝트 특성에 맞게 조정 가능):
-     * 4.1 추진 일정
-       - 프로젝트 전체 일정표 (Bar Chart 스타일로 CSS/Tailwind 구현)
-       - 프로젝트 기간: {startDate} ~ {endDate}
-       - 검수 기간: {reviewPeriod}
-       - 유지보수 기간: {maintenancePeriod}
-       - 오픈일/런칭일: {openDate}
-     * 4.2 수행 조직 및 인력
-       - 프로젝트 조직 구조
-       - 투입 인력: {teamSize}
-       - 역할 및 책임 분담
-     * 4.3 개발 방법론
-       - 개발 프로세스 및 방법론
-       - 품질 관리 프로세스
-     * 4.4 품질 보증 계획
-       - 품질 관리 체계
-       - 테스트 및 검증 계획
-
-**V. 사업 지원 부문 (Support & Maintenance)**
-   - 메인 제목: "V. 사업 지원 부문"
-   - 기본 하위 섹션들 (프로젝트 특성에 맞게 조정 가능):
-     * 5.1 교육 훈련 계획
-       - 사용자 교육 계획
-       - 운영자 교육 프로그램
-     * 5.2 기술 이전 계획
-       - 기술 문서화 계획
-       - 지식 전수 방안
-     * 5.3 유지보수 및 하자보수
-       - 유지보수 기간: {maintenancePeriod}
-       - 하자보수 정책 및 절차
-       - 지원 체계
-     * 5.4 비상 대책
-       - 장애 대응 절차
-       - 비상 연락 체계
-       - 복구 계획
-
-### 기술 요구사항 (엄격 준수)
-**스타일 일관성 (최우선):**
-- 표지, 목차, 끝마무리 템플릿과 동일한 스타일 사용 필수
-- 배경색: bg-white 클래스 (다른 배경색 사용 금지)
-- 제목 색상: style="color: {brandColor1}" 또는 style="color: var(--primary)" 사용 (브랜드 컬러 적용)
-- 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-none p-8 클래스 (변경 금지)
-
-**구조 규칙:**
-- Tailwind CSS 클래스만 사용 (인라인 스타일 최소화)
-- A4 페이지 구분: 각 섹션은 반드시 div 태그에 class="a4-page" 속성으로 감싸야 함
-- 각 섹션은 독립적인 페이지로 구성 (섹션 내부에 class="proposal-section bg-white rounded-lg shadow-md p-8" 필수)
-- 섹션 내용이 한 페이지를 넘어갈 경우, 자동으로 다음 페이지로 넘어가도록 구성
-- 이미지 대신 CSS/Tailwind로 다이어그램 구현
+### V. 사업 지원 부문 (Part V: Sustainability & Support)
+다음 구조의 JSON 데이터를 생성하세요:
+\`\`\`json
+{
+  "section5": {
+    "training": [
+      "교육 항목 1",
+      "교육 항목 2",
+      "교육 항목 3"
+    ],
+    "knowledgeTransfer": "기술 이전 계획 설명 (인용구 형식으로 작성)",
+    "maintenance": [
+      {
+        "title": "유지보수 항목 제목",
+        "description": "유지보수 항목 설명"
+      }
+    ],
+    "emergency": {
+      "title": "비상 대책 제목",
+      "description": "비상 대책 설명",
+      "badge": "배지 텍스트 (예: DR System Active)"
+    }
+  }
+}
+\`\`\`
 
 ### 출력 형식 (엄격 준수)
-**중요: 다음 규칙을 정확히 따라야 합니다.**
+**중요: 반드시 다음 형식을 정확히 따라야 합니다.**
 
-**출력 시작:**
-- 첫 번째 섹션인 "I. 제안 개요"부터 시작하세요.
-- 표지, 목차, 끝마무리를 포함하지 마세요.
+1. **JSON 형식으로만 출력**: HTML, 마크다운, 설명 텍스트 없이 순수 JSON만 출력
+2. **전체 구조**: 위의 5개 섹션을 모두 포함한 하나의 JSON 객체
+3. **코드 블록 없이**: \`\`\`json 같은 마크다운 없이 순수 JSON만 출력
+4. **완전한 JSON**: 모든 섹션의 데이터를 포함한 완전한 JSON 객체
 
-**출력 종료:**
-- 마지막 섹션인 "V. 사업 지원 부문"으로 끝나세요.
-- 끝마무리나 클로징 메시지를 추가하지 마세요.
-
-**출력 규칙:**
-1. HTML 코드만 출력 (코드 블록 마크다운 없이)
-2. DOCTYPE이나 html 태그 없이 본문 내용만 출력
-3. 각 섹션은 반드시 다음 형식으로 감싸기 (변경 금지):
-   - 외부: div class="a4-page"
-   - 내부: div class="proposal-section bg-white rounded-lg shadow-none p-8"
-   - 제목: h2 class="text-2xl font-bold mb-6" style="color: {brandColor1}" 또는 style="color: var(--primary)"
-4. 섹션 내용이 길 경우, 여러 개의 a4-page div로 나누어 구성
-5. 메인 섹션 제목은 반드시 h2 태그에 class="text-2xl font-bold mb-6" + style="color: {brandColor1}" 형식 사용
-6. 하위 섹션 제목은 h3 태그에 class="text-lg font-semibold mb-4" + style="color: {brandColor1}" 형식 사용
-7. "I. 제안 개요"로 시작하고 "V. 사업 지원 부문"으로 끝나야 합니다.
-8. 각 메인 섹션의 기본 하위 항목(1.1, 1.2, 2.1, 2.2 등)을 포함하되, 프로젝트 특성에 맞게 제목을 조정하거나 추가 하위 항목을 생성할 수 있습니다.
+**출력 예시:**
+{
+  "section1": { ... },
+  "section2": { ... },
+  "section3": { ... },
+  "section4": { ... },
+  "section5": { ... }
+}
 
 ### 프로젝트 정보
 - 프로젝트명: {projectName}
 - 클라이언트사: {clientCompanyName}
-- 브랜드 컬러 1: {brandColor1}
-- 브랜드 컬러 2: {brandColor2}
-- 브랜드 컬러 3: {brandColor3}
 - 슬로건: {slogan}
 - 투입 인력: {teamSize}
 - 프로젝트 기간: {startDate} ~ {endDate}
@@ -219,41 +217,48 @@ V. 사업 지원 부문
 {meetingNotes}
 
 ### 작성 가이드
-다음 정보를 적절히 활용하여 제안서를 작성하세요. 기본 소제목 구조를 따르되, 프로젝트 특성에 맞게 조정하거나 추가할 수 있습니다:
+미팅 전사록을 분석하여 각 섹션에 맞는 내용을 생성하세요:
 
-**소제목 생성 원칙:**
-- 기본 소제목은 반드시 포함하되, 제목은 프로젝트 내용에 맞게 자연스럽게 변경 가능
-- 프로젝트 특성에 맞는 추가 하위 소제목(예: 3.2.1, 3.2.2) 생성 가능
-- 각 소제목의 내용은 프로젝트의 실제 요구사항과 일치하도록 작성
+1. **I. 제안 개요**:
+   - background.quote: 프로젝트의 핵심 가치나 비전을 담은 인용구
+   - background.marketBackground: 미팅에서 논의된 시장 상황이나 배경
+   - background.primaryGoal: 프로젝트의 주요 목표
+   - scope: 프로젝트 범위에 포함되는 주요 항목들 (3개)
+   - strengths: 제안사의 차별화된 강점 (3개)
 
-1. **I. 제안 개요 섹션**:
-   - 1.1 제안 배경 및 목적: 슬로건({slogan})이 있으면 프로젝트의 지향 방향성으로 활용
-   - 1.2 제안의 범위: 프로젝트 개요({projectOverview})가 있으면 이를 기반으로 작성, 예산({budget})이 있으면 예산 범위를 언급
-   - 1.3 제안의 특징 및 장점: 우선순위 기능({priorityFeatures})이 있으면 이를 핵심 기능으로 강조
-   - 1.4 기대 효과: 프로젝트 성공 시 기대되는 효과와 가치
+2. **II. 제안 전략**:
+   - marketAnalysis.trends: 미팅에서 논의된 시장 트렌드 (3개)
+   - marketAnalysis.coreValue: 핵심 가치 (짧은 문구)
+   - targetModel: 목표 모델명 (프로젝트 비전)
+   - strategies: 추진 전략 (3개)
+   - benefits: 기대 효과 (수치 포함 가능)
 
-2. **II. 제안 전략 섹션**:
-   - 2.1 사업 이해 및 분석: 회의록({meetingNotes}) 내용을 분석하여 클라이언트의 비즈니스 모델과 시장 환경 분석
-   - 2.2 목표 모델 설계: 프로젝트의 목표 모델 및 비전 설정
-   - 2.3 추진 전략: 프로젝트 추진을 위한 핵심 전략 및 단계별 접근 방안
+3. **III. 기술 및 기능 부문**:
+   - architecture: 시스템 아키텍처 구성요소
+   - features: 주요 기능 (3개)
+   - security: 보안 항목 (2개)
+   - integrations: 연계 시스템들
 
-3. **III. 기술 및 기능 부문 섹션**:
-   - 3.1 시스템 목표 아키텍처: 전체 시스템 아키텍처 및 기술 스택
-   - 3.2 기능 구현 방안: 우선순위 기능({priorityFeatures})을 중심으로 주요 기능 상세 설명
-   - 3.3 보안 및 데이터 관리: 보안 정책 및 데이터 관리 전략
-   - 3.4 시스템 연계 방안: 외부 시스템 연동 계획
+4. **IV. 사업 관리 부문**:
+   - timeline: 프로젝트 일정 (반드시 프로젝트 기간 정보 활용)
+     * 프로젝트 기간: {startDate} ~ {endDate}
+     * 검수 기간: {reviewPeriod}
+     * 유지보수 기간: {maintenancePeriod}
+     * 오픈일/런칭일: {openDate}
+     * 위 정보를 기반으로 단계별 일정을 생성하세요 (예: M1, M2, M3-M5, M6)
+   - resources: 투입 인력 및 역할
+     * 투입 인력: {teamSize}
+     * 역할별로 구분하여 작성하세요 (예: Project Manager, Lead Developer, UX/UI Designer, QA Engineer)
+   - methodology: 개발 방법론
+   - qualityAssurance: 품질 보증 계획 (3개)
 
-4. **IV. 사업 관리 부문 섹션**:
-   - 4.1 추진 일정: 프로젝트 기간({startDate} ~ {endDate}), 검수 기간({reviewPeriod}), 유지보수 기간({maintenancePeriod}), 오픈일({openDate})을 명확히 표시
-   - 4.2 수행 조직 및 인력: 투입 인력({teamSize})이 있으면 구체적으로 명시
-   - 4.3 개발 방법론: 개발 프로세스 및 품질 관리 프로세스
-   - 4.4 품질 보증 계획: 품질 관리 체계 및 테스트 계획
+5. **V. 사업 지원 부문**:
+   - training: 교육 훈련 계획 (3개)
+   - knowledgeTransfer: 기술 이전 계획 설명
+   - maintenance: 유지보수 항목 (3개)
+   - emergency: 비상 대책
 
-5. **V. 사업 지원 부문 섹션**:
-   - 5.1 교육 훈련 계획: 사용자 및 운영자 교육 프로그램
-   - 5.2 기술 이전 계획: 기술 문서화 및 지식 전수 방안
-   - 5.3 유지보수: 유지보수 기간({maintenancePeriod})을 포함한 지원 체계
-   - 5.4 비상 대책: 장애 대응 절차 및 복구 계획
+**중요**: 모든 내용은 미팅 전사록을 기반으로 생성하되, 프로젝트 정보도 참고하여 작성하세요.
 `;
 
 // 키워드 추출용 프롬프트 템플릿

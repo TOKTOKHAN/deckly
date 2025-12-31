@@ -4,7 +4,17 @@ import {
   generateTableOfContentsTemplate,
   generateConclusionTemplate,
   generateHTMLWrapper,
+  generateBodySection1Template,
+  generateBodySection2Template,
+  generateBodySection3Template,
+  generateBodySection4Template,
+  generateBodySection5Template,
   TemplateData,
+  BodySection1Data,
+  BodySection2Data,
+  BodySection3Data,
+  BodySection4Data,
+  BodySection5Data,
 } from './templates';
 import { BODY_PROMPT_TEMPLATE, KEYWORD_EXTRACTION_PROMPT } from './prompts';
 
@@ -139,17 +149,79 @@ export async function generateProposalWithChains(
     });
 
     const bodyResponse = await model.invoke(bodyPrompt);
-    const bodyContent =
+    const bodyContentRaw =
       typeof bodyResponse.content === 'string'
         ? bodyResponse.content
         : JSON.stringify(bodyResponse.content);
-    console.log('본문 생성 완료, 길이:', bodyContent.length);
-    console.log('본문 미리보기:', bodyContent.substring(0, 300));
+    console.log('본문 JSON 생성 완료, 길이:', bodyContentRaw.length);
+    console.log('본문 JSON 미리보기:', bodyContentRaw.substring(0, 500));
 
-    // AI가 생성한 본문에서 표지나 끝마무리가 포함되어 있는지 확인
-    if (bodyContent.includes('TOKTOKHAN.DEV') && bodyContent.includes('감사합니다')) {
-      console.warn('⚠️ 본문에 표지/끝마무리가 포함되어 있을 수 있습니다.');
+    // JSON 파싱
+    let bodyData: {
+      section1?: BodySection1Data;
+      section2?: BodySection2Data;
+      section3?: BodySection3Data;
+      section4?: BodySection4Data;
+      section5?: BodySection5Data;
+    } = {};
+
+    try {
+      // JSON 추출 (마크다운 코드 블록 제거)
+      const jsonMatch =
+        bodyContentRaw.match(/```json\s*([\s\S]*?)\s*```/) || bodyContentRaw.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const jsonStr = jsonMatch[1] || jsonMatch[0];
+        bodyData = JSON.parse(jsonStr);
+        console.log('본문 JSON 파싱 성공');
+      } else {
+        console.warn('⚠️ JSON 형식을 찾을 수 없습니다. 원본 내용을 사용합니다.');
+        // JSON 파싱 실패 시 빈 데이터 사용
+      }
+    } catch (error) {
+      console.error('본문 JSON 파싱 오류:', error);
+      console.warn('⚠️ JSON 파싱 실패, 빈 데이터로 진행합니다.');
     }
+
+    // 브랜드 컬러 설정
+    const primaryColor = data.brandColor1 || '#4f46e5';
+    const secondaryColor = data.brandColor2 || '#1f2937';
+    const tertiaryColor = data.brandColor3 || '#0a0c10';
+
+    // 각 섹션 템플릿 생성 (3가지 브랜드 컬러 전달)
+    const section1HTML = generateBodySection1Template(
+      bodyData.section1 || {},
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
+    );
+    const section2HTML = generateBodySection2Template(
+      bodyData.section2 || {},
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
+    );
+    const section3HTML = generateBodySection3Template(
+      bodyData.section3 || {},
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
+    );
+    const section4HTML = generateBodySection4Template(
+      bodyData.section4 || {},
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
+    );
+    const section5HTML = generateBodySection5Template(
+      bodyData.section5 || {},
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
+    );
+
+    // 본문 조합
+    const bodyContent = section1HTML + section2HTML + section3HTML + section4HTML + section5HTML;
+    console.log('본문 HTML 생성 완료, 총 길이:', bodyContent.length);
 
     // 4. 끝마무리 생성 (템플릿)
     const conclusion = generateConclusionTemplate(data);

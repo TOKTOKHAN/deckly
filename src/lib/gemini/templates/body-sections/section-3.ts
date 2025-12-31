@@ -1,26 +1,37 @@
 /*본문 섹션 3: 기술 및 기능 부문 (Part III: Technical Solution)*/
 import type { BodySection3Data } from '../types';
 
-export function generateBodySection3Template(data: BodySection3Data, brandColor1?: string): string {
-  const primaryColor = brandColor1 || '#4f46e5';
-  const blueColor = '#3b82f6'; // blue-500
+export function generateBodySection3Template(
+  data: BodySection3Data,
+  brandColor1?: string,
+  brandColor2?: string,
+  brandColor3?: string,
+): string {
+  // 브랜드 컬러 설정
+  const primaryColor = brandColor1 || '#4f46e5'; // 주요 강조, 제목, 아이콘
+  const secondaryColor = brandColor2 || '#1f2937'; // 카드 배경, 보조 강조
+  const tertiaryColor = brandColor3 || '#0a0c10'; // 경계선, 미묘한 배경
 
-  // 기본값 설정
-  const architecture = data.architecture || {
-    frontend: ['Mobile App', 'Web Platform'],
-    coreHub: 'CORE HUB',
-    backend: ['Microservices', 'Scalable DB'],
+  // Hex to RGBA 변환 함수
+  const hexToRgba = (hex: string, alpha: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  const features = data.features || [
-    '반응형 웹 및 하이브리드 앱 고도화',
-    'AI 기반 스마트 주문 시스템 연동',
-    '실시간 배달 트래킹 GPS 인터페이스',
-  ];
+  // 미팅 전사록 기반으로 Gemini가 생성한 데이터 사용 (기본값 없음)
+  const architecture = data.architecture || {
+    frontend: [],
+    coreHub: '',
+    backend: [],
+  };
 
-  const security = data.security || ['End-to-End 데이터 암호화', 'WAF 및 DDoS 방어 체계 구축'];
+  const features = data.features || [];
 
-  const integrations = data.integrations || ['POS SYSTEM', 'CRM', 'ERP', '3RD PARTY API'];
+  const security = data.security || [];
+
+  const integrations = data.integrations || [];
 
   return `
     <div class="a4-page flex flex-col" style="background-color: #0a0c10 !important; color: white !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
@@ -45,7 +56,7 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
         <!-- 3.1 시스템 목표 아키텍처 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(59, 130, 246, 0.1) !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
               <span style="font-size: 1.25rem !important;">📚</span>
             </div>
             <div>
@@ -56,7 +67,7 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
             </div>
           </div>
           
-          <div class="bg-zinc-900/20 border border-dashed border-zinc-800 rounded-2xl p-8 flex justify-center" style="background-color: rgba(24, 24, 27, 0.2) !important; border: 1px dashed #27272a !important; border-radius: 1rem !important; padding: 2rem !important; display: flex !important; justify-content: center !important; width: 100% !important;">
+          <div class="bg-zinc-900/20 border border-dashed border-zinc-800 rounded-2xl p-8 flex justify-center" style="background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border: 1px dashed ${hexToRgba(tertiaryColor, 0.5)} !important; border-radius: 1rem !important; padding: 2rem !important; display: flex !important; justify-content: center !important; width: 100% !important;">
             <div class="flex items-center gap-6" style="display: flex !important; align-items: center !important; gap: 1.5rem !important;">
               <div class="flex flex-col gap-3" style="display: flex !important; flex-direction: column !important; gap: 0.75rem !important;">
                 ${
@@ -64,8 +75,8 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
                     ?.slice(0, 2)
                     .map(
                       (item, i) => `
-                <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 4rem !important; height: 4rem !important; background-color: #27272a !important; border-radius: 0.75rem !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${i === 0 ? blueColor : '#71717a'} !important;">
+                <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 4rem !important; height: 4rem !important; background-color: ${hexToRgba(secondaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.3)} !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${i === 0 ? primaryColor : '#71717a'} !important;">
                     ${
                       i === 0
                         ? '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line>'
@@ -82,9 +93,9 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
-              <div class="w-36 h-36 rounded-full border-4 border-blue-600/10 flex items-center justify-center relative" style="width: 9rem !important; height: 9rem !important; border-radius: 9999px !important; border: 4px solid rgba(37, 99, 235, 0.1) !important; display: flex !important; align-items: center !important; justify-content: center !important; position: relative !important;">
-                <div class="w-28 h-28 bg-zinc-950 border-2 border-blue-600 rounded-2xl flex flex-col items-center justify-center gap-2" style="width: 7rem !important; height: 7rem !important; background-color: #09090b !important; border: 2px solid ${blueColor} !important; border-radius: 1rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important; box-shadow: 0 0 40px rgba(37, 99, 235, 0.2) !important;">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${blueColor} !important;">
+              <div class="w-36 h-36 rounded-full border-4 border-blue-600/10 flex items-center justify-center relative" style="width: 9rem !important; height: 9rem !important; border-radius: 9999px !important; border: 4px solid ${hexToRgba(primaryColor, 0.1)} !important; display: flex !important; align-items: center !important; justify-content: center !important; position: relative !important;">
+                <div class="w-28 h-28 bg-zinc-950 border-2 border-blue-600 rounded-2xl flex flex-col items-center justify-center gap-2" style="width: 7rem !important; height: 7rem !important; background-color: ${hexToRgba(tertiaryColor, 0.5)} !important; border: 2px solid ${primaryColor} !important; border-radius: 1rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important; box-shadow: 0 0 40px ${hexToRgba(primaryColor, 0.2)} !important;">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                     <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
                     <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
                     <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
@@ -102,7 +113,7 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
                     ?.slice(0, 2)
                     .map(
                       item => `
-                <div class="w-32 p-3 bg-zinc-900 rounded-xl border border-white/5 text-center text-xs font-bold text-zinc-400" style="width: 8rem !important; padding: 0.75rem !important; background-color: #18181b !important; border-radius: 0.75rem !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; text-align: center !important; font-size: 0.75rem !important; font-weight: bold !important; color: #a1a1aa !important;">${item}</div>
+                <div class="w-32 p-3 bg-zinc-900 rounded-xl border border-white/5 text-center text-xs font-bold text-zinc-400" style="width: 8rem !important; padding: 0.75rem !important; background-color: ${hexToRgba(secondaryColor, 0.5)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; text-align: center !important; font-size: 0.75rem !important; font-weight: bold !important; color: #a1a1aa !important;">${item}</div>
                 `,
                     )
                     .join('') || ''
@@ -117,7 +128,7 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
           <!-- 3.2 기능 구현 방안 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(59, 130, 246, 0.1) !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
                 <span style="font-size: 1.25rem !important;">💻</span>
               </div>
               <div>
@@ -133,8 +144,8 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
                   ?.slice(0, 3)
                   .map(
                     feature => `
-              <li class="flex items-start gap-3 p-3 bg-zinc-900/20 border border-white/5 rounded-xl" style="display: flex !important; align-items: flex-start !important; gap: 0.75rem !important; padding: 0.75rem !important; background-color: rgba(24, 24, 27, 0.2) !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; border-radius: 0.75rem !important;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${blueColor} !important; margin-top: 0.125rem !important; flex-shrink: 0 !important;">
+              <li class="flex items-start gap-3 p-3 bg-zinc-900/20 border border-white/5 rounded-xl" style="display: flex !important; align-items: flex-start !important; gap: 0.75rem !important; padding: 0.75rem !important; background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; border-radius: 0.75rem !important;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important; margin-top: 0.125rem !important; flex-shrink: 0 !important;">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
@@ -150,7 +161,7 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
           <!-- 3.3 보안 및 데이터 관리 -->
           <div style="width: 100% !important;">
             <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(59, 130, 246, 0.1) !important;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
                 <span style="font-size: 1.25rem !important;">🛡️</span>
               </div>
               <div>
@@ -166,8 +177,8 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
                   ?.slice(0, 2)
                   .map(
                     item => `
-              <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex items-center gap-3" style="padding: 1rem !important; background-color: #09090b !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; border-radius: 0.75rem !important; display: flex !important; align-items: center !important; gap: 0.75rem !important;">
-                <div class="w-2 h-2 rounded-full bg-blue-500" style="width: 0.5rem !important; height: 0.5rem !important; border-radius: 9999px !important; background-color: ${blueColor} !important;"></div>
+              <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex items-center gap-3" style="padding: 1rem !important; background-color: ${hexToRgba(tertiaryColor, 0.5)} !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; border-radius: 0.75rem !important; display: flex !important; align-items: center !important; gap: 0.75rem !important;">
+                <div class="w-2 h-2 rounded-full bg-blue-500" style="width: 0.5rem !important; height: 0.5rem !important; border-radius: 9999px !important; background-color: ${primaryColor} !important;"></div>
                 <span class="text-xs text-zinc-300 font-bold" style="font-size: 0.75rem !important; color: #d4d4d8 !important; font-weight: bold !important;">${item}</span>
               </div>
               `,
@@ -181,7 +192,7 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
         <!-- 3.4 시스템 연계 방안 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: rgba(59, 130, 246, 0.1) !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.1)} !important;">
               <span style="font-size: 1.25rem !important;">⚙️</span>
             </div>
             <div>
@@ -192,7 +203,7 @@ export function generateBodySection3Template(data: BodySection3Data, brandColor1
             </div>
           </div>
           
-          <div class="bg-zinc-900/30 p-6 rounded-2xl flex justify-around items-center border border-white/5 italic text-zinc-500 font-black text-xs tracking-widest" style="background-color: rgba(24, 24, 27, 0.3) !important; padding: 1.5rem !important; border-radius: 1rem !important; display: flex !important; justify-content: space-around !important; align-items: center !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; font-style: italic !important; color: #71717a !important; font-weight: 900 !important; font-size: 0.75rem !important; letter-spacing: 0.1em !important; width: 100% !important;">
+          <div class="bg-zinc-900/30 p-6 rounded-2xl flex justify-around items-center border border-white/5 italic text-zinc-500 font-black text-xs tracking-widest" style="background-color: ${hexToRgba(secondaryColor, 0.3)} !important; padding: 1.5rem !important; border-radius: 1rem !important; display: flex !important; justify-content: space-around !important; align-items: center !important; border: 1px solid ${hexToRgba(tertiaryColor, 0.2)} !important; font-style: italic !important; color: #71717a !important; font-weight: 900 !important; font-size: 0.75rem !important; letter-spacing: 0.1em !important; width: 100% !important;">
             ${integrations
               .map(
                 (item, i) => `
