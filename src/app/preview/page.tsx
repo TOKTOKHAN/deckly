@@ -9,18 +9,20 @@ import {
   generateBodySection2Template,
   generateBodySection3Template,
   generateBodySection4Template,
+  generateBodySection5Template,
   generateHTMLWrapper,
   TemplateData,
   BodySection1Data,
   BodySection2Data,
   BodySection3Data,
   BodySection4Data,
+  BodySection5Data,
 } from '@/lib/gemini/templates';
 import clientLogo from '../../../public/images/Domino_pizza_logo.svg';
 
 export default function PreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<
-    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'body3' | 'body4' | 'all'
+    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'body3' | 'body4' | 'body5' | 'all'
   >('all');
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -156,6 +158,28 @@ export default function PreviewPage() {
           };
           content = generateBodySection4Template(bodySection4Data, sampleData.brandColor1);
           break;
+        case 'body5':
+          const bodySection5Data: BodySection5Data = {
+            training: [
+              '관리자 기능 매뉴얼 및 가이드 배포',
+              '현업 담당자 대상 시스템 활용 교육(2회)',
+              '데이터 분석 및 마케팅 툴 활용 워크숍',
+            ],
+            knowledgeTransfer:
+              '"모든 소스코드 및 인프라 설계 문서를 제공하며, 자체 운영 역량 내재화를 적극 지원합니다."',
+            maintenance: [
+              { title: '24/7 Monitoring', description: '상시 모니터링 체계 가동' },
+              { title: 'Regular Updates', description: '보안 취약점 점검 및 패치' },
+              { title: 'Help Desk', description: '전담 기술 지원 헬프데스크' },
+            ],
+            emergency: {
+              title: '장애 발생 시 30분 내 초동 조치 보장',
+              description: '에스컬레이션 경로 수립을 통한 무중단 비즈니스 연속성 확보',
+              badge: 'DR System Active',
+            },
+          };
+          content = generateBodySection5Template(bodySection5Data, sampleData.brandColor1);
+          break;
         case 'all':
           const cover = await generateCoverTemplate(sampleData);
           const toc = generateTableOfContentsTemplate(
@@ -252,12 +276,32 @@ export default function PreviewPage() {
             },
             qualityAssurance: ['정기 단위 테스트', '사용자 시나리오 검증', '부하 테스트 실시'],
           };
+          const bodySection5DataAll: BodySection5Data = {
+            training: [
+              '관리자 기능 매뉴얼 및 가이드 배포',
+              '현업 담당자 대상 시스템 활용 교육(2회)',
+              '데이터 분석 및 마케팅 툴 활용 워크숍',
+            ],
+            knowledgeTransfer:
+              '"모든 소스코드 및 인프라 설계 문서를 제공하며, 자체 운영 역량 내재화를 적극 지원합니다."',
+            maintenance: [
+              { title: '24/7 Monitoring', description: '상시 모니터링 체계 가동' },
+              { title: 'Regular Updates', description: '보안 취약점 점검 및 패치' },
+              { title: 'Help Desk', description: '전담 기술 지원 헬프데스크' },
+            ],
+            emergency: {
+              title: '장애 발생 시 30분 내 초동 조치 보장',
+              description: '에스컬레이션 경로 수립을 통한 무중단 비즈니스 연속성 확보',
+              badge: 'DR System Active',
+            },
+          };
           const body1 = generateBodySection1Template(bodySection1DataAll, sampleData.brandColor1);
           const body2 = generateBodySection2Template(bodySection2DataAll, sampleData.brandColor1);
           const body3 = generateBodySection3Template(bodySection3DataAll, sampleData.brandColor1);
           const body4 = generateBodySection4Template(bodySection4DataAll, sampleData.brandColor1);
+          const body5 = generateBodySection5Template(bodySection5DataAll, sampleData.brandColor1);
           const conclusion = generateConclusionTemplate(sampleData);
-          content = cover + toc + body1 + body2 + body3 + body4 + conclusion;
+          content = cover + toc + body1 + body2 + body3 + body4 + body5 + conclusion;
           break;
         default:
           content = '';
@@ -420,6 +464,16 @@ export default function PreviewPage() {
               }`}
             >
               본문 섹션 4
+            </button>
+            <button
+              onClick={() => setSelectedTemplate('body5')}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                selectedTemplate === 'body5'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              본문 섹션 5
             </button>
             <button
               onClick={() => setSelectedTemplate('all')}
