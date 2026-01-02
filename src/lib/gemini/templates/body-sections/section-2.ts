@@ -5,6 +5,7 @@ import {
   getCardTextColor,
   hexToRgba,
   getA4PageContainerStyle,
+  getBrandColors,
 } from '../constants';
 
 export function generateBodySection2Template(
@@ -14,9 +15,11 @@ export function generateBodySection2Template(
   brandColor3?: string,
 ): string {
   // 브랜드 컬러 설정
-  const primaryColor = brandColor1 || '#4f46e5'; // 주요 강조, 제목, 아이콘
-  const secondaryColor = brandColor2 || '#1f2937'; // 카드 배경, 보조 강조
-  const tertiaryColor = brandColor3 || '#0a0c10'; // 경계선, 미묘한 배경
+  const { primaryColor, secondaryColor, tertiaryColor } = getBrandColors(
+    brandColor1,
+    brandColor2,
+    brandColor3,
+  );
 
   // 배경색 밝기에 따라 텍스트 색상 결정
   const textColors = getContrastTextColorWithGray(tertiaryColor);

@@ -226,3 +226,26 @@ export function getContrastBorderColor(backgroundColor: string, _originalColor?:
 export function getA4PageContainerStyle(backgroundColor: string, textColor: string): string {
   return `background-color: ${backgroundColor} !important; color: ${textColor} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;`;
 }
+
+/**
+ * 브랜드 컬러를 기본값과 함께 반환합니다
+ * @param brandColor1 주요 강조 컬러 (기본값: #4f46e5)
+ * @param brandColor2 카드 배경, 보조 강조 컬러 (기본값: #1f2937)
+ * @param brandColor3 경계선, 미묘한 배경 컬러 (기본값: #0a0c10)
+ * @returns 브랜드 컬러 객체
+ */
+export function getBrandColors(
+  brandColor1?: string,
+  brandColor2?: string,
+  brandColor3?: string,
+): {
+  primaryColor: string;
+  secondaryColor: string;
+  tertiaryColor: string;
+} {
+  return {
+    primaryColor: brandColor1 || '#4f46e5', // 주요 강조, 제목, 아이콘
+    secondaryColor: brandColor2 || '#1f2937', // 카드 배경, 보조 강조
+    tertiaryColor: brandColor3 || '#0a0c10', // 경계선, 미묘한 배경
+  };
+}
