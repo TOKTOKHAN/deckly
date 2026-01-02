@@ -503,6 +503,11 @@ export function generateBodySection4Template(
     description: '',
   };
 
+  const budget = data.budget || {
+    amount: '',
+    description: '',
+  };
+
   // qualityAssurance 데이터 처리 (string[] 또는 Array<{title, description}>)
   const qualityAssuranceItems =
     !data.qualityAssurance || data.qualityAssurance.length === 0
@@ -522,11 +527,11 @@ export function generateBodySection4Template(
         textColors,
       )}
 
-      <div class="flex-1 space-y-6" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
+      <div class="flex-1" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1rem !important;">
         
         <!-- 4.1 추진 일정 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
-          <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
+          <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.2rem !important;">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
               <span style="font-size: 1.25rem !important;">📊</span>
             </div>
@@ -542,10 +547,10 @@ export function generateBodySection4Template(
         </section>
 
         <!-- 4.2 수행 조직 및 인력 & 4.3 개발 방법론 -->
-        <section class="grid grid-cols-2 gap-6" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1.5rem !important; width: 100% !important;">
+        <section class="grid grid-cols-2 gap-6" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1rem !important; width: 100% !important;">
           <!-- 4.2 수행 조직 및 인력 -->
           <div style="width: 100% !important;">
-            <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
+            <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.2rem !important;">
               <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
                 <span style="font-size: 1.25rem !important;">👥</span>
               </div>
@@ -556,11 +561,11 @@ export function generateBodySection4Template(
                 <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Resource Allocation</p>
               </div>
             </div>
-            <div class="bg-zinc-900/40 p-6 rounded-2xl grid grid-cols-2 gap-4" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; padding: 1.5rem !important; border-radius: 1rem !important; display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1rem !important; width: 100% !important;">
+            <div class="bg-zinc-900/40 p-6 rounded-2xl grid grid-cols-2 gap-4" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; padding: 1rem !important; border-radius: 1rem !important; display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.75rem !important; width: 100% !important;">
               ${resources
                 .map(
                   resource => `
-              <div class="p-4 bg-zinc-950 rounded-xl border border-white/5 text-center" style="padding: 1rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; text-align: center !important;">
+              <div class="p-4 bg-zinc-950 rounded-xl border border-white/5 text-center" style="padding: 0.75rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; text-align: center !important;">
                 <p class="text-[10px] text-zinc-500 font-black uppercase mb-1" style="font-size: 10px !important; color: #71717a !important; font-weight: 900 !important; text-transform: uppercase !important; margin-bottom: 0.25rem !important;">${resource.role}</p>
                 <p class="text-xs font-bold text-white italic" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${darkCardTextColors.primary} !important; font-style: italic !important;">${resource.name}</p>
               </div>
@@ -572,7 +577,7 @@ export function generateBodySection4Template(
           
           <!-- 4.3 개발 방법론 -->
           <div style="width: 100% !important;">
-            <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
+            <div class="flex items-center gap-3 mb-2" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.2rem !important;">
               <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
                 <span style="font-size: 1.25rem !important;">📚</span>
               </div>
@@ -583,16 +588,16 @@ export function generateBodySection4Template(
                 <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Agile Methodology</p>
               </div>
             </div>
-            <div class="bg-zinc-900/40 p-6 rounded-2xl h-full flex flex-col justify-center text-center" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; padding: 1.5rem !important; border-radius: 1rem !important; height: 100% !important; display: flex !important; flex-direction: column !important; justify-content: center !important; text-align: center !important; width: 100% !important;">
-              <p class="text-base font-bold text-white mb-2 italic" style="font-size: 1rem !important; font-weight: bold !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important; font-style: italic !important;">${methodology.title}</p>
-              <p class="text-xs text-zinc-500 leading-relaxed font-medium" style="font-size: 0.75rem !important; color: #71717a !important; line-height: 1.5 !important; font-weight: 500 !important;">${methodology.description}</p>
+            <div class="bg-zinc-900/40 p-4 rounded-2xl flex flex-col justify-center text-center h-full" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; padding: 0.5rem !important; border-radius: 1rem !important; display: flex !important; flex-direction: column !important; justify-content: center !important; text-align: center !important; width: 100% !important;">
+              <p class="text-base font-bold text-white mb-1 italic" style="font-size: 0.875rem !important; font-weight: bold !important; color: ${textColors.primary} !important; margin-bottom: 0.125rem !important; font-style: italic !important;">${methodology.title}</p>
+              <p class="text-xs text-zinc-500 leading-relaxed font-medium" style="font-size: 0.6875rem !important; color: #71717a !important; line-height: 1.4 !important; font-weight: 500 !important;">${methodology.description}</p>
             </div>
           </div>
         </section>
 
         <!-- 4.4 품질 보증 계획 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
-          <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
+          <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.2rem !important;">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
               <span style="font-size: 1.25rem !important;">✅</span>
             </div>
@@ -604,12 +609,12 @@ export function generateBodySection4Template(
             </div>
           </div>
           
-          <div class="grid grid-cols-3 gap-3" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.75rem !important; width: 100% !important;">
+          <div class="grid grid-cols-3 gap-3" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.5rem !important; width: 100% !important;">
             ${qualityAssuranceItems
               .slice(0, 3)
               .map(
                 item => `
-            <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex flex-col gap-2" style="padding: 1rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; display: flex !important; flex-direction: column !important; gap: 0.5rem !important;">
+            <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex flex-col gap-2" style="padding: 0.75rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; display: flex !important; flex-direction: column !important; gap: 0.375rem !important;">
               <div class="flex items-center gap-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -624,6 +629,50 @@ export function generateBodySection4Template(
               .join('')}
           </div>
         </section>
+
+        <!-- 4.5 사업 예산 -->
+        ${
+          budget.amount || budget.description
+            ? `
+        <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
+          <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.3rem !important;">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
+              <span style="font-size: 1.25rem !important;">💰</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
+                4.5 사업 예산
+              </h2>
+              <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Project Budget</p>
+            </div>
+          </div>
+          
+          <div class="bg-zinc-900/40 p-6 rounded-2xl" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; padding: 0.7rem !important; border-radius: 1rem !important; width: 100% !important;">
+            ${
+              budget.amount
+                ? `
+            <div class="mb-4" style="margin-bottom: 0.2rem !important;">
+              <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-2" style="font-size: 10px !important; color: #71717a !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; margin-bottom: 0.1rem !important;">예산 금액</p>
+              <p class="text-2xl font-black text-white" style="font-size: 1rem !important; font-weight: 900 !important; color: ${textColors.primary} !important;">${budget.amount}</p>
+            </div>
+            `
+                : ''
+            }
+            ${
+              budget.description
+                ? `
+            <div>
+              <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-2" style="font-size: 10px !important; color: #71717a !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; margin-bottom: 0.15rem !important;">${budget.amount ? '예산 설명' : ''}</p>
+              <p class="text-sm text-zinc-400 leading-relaxed font-medium" style="font-size: 0.8125rem !important; color: ${textColors.secondary} !important; line-height: 1.5 !important; font-weight: 500 !important;">${budget.description}</p>
+            </div>
+            `
+                : ''
+            }
+          </div>
+        </section>
+        `
+            : ''
+        }
       </div>
       ${generatePageFooter('06', primaryColor, textColors)}
     </div>

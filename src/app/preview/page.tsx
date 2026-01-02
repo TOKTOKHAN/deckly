@@ -236,6 +236,11 @@ export default function PreviewPage() {
                 description: '대용량 트래픽 시뮬레이션을 통한 성능 최적화 및 안정성 검증',
               },
             ],
+            budget: {
+              amount: '5,000만원 ~ 1억원',
+              description:
+                '프로젝트 규모 및 요구사항에 따라 세부 예산이 조정될 수 있으며, 개발 단계별 단계적 납품에 따른 진행률 기반 결제가 가능합니다.',
+            },
           };
           content = generateBodySection4Template(
             bodySection4Data,
@@ -424,6 +429,11 @@ export default function PreviewPage() {
                 description: '대용량 트래픽 시뮬레이션을 통한 성능 최적화 및 안정성 검증',
               },
             ],
+            budget: {
+              amount: '5,000만원 ~ 1억원',
+              description:
+                '프로젝트 규모 및 요구사항에 따라 세부 예산이 조정될 수 있으며, 개발 단계별 단계적 납품에 따른 진행률 기반 결제가 가능합니다.',
+            },
           };
           const bodySection5DataAll: BodySection5Data = {
             training: [

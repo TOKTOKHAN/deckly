@@ -171,7 +171,11 @@ export const BODY_PROMPT_TEMPLATE = `
         "title": "품질 보증 항목 3",
         "description": "품질 보증 항목 설명"
       }
-    ]
+    ],
+    "budget": {
+      "amount": "예산 금액 (예: \"5,000만원 이상\", \"5,000만원 ~ 1억원\")",
+      "description": "예산 설명 (선택사항)"
+    }
   }
 }
 \`\`\`
@@ -281,6 +285,9 @@ export const BODY_PROMPT_TEMPLATE = `
      * 역할별로 구분하여 작성하세요 (예: Project Manager, Lead Developer, UX/UI Designer, QA Engineer)
    - methodology: 개발 방법론
    - qualityAssurance: 품질 보증 계획 (각 항목은 title과 description을 포함한 객체 배열, 3개)
+   - budget: 사업 예산
+     * 예산: {budget}
+     * 예산 정보가 있으면 amount와 description으로 작성하세요
 
 5. **V. 사업 지원 부문**:
    - training: 교육 훈련 계획 (3개)

@@ -184,6 +184,21 @@ export async function generateProposalWithChains(
       console.warn('⚠️ JSON 파싱 실패, 빈 데이터로 진행합니다.');
     }
 
+    // budgetMin 데이터를 section4.budget에 매핑 (AI가 생성하지 않은 경우)
+    if (data.budgetMin && data.budgetMin.trim() !== '') {
+      if (!bodyData.section4) {
+        bodyData.section4 = {};
+      }
+      if (!bodyData.section4.budget) {
+        bodyData.section4.budget = {
+          amount: data.budgetMin,
+          description: '',
+        };
+      } else if (!bodyData.section4.budget.amount) {
+        bodyData.section4.budget.amount = data.budgetMin;
+      }
+    }
+
     // 브랜드 컬러 설정
     const primaryColor = data.brandColor1 || '#4f46e5';
     const secondaryColor = data.brandColor2 || '#1f2937';
