@@ -1,6 +1,6 @@
 /* 제안서 표지 템플릿 */
 import type { TemplateData } from './types';
-import { getContrastTextColorWithGray } from './constants';
+import { getContrastTextColorWithGray, hexToRgba } from './constants';
 
 export async function generateCoverTemplate(
   data: TemplateData,
@@ -14,14 +14,6 @@ export async function generateCoverTemplate(
 
   // 배경색 밝기에 따라 텍스트 색상 결정
   const textColors = getContrastTextColorWithGray(tertiaryColor);
-
-  // Hex to RGBA 변환 함수
-  const hexToRgba = (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
 
   // 브랜드 컬러 기반 색상 조합
   const cardBgColor = hexToRgba(secondaryColor, 0.4);

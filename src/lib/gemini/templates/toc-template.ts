@@ -1,5 +1,5 @@
 /* 제안서 목차 템플릿 프로젝트 제안서의 목차 페이지를 생성하는 템플릿입니다. */
-import { getContrastTextColorWithGray, getContrastBorderColor } from './constants';
+import { getContrastTextColorWithGray, getContrastBorderColor, hexToRgba } from './constants';
 
 export function generateTableOfContentsTemplate(
   brandColor1?: string,
@@ -12,14 +12,6 @@ export function generateTableOfContentsTemplate(
 
   // 배경색 밝기에 따라 텍스트 색상 결정
   const textColors = getContrastTextColorWithGray(tertiaryColor);
-
-  // Hex to RGBA 변환 함수
-  const hexToRgba = (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
 
   const primaryColorRgba = hexToRgba(primaryColor, 0.05);
 

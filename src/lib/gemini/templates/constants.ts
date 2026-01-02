@@ -84,6 +84,31 @@ export function getContrastTextColorWithGray(backgroundColor: string): {
 }
 
 /**
+ * HEX 색상 코드를 RGB 객체로 변환합니다
+ * @param hex HEX 색상 코드 (예: #4f46e5)
+ * @returns RGB 객체 { r, g, b }
+ */
+export function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  const cleanHex = hex.replace('#', '');
+  return {
+    r: parseInt(cleanHex.slice(0, 2), 16),
+    g: parseInt(cleanHex.slice(2, 4), 16),
+    b: parseInt(cleanHex.slice(4, 6), 16),
+  };
+}
+
+/**
+ * HEX 색상 코드를 RGBA 문자열로 변환합니다
+ * @param hex HEX 색상 코드 (예: #4f46e5)
+ * @param alpha 투명도 (0-1)
+ * @returns RGBA 문자열 (예: rgba(79, 70, 229, 0.5)
+ */
+export function hexToRgba(hex: string, alpha: number): string {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/**
  * 투명도가 적용된 색상을 배경색 위에 블렌딩한 실제 색상을 계산합니다
  * @param foregroundColor 전경색 HEX 코드
  * @param backgroundColor 배경색 HEX 코드
@@ -95,16 +120,6 @@ export function blendColors(
   backgroundColor: string,
   alpha: number,
 ): string {
-  // HEX를 RGB로 변환
-  const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
-    const cleanHex = hex.replace('#', '');
-    return {
-      r: parseInt(cleanHex.slice(0, 2), 16),
-      g: parseInt(cleanHex.slice(2, 4), 16),
-      b: parseInt(cleanHex.slice(4, 6), 16),
-    };
-  };
-
   const fg = hexToRgb(foregroundColor);
   const bg = hexToRgb(backgroundColor);
 
@@ -150,16 +165,6 @@ export function getCardTextColor(
  * @returns 보색 HEX 코드
  */
 export function getComplementaryColor(backgroundColor: string): string {
-  // HEX를 RGB로 변환
-  const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
-    const cleanHex = hex.replace('#', '');
-    return {
-      r: parseInt(cleanHex.slice(0, 2), 16),
-      g: parseInt(cleanHex.slice(2, 4), 16),
-      b: parseInt(cleanHex.slice(4, 6), 16),
-    };
-  };
-
   const rgb = hexToRgb(backgroundColor);
 
   // 보색 계산: 각 RGB 값을 255에서 빼기

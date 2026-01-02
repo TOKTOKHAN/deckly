@@ -1,6 +1,6 @@
 /*본문 섹션 3: 기술 및 기능 부문 (Part III: Technical Solution)*/
 import type { BodySection3Data } from '../types';
-import { getContrastTextColorWithGray, getCardTextColor } from '../constants';
+import { getContrastTextColorWithGray, getCardTextColor, hexToRgba } from '../constants';
 
 export function generateBodySection3Template(
   data: BodySection3Data,
@@ -19,14 +19,6 @@ export function generateBodySection3Template(
   // 카드 배경색에 따른 텍스트 색상 계산
   const cardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
   const darkCardTextColors = getCardTextColor(tertiaryColor, tertiaryColor, 0.3);
-
-  // Hex to RGBA 변환 함수
-  const hexToRgba = (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
 
   // 미팅 전사록 기반으로 Gemini가 생성한 데이터 사용 (기본값 없음)
   const architecture = data.architecture || {

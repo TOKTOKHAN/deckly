@@ -1,6 +1,6 @@
 /* 본문 섹션 1: 제안 개요 (Part I: Introduction)*/
 import type { BodySection1Data } from '../types';
-import { getContrastTextColorWithGray, getCardTextColor } from '../constants';
+import { getContrastTextColorWithGray, getCardTextColor, hexToRgba } from '../constants';
 
 export function generateBodySection1Template(
   data: BodySection1Data,
@@ -15,14 +15,6 @@ export function generateBodySection1Template(
 
   // 배경색 밝기에 따라 텍스트 색상 결정
   const textColors = getContrastTextColorWithGray(tertiaryColor);
-
-  // Hex to RGBA 변환 함수
-  const hexToRgba = (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
 
   // 미팅 전사록 기반으로 Gemini가 생성한 데이터 사용 (기본값 없음)
   const background = data.background || {

@@ -1,6 +1,6 @@
 /* 제안서 끝마무리 템플릿 */
 import type { TemplateData } from './types';
-import { getContrastTextColorWithGray } from './constants';
+import { getContrastTextColorWithGray, hexToRgba } from './constants';
 
 export function generateConclusionTemplate(data: TemplateData): string {
   // 브랜드 컬러 추출
@@ -10,14 +10,6 @@ export function generateConclusionTemplate(data: TemplateData): string {
 
   // 배경색 밝기에 따라 텍스트 색상 결정
   const textColors = getContrastTextColorWithGray(tertiaryColor);
-
-  // 브랜드 컬러를 rgba로 변환 (투명도 20%용)
-  const hexToRgba = (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
 
   const primaryColorRgba = hexToRgba(primaryColor, 0.05);
   const secondaryColorRgba = hexToRgba(secondaryColor, 0.05);

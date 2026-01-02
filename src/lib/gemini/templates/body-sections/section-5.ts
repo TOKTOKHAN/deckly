@@ -4,6 +4,7 @@ import {
   getContrastTextColorWithGray,
   getCardTextColor,
   getContrastBorderColor,
+  hexToRgba,
 } from '../constants';
 
 export function generateBodySection5Template(
@@ -26,14 +27,6 @@ export function generateBodySection5Template(
 
   // Part V 색상: 목차의 border 색상과 동일하게 보색 사용
   const part5Color = getContrastBorderColor(tertiaryColor, tertiaryColor);
-
-  // Hex to RGBA 변환 함수
-  const hexToRgba = (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
 
   // 미팅 전사록 기반으로 Gemini가 생성한 데이터 사용 (기본값 없음)
   const training = data.training || [];

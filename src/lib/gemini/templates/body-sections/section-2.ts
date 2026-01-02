@@ -1,6 +1,6 @@
 /* 본문 섹션 2: 제안 전략 (Part II: Strategy)*/
 import type { BodySection2Data } from '../types';
-import { getContrastTextColorWithGray, getCardTextColor } from '../constants';
+import { getContrastTextColorWithGray, getCardTextColor, hexToRgba } from '../constants';
 
 export function generateBodySection2Template(
   data: BodySection2Data,
@@ -18,14 +18,6 @@ export function generateBodySection2Template(
 
   // 카드 배경색에 따른 텍스트 색상 계산
   const cardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
-
-  // Hex to RGBA 변환 함수
-  const hexToRgba = (hex: string, alpha: number): string => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
 
   // 미팅 전사록 기반으로 Gemini가 생성한 데이터 사용 (기본값 없음)
   const marketAnalysis = data.marketAnalysis || {
