@@ -42,7 +42,7 @@ export async function extractKeywordsFromTranscript(
   transcriptText?: string,
   meetingNotes?: string,
 ): Promise<{
-  keywords: Array<{ icon?: string; title: string }>;
+  keywords: Array<{ icon?: string; title: string; sub?: string }>;
   description?: string;
 }> {
   // 전사록이나 미팅 노트가 없으면 기본값 반환
@@ -50,9 +50,9 @@ export async function extractKeywordsFromTranscript(
   if (!text || text.trim().length === 0) {
     return {
       keywords: [
-        { icon: '🎨', title: 'UX Renewal' },
-        { icon: '💻', title: 'Tech Stack' },
-        { icon: '📈', title: 'Growth' },
+        { icon: '🎨', title: 'UX Renewal', sub: '개인화 경험 강화' },
+        { icon: '💻', title: 'Tech Stack', sub: '클라우드 네이티브' },
+        { icon: '📈', title: 'Growth', sub: '데이터 중심 성장' },
       ],
     };
   }
@@ -84,9 +84,9 @@ export async function extractKeywordsFromTranscript(
     console.warn('키워드 추출 실패, 기본값 사용');
     return {
       keywords: [
-        { icon: '🎨', title: 'UX Renewal' },
-        { icon: '💻', title: 'Tech Stack' },
-        { icon: '📈', title: 'Growth' },
+        { icon: '🎨', title: 'UX Renewal', sub: '개인화 경험 강화' },
+        { icon: '💻', title: 'Tech Stack', sub: '클라우드 네이티브' },
+        { icon: '📈', title: 'Growth', sub: '데이터 중심 성장' },
       ],
     };
   } catch (error) {
@@ -94,9 +94,9 @@ export async function extractKeywordsFromTranscript(
     // 오류 발생 시 기본값 반환
     return {
       keywords: [
-        { icon: '🎨', title: 'UX Renewal' },
-        { icon: '💻', title: 'Tech Stack' },
-        { icon: '📈', title: 'Growth' },
+        { icon: '🎨', title: 'UX Renewal', sub: '개인화 경험 강화' },
+        { icon: '💻', title: 'Tech Stack', sub: '클라우드 네이티브' },
+        { icon: '📈', title: 'Growth', sub: '데이터 중심 성장' },
       ],
     };
   }

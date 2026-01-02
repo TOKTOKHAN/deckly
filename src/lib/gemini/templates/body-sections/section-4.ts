@@ -409,8 +409,31 @@ export function generateBodySection4Template(
           const borderRadius = '0.25rem';
           const { leftPercent, widthPercent } = item.position;
 
-          // 기간 텍스트 생성 (검수 항목인 경우 원본 reviewPeriod 사용)
-          const durationText = item.originalReviewPeriod || formatPeriodDuration(item.period);
+          // 기간 텍스트 생성
+          let durationText = '';
+          if (item.originalReviewPeriod) {
+            // 검수 항목인 경우 원본 reviewPeriod 사용
+            durationText = item.originalReviewPeriod;
+          } else {
+            // period 기반으로 기간 텍스트 생성
+            durationText = formatPeriodDuration(item.period);
+            // formatPeriodDuration이 빈 문자열을 반환하면 dateRange 기반으로 계산
+            if (!durationText && item.dateRange) {
+              const days = Math.ceil(
+                (item.dateRange.endDate.getTime() - item.dateRange.startDate.getTime()) /
+                  (1000 * 60 * 60 * 24),
+              );
+              const weeks = Math.ceil(days / 7);
+              const months = Math.ceil(days / 30);
+              if (weeks < 4) {
+                durationText = `${weeks}주`;
+              } else if (months === 1) {
+                durationText = '1개월';
+              } else {
+                durationText = `${months}개월`;
+              }
+            }
+          }
 
           timelineBar = `
             ${
