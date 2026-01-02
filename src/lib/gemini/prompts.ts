@@ -22,9 +22,18 @@ export const BODY_PROMPT_TEMPLATE = `
       "primaryGoal": "프로젝트의 주요 목표 (2-3문장)"
     },
     "scope": [
-      "프로젝트 범위 항목 1",
-      "프로젝트 범위 항목 2",
-      "프로젝트 범위 항목 3"
+      {
+        "title": "프로젝트 범위 항목 1",
+        "description": "범위 항목 설명 (예: 플랫폼 개발 및 배포, 사용자 교육 및 기술 이전 등)"
+      },
+      {
+        "title": "프로젝트 범위 항목 2",
+        "description": "범위 항목 설명"
+      },
+      {
+        "title": "프로젝트 범위 항목 3",
+        "description": "범위 항목 설명"
+      }
     ],
     "strengths": [
       {
@@ -235,7 +244,7 @@ export const BODY_PROMPT_TEMPLATE = `
    - background.quote: 프로젝트의 핵심 가치나 비전을 담은 인용구
    - background.marketBackground: 미팅에서 논의된 시장 상황이나 배경
    - background.primaryGoal: 프로젝트의 주요 목표
-   - scope: 프로젝트 범위에 포함되는 주요 항목들 (3개)
+   - scope: 프로젝트 범위에 포함되는 주요 항목들 (각 항목은 title과 description을 포함한 객체 배열, 3개)
    - strengths: 제안사의 차별화된 강점 (3개)
 
 2. **II. 제안 전략**:

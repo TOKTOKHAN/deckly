@@ -31,7 +31,13 @@ export function generateBodySection1Template(
     primaryGoal: '',
   };
 
-  const scope = data.scope || [];
+  // scope 데이터 처리 (string[] 또는 Array<{title, description}>)
+  const scopeItems =
+    !data.scope || data.scope.length === 0
+      ? []
+      : typeof data.scope[0] === 'string'
+        ? (data.scope as string[]).map(item => ({ title: item, description: '' }))
+        : (data.scope as Array<{ title: string; description: string }>);
 
   const strengths = data.strengths || [];
 
@@ -115,18 +121,19 @@ export function generateBodySection1Template(
           </div>
           
           <div class="grid grid-cols-3 gap-3" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.75rem !important; width: 100% !important;">
-            ${scope
+            ${scopeItems
               .slice(0, 3)
               .map(
                 item => `
-            <div class="p-4 bg-zinc-900/40 border border-white/5 rounded-xl" style="padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; width: 100% !important; box-sizing: border-box !important;">
-              <div class="w-10 h-10 bg-zinc-950 rounded-lg flex items-center justify-center mb-3 border border-white/5" style="width: 2.5rem !important; height: 2.5rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
+            <div class="p-4 bg-zinc-900/40 border border-white/5 rounded-xl" style="padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; width: 100% !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; gap: 0.5rem !important;">
+              <div class="w-10 h-10 bg-zinc-950 rounded-lg flex items-center justify-center border border-white/5" style="width: 2.5rem !important; height: 2.5rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
               </div>
-              <p class="text-xs font-bold text-zinc-200" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${scopeCardTextColors.primary} !important;">${item}</p>
+              <p class="text-xs font-bold text-zinc-200" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${scopeCardTextColors.primary} !important; margin: 0 !important;">${item.title}</p>
+              ${item.description ? `<p class="text-[11px] text-zinc-400 leading-tight" style="font-size: 0.6875rem !important; color: ${scopeCardTextColors.tertiary} !important; line-height: 1.4 !important; margin: 0 !important;">${item.description}</p>` : ''}
             </div>
             `,
               )

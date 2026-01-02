@@ -46,7 +46,12 @@ export interface BodySection1Data {
     primaryGoal?: string; // 주요 목표
   };
   // 1.2 제안의 범위
-  scope?: string[]; // 범위 항목들 (최대 3개)
+  scope?:
+    | Array<{
+        title: string; // 범위 항목 제목
+        description: string; // 범위 항목 설명
+      }>
+    | string[]; // 기존 호환성을 위해 string[]도 허용 (최대 3개)
   // 1.3 제안사의 특징 및 장점
   strengths?: Array<{
     title: string; // 제목
