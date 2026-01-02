@@ -223,8 +223,11 @@ export function generateBodySection4Template(
       return '<div>날짜 정보가 올바르지 않습니다.</div>';
     }
 
+    // timeline에서 검수 관련 항목 필터링 (reviewPeriod 파라미터로 관리하므로)
+    const filteredTimeline = timeline.filter(item => !item.title.includes('검수'));
+
     // 검수기간이 있으면 timeline 배열에 추가
-    const extendedTimeline = [...timeline];
+    const extendedTimeline = [...filteredTimeline];
     if (reviewPeriod) {
       const reviewDays = parseReviewPeriod(reviewPeriod);
       if (reviewDays > 0 && endDate) {
