@@ -7,6 +7,8 @@ export function generateBodySection4Template(
   brandColor1?: string,
   brandColor2?: string,
   brandColor3?: string,
+  startDate?: string,
+  endDate?: string,
 ): string {
   // 브랜드 컬러 설정
   const primaryColor = brandColor1 || '#4f46e5'; // 주요 강조, 제목, 아이콘
@@ -30,6 +32,167 @@ export function generateBodySection4Template(
 
   // 미팅 전사록 기반으로 Gemini가 생성한 데이터 사용 (기본값 없음)
   const timeline = data.timeline || [];
+
+  // 타임라인 관련 헬퍼 함수들
+  // period 문자열 파싱 (M1 → [0], M2-M3 → [1, 2])
+  const parsePeriod = (period: string): number[] => {
+    const parts = period.split('-');
+    if (parts.length === 1) {
+      // M1 형식
+      const match = parts[0].match(/M(\d+)/);
+      if (match) {
+        return [parseInt(match[1], 10) - 1]; // 0-based index
+      }
+    } else {
+      // M2-M3 형식
+      const startMatch = parts[0].match(/M(\d+)/);
+      const endMatch = parts[1].match(/M(\d+)/);
+      if (startMatch && endMatch) {
+        const start = parseInt(startMatch[1], 10) - 1;
+        const end = parseInt(endMatch[1], 10) - 1;
+        const result: number[] = [];
+        for (let i = start; i <= end; i++) {
+          result.push(i);
+        }
+        return result;
+      }
+    }
+    return [];
+  };
+
+  // 시작일과 종료일로부터 월 배열 생성
+  const generateMonths = (
+    start: string,
+    end: string,
+  ): Array<{ year: number; month: number; label: string }> => {
+    if (!start || !end) return [];
+
+    const startDateObj = new Date(start);
+    const endDateObj = new Date(end);
+    const months: Array<{ year: number; month: number; label: string }> = [];
+
+    const current = new Date(startDateObj.getFullYear(), startDateObj.getMonth(), 1);
+    const endMonth = new Date(endDateObj.getFullYear(), endDateObj.getMonth(), 1);
+
+    while (current <= endMonth) {
+      months.push({
+        year: current.getFullYear(),
+        month: current.getMonth(),
+        label: `${current.getFullYear()}년 ${current.getMonth() + 1}월`,
+      });
+      current.setMonth(current.getMonth() + 1);
+    }
+
+    return months;
+  };
+
+  // 타임라인 HTML 생성
+  const generateTimelineHTML = (): string => {
+    if (!startDate || !endDate || timeline.length === 0) {
+      // 기존 형식으로 폴백 (period 라벨 없이)
+      if (timeline.length === 0) {
+        return '<div style="padding: 1rem; color: #71717a; font-size: 0.875rem;">타임라인 데이터가 없습니다.</div>';
+      }
+      return `
+          <div class="space-y-2" style="display: flex !important; flex-direction: column !important; gap: 0.5rem !important; width: 100% !important;">
+            ${timeline
+              .map(
+                item => `
+            <div class="flex gap-4 p-4 bg-zinc-900/20 border border-white/5 rounded-xl items-center" style="display: flex !important; gap: 1rem !important; padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; align-items: center !important;">
+              <div class="w-48 shrink-0" style="width: 12rem !important; flex-shrink: 0 !important;">
+                <p class="text-sm font-bold text-zinc-100" style="font-size: 0.875rem !important; font-weight: bold !important; color: ${cardTextColors.primary} !important;">${item.title}</p>
+              </div>
+              <div class="flex-1" style="flex: 1 !important;">
+                <p class="text-xs text-zinc-500 font-medium" style="font-size: 0.75rem !important; color: ${cardTextColors.tertiary} !important; font-weight: 500 !important;">${item.description}</p>
+              </div>
+            </div>
+            `,
+              )
+              .join('')}
+          </div>
+      `;
+    }
+
+    const months = generateMonths(startDate, endDate);
+    if (months.length === 0) {
+      return '<div>날짜 정보가 올바르지 않습니다.</div>';
+    }
+
+    // 각 timeline 아이템을 월 인덱스에 매핑
+    const timelineMap = timeline.map(item => ({
+      ...item,
+      monthIndices: parsePeriod(item.period),
+    }));
+
+    // 테이블 헤더 생성
+    const headerHTML = `
+      <tr style="border-bottom: 1px solid ${hexToRgba(primaryColor, 0.2)} !important;">
+        <th style="padding: 0.5rem 0.75rem !important; text-align: left !important; font-size: 0.875rem !important; font-weight: bold !important; color: ${textColors.primary} !important; vertical-align: top !important;">단계</th>
+        ${months
+          .map(
+            month =>
+              `<th style="padding: 0.5rem 0.5rem !important; text-align: center !important; font-size: 0.75rem !important; font-weight: 600 !important; color: ${textColors.secondary} !important; min-width: 3rem !important;">${month.month + 1}월</th>`,
+          )
+          .join('')}
+      </tr>
+    `;
+
+    // 테이블 행 생성
+    const rowsHTML = timelineMap
+      .map(item => {
+        const sortedIndices = [...item.monthIndices].sort((a, b) => a - b);
+        const startIndex = sortedIndices[0];
+
+        // 타임라인 막대 생성
+        let timelineBar = '';
+        if (sortedIndices.length > 0) {
+          const borderRadius = sortedIndices.length === 1 ? '0.25rem' : '0.25rem';
+          const leftPercent = (startIndex / months.length) * 100;
+          const widthPercent = (sortedIndices.length / months.length) * 100;
+
+          timelineBar = `
+            <div style="
+              background-color: ${primaryColor} !important;
+              height: 1.25rem !important;
+              border-radius: ${borderRadius} !important;
+              position: absolute !important;
+              left: ${leftPercent}% !important;
+              width: ${widthPercent}% !important;
+              top: 50% !important;
+              transform: translateY(-50%) !important;
+            "></div>
+          `;
+        }
+
+        return `
+          <tr style="border-bottom: 1px solid ${hexToRgba(primaryColor, 0.1)} !important;">
+            <td style="padding: 0.5rem 0.75rem !important; text-align: left !important; vertical-align: top !important;">
+              <p style="font-size: 0.875rem !important; font-weight: bold !important; color: ${cardTextColors.primary} !important; margin-bottom: 0.125rem !important; line-height: 1.4 !important;">${item.title}</p>
+              <p style="font-size: 0.75rem !important; color: ${cardTextColors.tertiary} !important; font-weight: 400 !important; line-height: 1.4 !important;">${item.description}</p>
+            </td>
+            <td colspan="${months.length}" style="padding: 0.375rem 0 !important; position: relative !important;">
+              <div style="display: grid !important; grid-template-columns: repeat(${months.length}, 1fr) !important; gap: 0 !important; position: relative !important; width: 100% !important; height: 2rem !important;">
+                ${timelineBar}
+              </div>
+            </td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    return `
+      <div style="overflow-x: auto !important; width: 100% !important;">
+        <table style="width: 100% !important; border-collapse: collapse !important; border-spacing: 0 !important;">
+          <thead>
+            ${headerHTML}
+          </thead>
+          <tbody>
+            ${rowsHTML}
+          </tbody>
+        </table>
+      </div>
+    `;
+  };
 
   const resources = data.resources || [];
 
@@ -74,26 +237,7 @@ export function generateBodySection4Template(
             </div>
           </div>
           
-          <div class="space-y-2" style="display: flex !important; flex-direction: column !important; gap: 0.5rem !important; width: 100% !important;">
-            ${timeline
-              .map(
-                item => `
-            <div class="flex gap-4 p-4 bg-zinc-900/20 border border-white/5 rounded-xl items-center" style="display: flex !important; gap: 1rem !important; padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; align-items: center !important;">
-              <div class="w-16 text-center shrink-0" style="width: 4rem !important; text-align: center !important; flex-shrink: 0 !important;">
-                <span class="text-sm font-black italic uppercase leading-none" style="font-size: 0.875rem !important; font-weight: 900 !important; color: ${primaryColor} !important; font-style: italic !important; text-transform: uppercase !important; line-height: 1 !important;">${item.period}</span>
-              </div>
-              <div class="w-px h-8 bg-zinc-800" style="width: 1px !important; height: 2rem !important; background-color: #27272a !important;"></div>
-              <div class="w-48 shrink-0" style="width: 12rem !important; flex-shrink: 0 !important;">
-                <p class="text-sm font-bold text-zinc-100" style="font-size: 0.875rem !important; font-weight: bold !important; color: ${cardTextColors.primary} !important;">${item.title}</p>
-              </div>
-              <div class="flex-1" style="flex: 1 !important;">
-                <p class="text-xs text-zinc-500 font-medium" style="font-size: 0.75rem !important; color: ${cardTextColors.tertiary} !important; font-weight: 500 !important;">${item.description}</p>
-              </div>
-            </div>
-            `,
-              )
-              .join('')}
-          </div>
+          ${generateTimelineHTML()}
         </section>
 
         <!-- 4.2 수행 조직 및 인력 & 4.3 개발 방법론 -->

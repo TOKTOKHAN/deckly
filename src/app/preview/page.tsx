@@ -40,6 +40,8 @@ export default function PreviewPage() {
       brandColor2,
       brandColor3,
       clientLogo: clientLogo.src as string,
+      startDate: '2024-01-15',
+      endDate: '2024-06-30',
     }),
     [brandColor1, brandColor2, brandColor3],
   );
@@ -185,6 +187,8 @@ export default function PreviewPage() {
             sampleData.brandColor1,
             sampleData.brandColor2,
             sampleData.brandColor3,
+            sampleData.startDate,
+            sampleData.endDate,
           );
           break;
         case 'body5':
@@ -353,6 +357,8 @@ export default function PreviewPage() {
             sampleData.brandColor1,
             sampleData.brandColor2,
             sampleData.brandColor3,
+            sampleData.startDate,
+            sampleData.endDate,
           );
           const body5 = generateBodySection5Template(
             bodySection5DataAll,

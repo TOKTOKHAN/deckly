@@ -213,6 +213,8 @@ export async function generateProposalWithChains(
       primaryColor,
       secondaryColor,
       tertiaryColor,
+      data.startDate,
+      data.endDate,
     );
     const section5HTML = generateBodySection5Template(
       bodyData.section5 || {},
