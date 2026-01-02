@@ -89,7 +89,12 @@ export interface BodySection3Data {
   // 3.3 보안 및 데이터 관리
   security?: string[]; // 보안 항목들 (최대 2개)
   // 3.4 시스템 연계 방안
-  integrations?: string[]; // 연계 시스템들
+  integrations?:
+    | Array<{
+        title: string; // 연계 시스템 이름
+        description: string; // 연계 방안 설명
+      }>
+    | string[]; // 기존 호환성을 위해 string[]도 허용
 }
 
 // 본문 섹션 4: 사업 관리 부문 (Project Management)

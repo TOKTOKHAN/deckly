@@ -137,7 +137,28 @@ export default function PreviewPage() {
               '실시간 배달 트래킹 GPS 인터페이스',
             ],
             security: ['End-to-End 데이터 암호화', 'WAF 및 DDoS 방어 체계 구축'],
-            integrations: ['POS SYSTEM', 'CRM', 'ERP', '3RD PARTY API'],
+            integrations: [
+              {
+                title: 'POS 실시간 연동',
+                description:
+                  '전 지점 주문 및 결제 데이터를 지연 없이 동기화하여 매출 및 재고 데이터의 정합성을 확보합니다.',
+              },
+              {
+                title: 'CRM 통합 마케팅',
+                description:
+                  '고객 등급, 포인트, 쿠폰 정보를 실시간 연동하여 맞춤형 푸시 알림 및 개인화 프로모션을 지원합니다.',
+              },
+              {
+                title: 'ERP 시스템 연계',
+                description:
+                  '전사적 자원 관리 시스템과의 데이터 연계를 통해 원자재 수급 및 인사 관리 최적화 모델을 제공합니다.',
+              },
+              {
+                title: '외부 채널 연동 API',
+                description:
+                  '배달 대행, 간편결제, SNS 연동 등 다양한 서드파티 서비스와의 안정적인 인터페이스를 구축합니다.',
+              },
+            ],
           };
           content = generateBodySection3Template(
             bodySection3Data,
@@ -279,7 +300,28 @@ export default function PreviewPage() {
               '실시간 배달 트래킹 GPS 인터페이스',
             ],
             security: ['End-to-End 데이터 암호화', 'WAF 및 DDoS 방어 체계 구축'],
-            integrations: ['POS SYSTEM', 'CRM', 'ERP', '3RD PARTY API'],
+            integrations: [
+              {
+                title: 'POS 실시간 연동',
+                description:
+                  '전 지점 주문 및 결제 데이터를 지연 없이 동기화하여 매출 및 재고 데이터의 정합성을 확보합니다.',
+              },
+              {
+                title: 'CRM 통합 마케팅',
+                description:
+                  '고객 등급, 포인트, 쿠폰 정보를 실시간 연동하여 맞춤형 푸시 알림 및 개인화 프로모션을 지원합니다.',
+              },
+              {
+                title: 'ERP 시스템 연계',
+                description:
+                  '전사적 자원 관리 시스템과의 데이터 연계를 통해 원자재 수급 및 인사 관리 최적화 모델을 제공합니다.',
+              },
+              {
+                title: '외부 채널 연동 API',
+                description:
+                  '배달 대행, 간편결제, SNS 연동 등 다양한 서드파티 서비스와의 안정적인 인터페이스를 구축합니다.',
+              },
+            ],
           };
           const bodySection4DataAll: BodySection4Data = {
             timeline: [
