@@ -7,6 +7,7 @@ import {
   hexToRgba,
   getA4PageContainerStyle,
   getBrandColors,
+  generateSectionHeader,
 } from '../constants';
 
 export function generateBodySection5Template(
@@ -47,21 +48,14 @@ export function generateBodySection5Template(
 
   return `
     <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
-      
-      <!-- Main Title -->
-      <div class="mb-6" style="margin-bottom: 1.5rem !important;">
-        <div class="flex items-center gap-4 mb-2" style="display: flex !important; align-items: center !important; gap: 1rem !important; margin-bottom: 0.5rem !important;">
-          <div class="h-0.5 w-10" style="height: 2px !important; width: 2.5rem !important; background-color: ${part5Color} !important;"></div>
-          <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${part5Color} !important; text-transform: uppercase !important;">Part V</span>
-        </div>
-        <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important;">
-          사업 지원 부문
-          <span class="block text-sm font-light italic tracking-widest uppercase mt-1" style="display: block !important; font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important; margin-top: 0.25rem !important;">Sustainability & Support</span>
-        </h1>
-        <p class="text-sm text-zinc-400 mt-2" style="font-size: 0.875rem !important; color: #a1a1aa !important; margin-top: 0.5rem !important;">
-          사업 완료 이후의 안정적인 운영 지원 및 기술 전수 계획을 제안합니다.
-        </p>
-      </div>
+      ${generateSectionHeader(
+        'V',
+        '사업 지원 부문',
+        'Sustainability & Support',
+        '사업 완료 이후의 안정적인 운영 지원 및 기술 전수 계획을 제안합니다.',
+        part5Color,
+        textColors,
+      )}
 
       <div class="flex-1 space-y-6" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
         

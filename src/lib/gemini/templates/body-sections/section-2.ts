@@ -6,6 +6,7 @@ import {
   hexToRgba,
   getA4PageContainerStyle,
   getBrandColors,
+  generateSectionHeader,
 } from '../constants';
 
 export function generateBodySection2Template(
@@ -48,21 +49,14 @@ export function generateBodySection2Template(
 
   return `
     <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
-      
-      <!-- Main Title -->
-      <div class="mb-6" style="margin-bottom: 1.5rem !important;">
-        <div class="flex items-center gap-4 mb-2" style="display: flex !important; align-items: center !important; gap: 1rem !important; margin-bottom: 0.5rem !important;">
-          <div class="h-0.5 w-10" style="height: 2px !important; width: 2.5rem !important; background-color: ${secondaryColor} !important;"></div>
-          <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${secondaryColor} !important; text-transform: uppercase !important;">Part II</span>
-        </div>
-        <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important;">
-          제안 전략
-          <span class="block text-sm font-light italic tracking-widest uppercase mt-1" style="display: block !important; font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important; margin-top: 0.25rem !important;">Strategic Approach</span>
-        </h1>
-        <p class="text-sm text-zinc-400 mt-2" style="font-size: 0.875rem !important; color: #a1a1aa !important; margin-top: 0.5rem !important;">
-          시장 트렌드 분석과 데이터 인사이트를 바탕으로 한 추진 전략을 제안합니다.
-        </p>
-      </div>
+      ${generateSectionHeader(
+        'II',
+        '제안 전략',
+        'Strategic Approach',
+        '시장 트렌드 분석과 데이터 인사이트를 바탕으로 한 추진 전략을 제안합니다.',
+        secondaryColor,
+        textColors,
+      )}
 
       <div class="flex-1 space-y-6" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
         

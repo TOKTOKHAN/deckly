@@ -249,3 +249,39 @@ export function getBrandColors(
     tertiaryColor: brandColor3 || '#0a0c10', // 경계선, 미묘한 배경
   };
 }
+
+/**
+ * 섹션 헤더 HTML을 생성합니다
+ * @param partNumber Part 번호 (예: "I", "II", "III", "IV", "V")
+ * @param koreanTitle 한글 제목
+ * @param englishTitle 영문 부제목
+ * @param description 설명 문구
+ * @param accentColor 강조 색상 HEX 코드
+ * @param textColors 텍스트 색상 객체
+ * @returns 섹션 헤더 HTML 문자열
+ */
+export function generateSectionHeader(
+  partNumber: string,
+  koreanTitle: string,
+  englishTitle: string,
+  description: string,
+  accentColor: string,
+  textColors: { primary: string },
+): string {
+  return `
+      <!-- Main Title -->
+      <div class="mb-6" style="margin-bottom: 1.5rem !important;">
+        <div class="flex items-center gap-4 mb-2" style="display: flex !important; align-items: center !important; gap: 1rem !important; margin-bottom: 0.5rem !important;">
+          <div class="h-0.5 w-10" style="height: 2px !important; width: 2.5rem !important; background-color: ${accentColor} !important;"></div>
+          <span class="text-[10px] font-black tracking-[0.5em] uppercase" style="font-size: 10px !important; font-weight: 900 !important; letter-spacing: 0.5em !important; color: ${accentColor} !important; text-transform: uppercase !important;">Part ${partNumber}</span>
+        </div>
+        <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important;">
+          ${koreanTitle}
+          <span class="block text-sm font-light italic tracking-widest uppercase mt-1" style="display: block !important; font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important; margin-top: 0.25rem !important;">${englishTitle}</span>
+        </h1>
+        <p class="text-sm text-zinc-400 mt-2" style="font-size: 0.875rem !important; color: #a1a1aa !important; margin-top: 0.5rem !important;">
+          ${description}
+        </p>
+      </div>
+  `;
+}
