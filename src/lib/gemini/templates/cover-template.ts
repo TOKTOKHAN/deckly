@@ -85,8 +85,9 @@ export async function generateCoverTemplate(
   const clientSubtitle = data.slogan || 'Digital Transformation Partner';
   const title = data.projectName || '프로젝트 제안서';
   const subTitle =
-    description ||
-    `${data.clientCompanyName ? `<span style="color: ${primaryColor} !important;">${data.clientCompanyName}</span>를 위한` : ''} 프로젝트 기획 제안서`;
+    description && description.trim() !== ''
+      ? description
+      : `${data.clientCompanyName ? `<span style="color: ${primaryColor} !important;">${data.clientCompanyName}</span>를 위한` : ''} 프로젝트 기획 제안서`;
 
   // 키워드 카드 (기본값 또는 전달받은 값 사용)
   const defaultKeywords = [

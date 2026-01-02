@@ -56,7 +56,11 @@ export default function PreviewPage() {
 
       switch (selectedTemplate) {
         case 'cover':
-          content = await generateCoverTemplate(sampleData);
+          content = await generateCoverTemplate(
+            sampleData,
+            undefined,
+            '디지털 트랜스포메이션을 통한 고객 경험 혁신 및 시장 경쟁력 강화를 위한 통합 플랫폼 구축',
+          );
           break;
         case 'toc':
           content = generateTableOfContentsTemplate(
@@ -271,7 +275,11 @@ export default function PreviewPage() {
           );
           break;
         case 'all':
-          const cover = await generateCoverTemplate(sampleData);
+          const cover = await generateCoverTemplate(
+            sampleData,
+            undefined,
+            '디지털 트랜스포메이션을 통한 고객 경험 혁신 및 시장 경쟁력 강화를 위한 통합 플랫폼 구축',
+          );
           const toc = generateTableOfContentsTemplate(
             sampleData.brandColor1,
             sampleData.brandColor2,
