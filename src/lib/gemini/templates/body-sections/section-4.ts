@@ -9,6 +9,7 @@ export function generateBodySection4Template(
   brandColor3?: string,
   startDate?: string,
   endDate?: string,
+  reviewPeriod?: string,
 ): string {
   // 브랜드 컬러 설정
   const primaryColor = brandColor1 || '#4f46e5'; // 주요 강조, 제목, 아이콘
@@ -34,6 +35,28 @@ export function generateBodySection4Template(
   const timeline = data.timeline || [];
 
   // 타임라인 관련 헬퍼 함수들
+  // reviewPeriod 텍스트 파싱 (예: "2주" → 14일, "1개월" → 30일)
+  const parseReviewPeriod = (reviewPeriod: string): number => {
+    if (!reviewPeriod) return 0;
+
+    const weekMatch = reviewPeriod.match(/(\d+)주/);
+    if (weekMatch) {
+      return parseInt(weekMatch[1], 10) * 7;
+    }
+
+    const monthMatch = reviewPeriod.match(/(\d+)개?월/);
+    if (monthMatch) {
+      return parseInt(monthMatch[1], 10) * 30;
+    }
+
+    const dayMatch = reviewPeriod.match(/(\d+)일/);
+    if (dayMatch) {
+      return parseInt(dayMatch[1], 10);
+    }
+
+    return 0;
+  };
+
   // period 문자열 파싱 (M1 → [0], M2-M3 → [1, 2])
   const parsePeriod = (period: string): number[] => {
     const parts = period.split('-');
@@ -60,6 +83,15 @@ export function generateBodySection4Template(
     return [];
   };
 
+  // period를 기반으로 기간 텍스트 생성 (예: "1개월", "2개월", "3개월")
+  const formatPeriodDuration = (period: string): string => {
+    const monthIndices = parsePeriod(period);
+    if (monthIndices.length === 0) return '';
+
+    const monthCount = monthIndices.length;
+    return `${monthCount}개월`;
+  };
+
   // 시작일과 종료일로부터 월 배열 생성
   const generateMonths = (
     start: string,
@@ -84,6 +116,66 @@ export function generateBodySection4Template(
     }
 
     return months;
+  };
+
+  // 시작일과 종료일로부터 주 배열 생성 (각 월을 4주로 나눔)
+  const generateWeeks = (
+    start: string,
+    end: string,
+  ): Array<{
+    year: number;
+    month: number;
+    week: number;
+    label: string;
+    startDate: Date;
+    endDate: Date;
+  }> => {
+    if (!start || !end) return [];
+
+    const startDateObj = new Date(start);
+    const endDateObj = new Date(end);
+    const weeks: Array<{
+      year: number;
+      month: number;
+      week: number;
+      label: string;
+      startDate: Date;
+      endDate: Date;
+    }> = [];
+
+    const current = new Date(startDateObj.getFullYear(), startDateObj.getMonth(), 1);
+    const endMonth = new Date(endDateObj.getFullYear(), endDateObj.getMonth(), 1);
+
+    while (current <= endMonth) {
+      const year = current.getFullYear();
+      const month = current.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // 각 월을 4주로 나눔
+      for (let week = 0; week < 4; week++) {
+        const weekStartDay = week * 7 + 1;
+        const weekEndDay = Math.min((week + 1) * 7, daysInMonth);
+
+        const weekStartDate = new Date(year, month, weekStartDay);
+        const weekEndDate = new Date(year, month, weekEndDay);
+
+        // 프로젝트 종료일을 넘지 않는 주만 추가
+        if (weekStartDate <= endDateObj) {
+          weeks.push({
+            year,
+            month,
+            week: week + 1,
+            label: `${month + 1}월 ${week + 1}주`,
+            startDate: weekStartDate,
+            endDate: weekEndDate,
+          });
+        }
+      }
+
+      current.setMonth(current.getMonth() + 1);
+    }
+
+    return weeks;
   };
 
   // 타임라인 HTML 생성
@@ -113,25 +205,191 @@ export function generateBodySection4Template(
       `;
     }
 
-    const months = generateMonths(startDate, endDate);
-    if (months.length === 0) {
+    // 검수 종료일 계산
+    let reviewEndDate = endDate;
+    if (reviewPeriod) {
+      const reviewDays = parseReviewPeriod(reviewPeriod);
+      if (reviewDays > 0) {
+        const endDateObj = new Date(endDate);
+        endDateObj.setDate(endDateObj.getDate() + reviewDays);
+        reviewEndDate = endDateObj.toISOString().split('T')[0];
+      }
+    }
+
+    const months = generateMonths(startDate, reviewEndDate);
+    const weeks = generateWeeks(startDate, reviewEndDate);
+    if (months.length === 0 || weeks.length === 0) {
       return '<div>날짜 정보가 올바르지 않습니다.</div>';
     }
 
-    // 각 timeline 아이템을 월 인덱스에 매핑
-    const timelineMap = timeline.map(item => ({
-      ...item,
-      monthIndices: parsePeriod(item.period),
-    }));
+    // 검수기간이 있으면 timeline 배열에 추가
+    const extendedTimeline = [...timeline];
+    if (reviewPeriod) {
+      const reviewDays = parseReviewPeriod(reviewPeriod);
+      if (reviewDays > 0 && endDate) {
+        const endDateObj = new Date(endDate);
+        const reviewEndDateObj = new Date(endDateObj);
+        reviewEndDateObj.setDate(reviewEndDateObj.getDate() + reviewDays);
 
-    // 테이블 헤더 생성
+        // 검수기간이 속한 월 인덱스 계산
+        const startDateObj = new Date(startDate);
+        const reviewStartMonth = new Date(endDateObj.getFullYear(), endDateObj.getMonth(), 1);
+        const reviewEndMonth = new Date(
+          reviewEndDateObj.getFullYear(),
+          reviewEndDateObj.getMonth(),
+          1,
+        );
+        const projectStartMonth = new Date(startDateObj.getFullYear(), startDateObj.getMonth(), 1);
+
+        const reviewMonthIndices: number[] = [];
+        const current = new Date(reviewStartMonth);
+        while (current <= reviewEndMonth) {
+          const monthDiff =
+            (current.getFullYear() - projectStartMonth.getFullYear()) * 12 +
+            (current.getMonth() - projectStartMonth.getMonth());
+          if (monthDiff >= 0 && monthDiff < months.length) {
+            reviewMonthIndices.push(monthDiff);
+          }
+          current.setMonth(current.getMonth() + 1);
+        }
+
+        if (reviewMonthIndices.length > 0) {
+          // period 형식으로 변환 (예: "M6" 또는 "M6-M7")
+          const sortedIndices = [...reviewMonthIndices].sort((a, b) => a - b);
+          const startIdx = sortedIndices[0];
+          const endIdx = sortedIndices[sortedIndices.length - 1];
+          const reviewPeriodStr =
+            startIdx === endIdx ? `M${startIdx + 1}` : `M${startIdx + 1}-M${endIdx + 1}`;
+
+          extendedTimeline.push({
+            period: reviewPeriodStr,
+            title: '검수',
+            description: 'QA 및 버그 수정',
+            originalReviewPeriod: reviewPeriod, // 원본 reviewPeriod 저장
+          } as {
+            period: string;
+            title: string;
+            description: string;
+            originalReviewPeriod?: string;
+          });
+        }
+      }
+    }
+
+    // period를 실제 날짜 범위로 변환하는 함수
+    const periodToDateRange = (period: string): { startDate: Date; endDate: Date } | null => {
+      const monthIndices = parsePeriod(period);
+      if (monthIndices.length === 0 || !startDate) return null;
+
+      const startDateObj = new Date(startDate);
+      const sortedIndices = [...monthIndices].sort((a, b) => a - b);
+      const startMonthIdx = sortedIndices[0];
+      const endMonthIdx = sortedIndices[sortedIndices.length - 1];
+
+      // 시작 날짜: 프로젝트 시작일로부터 startMonthIdx개월 후
+      // M1 (index 0) = 프로젝트 시작일
+      // M2 (index 1) = 프로젝트 시작일 + 1개월
+      const periodStartDate = new Date(startDateObj);
+      periodStartDate.setMonth(periodStartDate.getMonth() + startMonthIdx);
+
+      // 종료 날짜: 프로젝트 시작일로부터 (endMonthIdx + 1)개월 후 - 1일
+      // M1 (index 0) = 프로젝트 시작일 + 1개월 - 1일
+      // M2 (index 1) = 프로젝트 시작일 + 2개월 - 1일
+      const periodEndDate = new Date(startDateObj);
+      periodEndDate.setMonth(periodEndDate.getMonth() + endMonthIdx + 1);
+      periodEndDate.setDate(periodEndDate.getDate() - 1);
+
+      return { startDate: periodStartDate, endDate: periodEndDate };
+    };
+
+    // 날짜 범위를 주 기반 퍼센트로 변환하는 함수
+    const dateRangeToPosition = (
+      startDate: Date,
+      endDate: Date,
+    ): { leftPercent: number; widthPercent: number } => {
+      const timelineStartDate = new Date(weeks[0].startDate);
+      const timelineEndDate = new Date(weeks[weeks.length - 1].endDate);
+      const totalDuration = timelineEndDate.getTime() - timelineStartDate.getTime();
+
+      const startOffset = Math.max(0, startDate.getTime() - timelineStartDate.getTime());
+      const endOffset = Math.min(totalDuration, endDate.getTime() - timelineStartDate.getTime());
+
+      const leftPercent = (startOffset / totalDuration) * 100;
+      const widthPercent = ((endOffset - startOffset) / totalDuration) * 100;
+
+      return { leftPercent, widthPercent };
+    };
+
+    // 각 timeline 아이템을 날짜 범위와 위치로 매핑
+    const timelineMap = extendedTimeline.map(item => {
+      const itemWithReview = item as {
+        period: string;
+        title: string;
+        description: string;
+        originalReviewPeriod?: string;
+      };
+      let dateRange: { startDate: Date; endDate: Date } | null = null;
+
+      // 검수기간의 경우 originalReviewPeriod를 기반으로 정확한 날짜 범위 계산
+      if (itemWithReview.originalReviewPeriod && endDate) {
+        const reviewDays = parseReviewPeriod(itemWithReview.originalReviewPeriod);
+        if (reviewDays > 0) {
+          const reviewStartDate = new Date(endDate);
+          const reviewEndDate = new Date(endDate);
+          reviewEndDate.setDate(reviewEndDate.getDate() + reviewDays);
+          dateRange = { startDate: reviewStartDate, endDate: reviewEndDate };
+        }
+      }
+
+      // 검수기간이 아니거나 originalReviewPeriod가 없는 경우 period 기반으로 계산
+      if (!dateRange) {
+        dateRange = periodToDateRange(item.period);
+      }
+
+      const position = dateRange
+        ? dateRangeToPosition(dateRange.startDate, dateRange.endDate)
+        : { leftPercent: 0, widthPercent: 0 };
+
+      return {
+        ...item,
+        dateRange,
+        position,
+        originalReviewPeriod: itemWithReview.originalReviewPeriod,
+      };
+    });
+
+    // 테이블 헤더 생성 (월 단위)
+    // 주들을 월별로 그룹핑
+    const monthGroups: Array<{ month: number; year: number; weekCount: number }> = [];
+    let currentMonth = -1;
+    let currentYear = -1;
+    let weekCount = 0;
+
+    weeks.forEach((week, index) => {
+      if (week.month !== currentMonth || week.year !== currentYear) {
+        if (currentMonth !== -1) {
+          monthGroups.push({ month: currentMonth, year: currentYear, weekCount });
+        }
+        currentMonth = week.month;
+        currentYear = week.year;
+        weekCount = 1;
+      } else {
+        weekCount++;
+      }
+
+      // 마지막 주인 경우
+      if (index === weeks.length - 1) {
+        monthGroups.push({ month: currentMonth, year: currentYear, weekCount });
+      }
+    });
+
     const headerHTML = `
       <tr style="border-bottom: 1px solid ${hexToRgba(primaryColor, 0.2)} !important;">
         <th style="padding: 0.5rem 0.75rem !important; text-align: left !important; font-size: 0.875rem !important; font-weight: bold !important; color: ${textColors.primary} !important; vertical-align: top !important;">단계</th>
-        ${months
+        ${monthGroups
           .map(
-            month =>
-              `<th style="padding: 0.5rem 0.5rem !important; text-align: center !important; font-size: 0.75rem !important; font-weight: 600 !important; color: ${textColors.secondary} !important; min-width: 3rem !important;">${month.month + 1}월</th>`,
+            group =>
+              `<th colspan="${group.weekCount}" style="padding: 0.5rem 0.5rem !important; text-align: center !important; font-size: 0.75rem !important; font-weight: 600 !important; color: ${textColors.secondary} !important;">${group.month + 1}월</th>`,
           )
           .join('')}
       </tr>
@@ -140,17 +398,34 @@ export function generateBodySection4Template(
     // 테이블 행 생성
     const rowsHTML = timelineMap
       .map(item => {
-        const sortedIndices = [...item.monthIndices].sort((a, b) => a - b);
-        const startIndex = sortedIndices[0];
-
         // 타임라인 막대 생성
         let timelineBar = '';
-        if (sortedIndices.length > 0) {
-          const borderRadius = sortedIndices.length === 1 ? '0.25rem' : '0.25rem';
-          const leftPercent = (startIndex / months.length) * 100;
-          const widthPercent = (sortedIndices.length / months.length) * 100;
+        if (item.dateRange && item.position.widthPercent > 0) {
+          const borderRadius = '0.25rem';
+          const { leftPercent, widthPercent } = item.position;
+
+          // 기간 텍스트 생성 (검수 항목인 경우 원본 reviewPeriod 사용)
+          const durationText = item.originalReviewPeriod || formatPeriodDuration(item.period);
 
           timelineBar = `
+            ${
+              durationText
+                ? `
+            <div style="
+              position: absolute !important;
+              left: ${leftPercent}% !important;
+              width: ${widthPercent}% !important;
+              top: 0 !important;
+              font-size: 0.625rem !important;
+              color: ${textColors.secondary} !important;
+              text-align: center !important;
+              line-height: 1.2 !important;
+              padding: 0 0.25rem !important;
+              white-space: nowrap !important;
+            ">${durationText}</div>
+            `
+                : ''
+            }
             <div style="
               background-color: ${primaryColor} !important;
               height: 1.25rem !important;
@@ -158,8 +433,7 @@ export function generateBodySection4Template(
               position: absolute !important;
               left: ${leftPercent}% !important;
               width: ${widthPercent}% !important;
-              top: 50% !important;
-              transform: translateY(-50%) !important;
+              bottom: 0.25rem !important;
             "></div>
           `;
         }
@@ -170,8 +444,8 @@ export function generateBodySection4Template(
               <p style="font-size: 0.875rem !important; font-weight: bold !important; color: ${cardTextColors.primary} !important; margin-bottom: 0.125rem !important; line-height: 1.4 !important;">${item.title}</p>
               <p style="font-size: 0.75rem !important; color: ${cardTextColors.tertiary} !important; font-weight: 400 !important; line-height: 1.4 !important;">${item.description}</p>
             </td>
-            <td colspan="${months.length}" style="padding: 0.375rem 0 !important; position: relative !important;">
-              <div style="display: grid !important; grid-template-columns: repeat(${months.length}, 1fr) !important; gap: 0 !important; position: relative !important; width: 100% !important; height: 2rem !important;">
+            <td colspan="${weeks.length}" style="padding: 0.375rem 0 !important; position: relative !important;">
+              <div style="display: grid !important; grid-template-columns: repeat(${weeks.length}, 1fr) !important; gap: 0 !important; position: relative !important; width: 100% !important; height: 2.5rem !important;">
                 ${timelineBar}
               </div>
             </td>

@@ -42,6 +42,7 @@ export default function PreviewPage() {
       clientLogo: clientLogo.src as string,
       startDate: '2024-01-15',
       endDate: '2024-06-30',
+      reviewPeriod: '2주',
     }),
     [brandColor1, brandColor2, brandColor3],
   );
@@ -189,6 +190,7 @@ export default function PreviewPage() {
             sampleData.brandColor3,
             sampleData.startDate,
             sampleData.endDate,
+            sampleData.reviewPeriod,
           );
           break;
         case 'body5':
@@ -359,6 +361,7 @@ export default function PreviewPage() {
             sampleData.brandColor3,
             sampleData.startDate,
             sampleData.endDate,
+            sampleData.reviewPeriod,
           );
           const body5 = generateBodySection5Template(
             bodySection5DataAll,
