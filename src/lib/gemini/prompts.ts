@@ -101,10 +101,22 @@ export const BODY_PROMPT_TEMPLATE = `
       "보안 항목 2"
     ],
     "integrations": [
-      "연계 시스템 1",
-      "연계 시스템 2",
-      "연계 시스템 3",
-      "연계 시스템 4"
+      {
+        "title": "연계 시스템 1 (예: POS 실시간 연동)",
+        "description": "연계 방안 설명 (예: 전 지점 주문 및 결제 데이터를 지연 없이 동기화하여 매출 및 재고 데이터의 정합성을 확보합니다.)"
+      },
+      {
+        "title": "연계 시스템 2 (예: CRM 통합 마케팅)",
+        "description": "연계 방안 설명"
+      },
+      {
+        "title": "연계 시스템 3 (예: ERP 시스템 연계)",
+        "description": "연계 방안 설명"
+      },
+      {
+        "title": "연계 시스템 4 (예: 외부 채널 연동 API)",
+        "description": "연계 방안 설명"
+      }
     ]
   }
 }
@@ -237,7 +249,7 @@ export const BODY_PROMPT_TEMPLATE = `
    - architecture: 시스템 아키텍처 구성요소
    - features: 주요 기능 (3개)
    - security: 보안 항목 (2개)
-   - integrations: 연계 시스템들
+   - integrations: 연계 시스템들 (각 항목은 title과 description을 포함한 객체 배열, 최대 4개)
 
 4. **IV. 사업 관리 부문**:
    - timeline: 프로젝트 일정 (반드시 프로젝트 기간 정보 활용)
