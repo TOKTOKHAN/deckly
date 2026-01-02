@@ -1,6 +1,11 @@
 /*본문 섹션 4: 사업 관리 부문 (Part IV: Project Management)*/
 import type { BodySection4Data } from '../types';
-import { getContrastTextColorWithGray, getCardTextColor, hexToRgba } from '../constants';
+import {
+  getContrastTextColorWithGray,
+  getCardTextColor,
+  hexToRgba,
+  getA4PageContainerStyle,
+} from '../constants';
 
 export function generateBodySection4Template(
   data: BodySection4Data,
@@ -476,7 +481,7 @@ export function generateBodySection4Template(
         : (data.qualityAssurance as Array<{ title: string; description: string }>);
 
   return `
-    <div class="a4-page body-section flex flex-col" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
+    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
       
       <!-- Main Title -->
       <div class="mb-6" style="margin-bottom: 1.5rem !important;">

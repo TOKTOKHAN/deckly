@@ -216,3 +216,13 @@ export function getContrastBorderColor(backgroundColor: string, _originalColor?:
     }
   }
 }
+
+/**
+ * A4 페이지 컨테이너 스타일을 생성합니다
+ * @param backgroundColor 배경색 HEX 코드
+ * @param textColor 텍스트 색상 HEX 코드
+ * @returns 인라인 스타일 문자열
+ */
+export function getA4PageContainerStyle(backgroundColor: string, textColor: string): string {
+  return `background-color: ${backgroundColor} !important; color: ${textColor} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;`;
+}

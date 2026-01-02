@@ -5,6 +5,7 @@ import {
   getCardTextColor,
   getContrastBorderColor,
   hexToRgba,
+  getA4PageContainerStyle,
 } from '../constants';
 
 export function generateBodySection5Template(
@@ -42,7 +43,7 @@ export function generateBodySection5Template(
   };
 
   return `
-    <div class="a4-page body-section flex flex-col" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
+    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
       
       <!-- Main Title -->
       <div class="mb-6" style="margin-bottom: 1.5rem !important;">

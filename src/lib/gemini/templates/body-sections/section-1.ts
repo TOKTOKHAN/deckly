@@ -1,6 +1,11 @@
 /* 본문 섹션 1: 제안 개요 (Part I: Introduction)*/
 import type { BodySection1Data } from '../types';
-import { getContrastTextColorWithGray, getCardTextColor, hexToRgba } from '../constants';
+import {
+  getContrastTextColorWithGray,
+  getCardTextColor,
+  hexToRgba,
+  getA4PageContainerStyle,
+} from '../constants';
 
 export function generateBodySection1Template(
   data: BodySection1Data,
@@ -39,7 +44,7 @@ export function generateBodySection1Template(
   const scopeCardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
 
   return `
-    <div class="a4-page body-section flex flex-col" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
+    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
       
       <!-- Main Title -->
       <div class="mb-6" style="margin-bottom: 1.5rem !important;">
