@@ -45,7 +45,6 @@ export function generateBodySection1Template(
   const largeCardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
   const smallCardTextColors = getCardTextColor(tertiaryColor, tertiaryColor, 0.3);
   const scopeCardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
-  const strengthsCardTextColors = getCardTextColor(primaryColor, tertiaryColor, 0.15);
 
   return `
     <div class="a4-page body-section flex flex-col" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
