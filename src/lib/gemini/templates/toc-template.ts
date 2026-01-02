@@ -133,20 +133,9 @@ export function generateTableOfContentsTemplate(
       </div>
 
       <!-- Footer Area -->
-      <div class="px-16 pb-12 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0.5rem !important; padding-bottom: 1.5rem !important; position: relative !important; z-index: 10 !important;">
-        <div class="h-px w-full mb-6 opacity-30" style="height: 1px !important; width: 100% !important; background-color: #27272a !important; margin-bottom: 0.75rem !important; opacity: 0.3 !important;"></div>
-        <div class="flex justify-between items-center opacity-40" style="display: flex !important; justify-content: space-between !important; align-items: center !important; opacity: 0.4 !important;">
-          <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">
-            <span class="text-xs font-black tracking-tighter uppercase" style="font-size: 0.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: ${textColors.primary} !important; text-transform: uppercase !important;">TOKTOKHAN.DEV</span>
-          </div>
-          <div class="flex items-center gap-6" style="display: flex !important; align-items: center !important; gap: 1.5rem !important;">
-            <div class="flex items-center gap-2" style="display: flex !important; align-items: center !important; gap: 0.5rem !important;">
-              <span style="color: ${primaryColor} !important;">🔒</span>
-              <span class="text-[8px] font-black uppercase tracking-widest leading-none" style="font-size: 8px !important; color: #71717a !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; line-height: 1 !important;">Confidential Document</span>
-            </div>
-            <div class="w-px h-3" style="width: 1px !important; height: 0.75rem !important; background-color: #27272a !important;"></div>
-            <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 8px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important;">Page 02</span>
-          </div>
+      <div class="px-16 pb-8 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0 !important; padding-bottom: 0.125rem !important; position: relative !important; z-index: 10 !important;">
+        <div class="flex justify-end items-center opacity-40" style="display: flex !important; justify-content: flex-end !important; align-items: center !important; opacity: 0.4 !important;">
+          <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important;">Page 02</span>
         </div>
       </div>
     </div>

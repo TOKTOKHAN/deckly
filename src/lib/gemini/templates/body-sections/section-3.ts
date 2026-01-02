@@ -7,6 +7,7 @@ import {
   getA4PageContainerStyle,
   getBrandColors,
   generateSectionHeader,
+  generatePageFooter,
 } from '../constants';
 
 export function generateBodySection3Template(
@@ -53,7 +54,7 @@ export function generateBodySection3Template(
         textColors,
       )}
 
-      <div class="flex-1 space-y-6" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 0.375rem !important;">
+      <div class="flex-1 space-y-4" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 0.375rem !important;">
         
         <!-- 3.1 시스템 목표 아키텍처 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
@@ -304,6 +305,7 @@ export function generateBodySection3Template(
           </div>
         </section>
       </div>
+      ${generatePageFooter('05', primaryColor, textColors)}
     </div>
   `;
 }

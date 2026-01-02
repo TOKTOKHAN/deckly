@@ -240,6 +240,13 @@ export async function generateCoverTemplate(
             </p>
           </div>
         </div>
+        
+        <!-- Page Number -->
+        <div class="px-16 pb-8 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0 !important; padding-bottom: 0.125rem !important; position: relative !important; z-index: 10 !important; width: 100% !important; box-sizing: border-box !important;">
+          <div class="flex justify-end items-center opacity-40" style="display: flex !important; justify-content: flex-end !important; align-items: center !important; opacity: 0.4 !important; width: 100% !important;">
+            <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important; text-align: right !important;">Page 01</span>
+          </div>
+        </div>
       </div>
     </div>
   `;

@@ -7,6 +7,7 @@ import {
   getA4PageContainerStyle,
   getBrandColors,
   generateSectionHeader,
+  generatePageFooter,
 } from '../constants';
 
 export function generateBodySection2Template(
@@ -198,6 +199,7 @@ export function generateBodySection2Template(
           </div>
         </section>
       </div>
+      ${generatePageFooter('04', primaryColor, textColors)}
     </div>
   `;
 }

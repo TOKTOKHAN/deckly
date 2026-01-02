@@ -285,3 +285,25 @@ export function generateSectionHeader(
       </div>
   `;
 }
+
+/**
+ * 페이지 footer HTML을 생성합니다
+ * @param pageNumber 페이지 번호 (예: "01", "02", "03")
+ * @param _primaryColor 주요 강조 색상 HEX 코드 (사용하지 않음, 호환성 유지)
+ * @param _textColors 텍스트 색상 객체 (사용하지 않음, 호환성 유지)
+ * @returns 페이지 footer HTML 문자열
+ */
+export function generatePageFooter(
+  pageNumber: string,
+  _primaryColor: string,
+  _textColors: { primary: string },
+): string {
+  return `
+      <!-- Footer Area -->
+      <div class="px-16 pb-8 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0 !important; padding-bottom: 0.125rem !important; position: relative !important; z-index: 10 !important;">
+        <div class="flex justify-end items-center opacity-40" style="display: flex !important; justify-content: flex-end !important; align-items: center !important; opacity: 0.4 !important;">
+          <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important;">Page ${pageNumber}</span>
+        </div>
+      </div>
+  `;
+}
