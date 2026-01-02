@@ -121,7 +121,12 @@ export interface BodySection4Data {
     description?: string; // 설명
   };
   // 4.4 품질 보증 계획
-  qualityAssurance?: string[]; // 품질 보증 항목들 (최대 3개)
+  qualityAssurance?:
+    | Array<{
+        title: string; // 품질 보증 항목 제목
+        description: string; // 품질 보증 항목 설명
+      }>
+    | string[]; // 기존 호환성을 위해 string[]도 허용 (최대 3개)
 }
 
 // 본문 섹션 5: 사업 지원 부문 (Sustainability & Support)

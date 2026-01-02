@@ -78,7 +78,21 @@ export default function PreviewPage() {
               primaryGoal:
                 '사용자 데이터 기반의 개인화 추천과 심리스한 결제 프로세스 구축으로 구매 전환율을 극대화합니다.',
             },
-            scope: ['UI/UX Renewal', 'Platform Core Dev', 'Back-office System'],
+            scope: [
+              {
+                title: 'UI/UX Renewal',
+                description:
+                  '사용자 중심의 직관적인 인터페이스 디자인 및 반응형 웹/모바일 플랫폼 개발',
+              },
+              {
+                title: 'Platform Core Dev',
+                description: '확장 가능한 클라우드 기반 백엔드 시스템 및 핵심 비즈니스 로직 구현',
+              },
+              {
+                title: 'Back-office System',
+                description: '관리자 대시보드, 주문 관리, 재고 관리 등 운영 효율화 시스템 구축',
+              },
+            ],
             strengths: [
               { title: 'Specialized Skill', description: '국내 최고 수준의\n푸드테크 기술력' },
               { title: 'Proven Track', description: '다수의 대형 플랫폼\n수행 실적 보유' },
@@ -202,7 +216,22 @@ export default function PreviewPage() {
               description:
                 '지속적인 피드백과 점진적 기능 구현으로 변화하는 요구사항에 유연하게 대응합니다.',
             },
-            qualityAssurance: ['정기 단위 테스트', '사용자 시나리오 검증', '부하 테스트 실시'],
+            qualityAssurance: [
+              {
+                title: '정기 단위 테스트',
+                description:
+                  '코드 리뷰 및 정적 분석 도구를 통한 코드 품질 관리 및 자동화된 단위 테스트 수행',
+              },
+              {
+                title: '사용자 시나리오 검증',
+                description:
+                  '실제 사용자 시나리오 기반 통합 테스트 및 사용성 테스트를 통한 UX 검증',
+              },
+              {
+                title: '부하 테스트 실시',
+                description: '대용량 트래픽 시뮬레이션을 통한 성능 최적화 및 안정성 검증',
+              },
+            ],
           };
           content = generateBodySection4Template(
             bodySection4Data,
@@ -257,7 +286,21 @@ export default function PreviewPage() {
               primaryGoal:
                 '사용자 데이터 기반의 개인화 추천과 심리스한 결제 프로세스 구축으로 구매 전환율을 극대화합니다.',
             },
-            scope: ['UI/UX Renewal', 'Platform Core Dev', 'Back-office System'],
+            scope: [
+              {
+                title: 'UI/UX Renewal',
+                description:
+                  '사용자 중심의 직관적인 인터페이스 디자인 및 반응형 웹/모바일 플랫폼 개발',
+              },
+              {
+                title: 'Platform Core Dev',
+                description: '확장 가능한 클라우드 기반 백엔드 시스템 및 핵심 비즈니스 로직 구현',
+              },
+              {
+                title: 'Back-office System',
+                description: '관리자 대시보드, 주문 관리, 재고 관리 등 운영 효율화 시스템 구축',
+              },
+            ],
             strengths: [
               { title: 'Specialized Skill', description: '국내 최고 수준의\n푸드테크 기술력' },
               { title: 'Proven Track', description: '다수의 대형 플랫폼\n수행 실적 보유' },
@@ -357,7 +400,22 @@ export default function PreviewPage() {
               description:
                 '지속적인 피드백과 점진적 기능 구현으로 변화하는 요구사항에 유연하게 대응합니다.',
             },
-            qualityAssurance: ['정기 단위 테스트', '사용자 시나리오 검증', '부하 테스트 실시'],
+            qualityAssurance: [
+              {
+                title: '정기 단위 테스트',
+                description:
+                  '코드 리뷰 및 정적 분석 도구를 통한 코드 품질 관리 및 자동화된 단위 테스트 수행',
+              },
+              {
+                title: '사용자 시나리오 검증',
+                description:
+                  '실제 사용자 시나리오 기반 통합 테스트 및 사용성 테스트를 통한 UX 검증',
+              },
+              {
+                title: '부하 테스트 실시',
+                description: '대용량 트래픽 시뮬레이션을 통한 성능 최적화 및 안정성 검증',
+              },
+            ],
           };
           const bodySection5DataAll: BodySection5Data = {
             training: [

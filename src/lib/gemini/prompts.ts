@@ -159,9 +159,18 @@ export const BODY_PROMPT_TEMPLATE = `
       "description": "방법론 설명"
     },
     "qualityAssurance": [
-      "품질 보증 항목 1",
-      "품질 보증 항목 2",
-      "품질 보증 항목 3"
+      {
+        "title": "품질 보증 항목 1",
+        "description": "품질 보증 항목 설명 (예: 코드 리뷰 및 정적 분석 도구를 통한 코드 품질 관리)"
+      },
+      {
+        "title": "품질 보증 항목 2",
+        "description": "품질 보증 항목 설명"
+      },
+      {
+        "title": "품질 보증 항목 3",
+        "description": "품질 보증 항목 설명"
+      }
     ]
   }
 }
@@ -271,7 +280,7 @@ export const BODY_PROMPT_TEMPLATE = `
      * 투입 인력: {teamSize}
      * 역할별로 구분하여 작성하세요 (예: Project Manager, Lead Developer, UX/UI Designer, QA Engineer)
    - methodology: 개발 방법론
-   - qualityAssurance: 품질 보증 계획 (3개)
+   - qualityAssurance: 품질 보증 계획 (각 항목은 title과 description을 포함한 객체 배열, 3개)
 
 5. **V. 사업 지원 부문**:
    - training: 교육 훈련 계획 (3개)

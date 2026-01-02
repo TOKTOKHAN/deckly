@@ -475,7 +475,13 @@ export function generateBodySection4Template(
     description: '',
   };
 
-  const qualityAssurance = data.qualityAssurance || [];
+  // qualityAssurance 데이터 처리 (string[] 또는 Array<{title, description}>)
+  const qualityAssuranceItems =
+    !data.qualityAssurance || data.qualityAssurance.length === 0
+      ? []
+      : typeof data.qualityAssurance[0] === 'string'
+        ? (data.qualityAssurance as string[]).map(item => ({ title: item, description: '' }))
+        : (data.qualityAssurance as Array<{ title: string; description: string }>);
 
   return `
     <div class="a4-page body-section flex flex-col" style="background-color: ${tertiaryColor} !important; color: ${textColors.primary} !important; position: relative !important; overflow: visible !important; width: 210mm !important; min-height: 297mm !important; height: auto !important; padding: 2rem !important; margin: 0 !important; max-width: 210mm !important;">
@@ -578,16 +584,19 @@ export function generateBodySection4Template(
           </div>
           
           <div class="grid grid-cols-3 gap-3" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.75rem !important; width: 100% !important;">
-            ${qualityAssurance
+            ${qualityAssuranceItems
               .slice(0, 3)
               .map(
                 item => `
-            <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex items-center gap-3" style="padding: 1rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; display: flex !important; align-items: center !important; gap: 0.75rem !important;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-              <span class="text-xs font-bold text-zinc-400" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${darkCardTextColors.secondary} !important;">${item}</span>
+            <div class="p-4 bg-zinc-950 border border-white/5 rounded-xl flex flex-col gap-2" style="padding: 1rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; display: flex !important; flex-direction: column !important; gap: 0.5rem !important;">
+              <div class="flex items-center gap-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span class="text-xs font-bold text-zinc-400" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${darkCardTextColors.secondary} !important; margin: 0 !important;">${item.title}</span>
+              </div>
+              ${item.description ? `<p class="text-[11px] text-zinc-500 leading-tight" style="font-size: 0.6875rem !important; color: ${darkCardTextColors.tertiary} !important; line-height: 1.4 !important; margin: 0 !important;">${item.description}</p>` : ''}
             </div>
             `,
               )
