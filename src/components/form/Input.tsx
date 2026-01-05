@@ -1,34 +1,56 @@
 'use client';
 
-import React from 'react';
+import React, { ReactNode, useId } from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   required?: boolean;
   error?: string;
+  icon?: ReactNode;
+  rightIcon?: ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, required, error, id, className = '', ...props }, ref) => {
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  ({ label, required, error, id, className = '', icon, rightIcon, ...props }, ref) => {
+    // Hydration 문제 방지를 위해 useId 사용
+    const generatedId = useId();
+    const inputId = id || generatedId;
 
     return (
-      <div className="mb-4 flex flex-col gap-1.5">
-        <label htmlFor={inputId} className="text-sm font-semibold text-gray-700">
-          {label}
-        </label>
-        <input
-          ref={ref}
-          id={inputId}
-          required={required}
-          className={`rounded-xl border p-2.5 text-black transition focus:outline-none focus:ring-2 ${
-            error
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
-          } ${className}`}
-          {...props}
-        />
-        {error && <span className="mt-0.5 text-xs font-medium text-red-500">{error}</span>}
+      <div className="mb-1 flex flex-col gap-1">
+        {label && (
+          <label htmlFor={inputId} className="text-sm font-semibold text-gray-700">
+            {label}
+          </label>
+        )}
+        <div className={icon || rightIcon ? 'relative' : ''}>
+          {icon && (
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center text-slate-400 leading-none">
+              {icon}
+            </div>
+          )}
+          <input
+            ref={ref}
+            id={inputId}
+            required={required}
+            className={`w-full rounded-xl border text-black transition focus:outline-none focus:ring-2 ${
+              icon ? 'py-3 pl-12' : 'py-3 pl-4'
+            } ${rightIcon ? 'pr-12' : 'pr-4'} ${
+              error
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
+            } ${className}`}
+            {...props}
+          />
+          {rightIcon && (
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer text-slate-400 leading-none">
+              {rightIcon}
+            </div>
+          )}
+        </div>
+        <div className="min-h-[20px]">
+          {error && <span className="mt-0.5 text-xs font-medium text-red-500">{error}</span>}
+        </div>
       </div>
     );
   },
