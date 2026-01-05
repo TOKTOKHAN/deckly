@@ -34,16 +34,21 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              icon={<LogOut size={16} />}
-              onClick={handleLogout}
-              className="text-slate-600 hover:text-slate-900"
-            >
-              로그아웃
-            </Button>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-slate-700">
+                {user?.user_metadata?.name || user?.email || '사용자'}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                icon={<LogOut size={16} />}
+                onClick={handleLogout}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                로그아웃
+              </Button>
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login">
