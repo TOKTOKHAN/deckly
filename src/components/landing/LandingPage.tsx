@@ -416,7 +416,7 @@ export default function LandingPage() {
                   variant="primary"
                   size="lg"
                   onClick={handleCTAClick}
-                  className="w-full rounded-3xl bg-white px-16 py-6 text-2xl font-black text-blue-600 shadow-2xl transition-all hover:scale-110 hover:bg-white hover:text-blue-700 active:scale-95 md:w-auto"
+                  className="w-full rounded-3xl bg-white px-16 py-6 text-2xl font-black !text-indigo-600 shadow-2xl transition-all hover:scale-110 hover:bg-white hover:!text-indigo-700 active:scale-95 md:w-auto"
                 >
                   지금 상담받기
                 </Button>
