@@ -166,7 +166,7 @@ export default function LandingPage() {
           <p className="mx-auto mb-16 max-w-3xl px-4 text-lg font-medium leading-relaxed text-slate-500 md:text-2xl">
             정리되지 않은 수많은 대화 속에서 핵심 비즈니스 로직을 추출합니다.{' '}
             <br className="hidden md:block" />
-            Deckly AI가 당신의 미팅 전사록을 가장 완벽한 제안서로 재구성합니다.
+            Deckly 가 당신의 미팅 전사록을 가장 완벽한 제안서로 재구성합니다.
           </p>
 
           <div className="flex flex-col items-center justify-center gap-5 md:flex-row">
@@ -203,7 +203,7 @@ export default function LandingPage() {
                   d: '기록을 옮겨 적는 데 급급해 정작 중요한 비즈니스 전략을 고민할 시간이 부족합니다.',
                 },
                 {
-                  t: '반복적인 노가다',
+                  t: '반복적인 업무',
                   d: '매번 새로운 템플릿을 찾고 문구를 다듬는 과정에서 창의성이 고갈됩니다.',
                 },
               ].map((item, i) => (
@@ -227,7 +227,7 @@ export default function LandingPage() {
               <Layout className="text-slate-900" size={64} />
             </div>
             <p className="mb-6 text-2xl font-black italic text-slate-900">
-              &ldquo;이 모든 비효율을 AI가 <br /> 단 한 번에 해결합니다.&rdquo;
+              &ldquo;이 모든 비효율을 Deckly가 <br /> 단 한 번에 해결합니다.&rdquo;
             </p>
             <div className="mb-8 h-1 w-20 rounded-full bg-blue-600"></div>
             <div className="flex items-center gap-4">
@@ -265,20 +265,20 @@ export default function LandingPage() {
               {
                 icon: <Mic size={24} />,
                 step: '01',
-                title: '미팅 전사',
-                desc: '음성을 분석하여 실시간 화자 분리 및 텍스트 변환',
+                title: '미팅 전사록 파악',
+                desc: '미팅 전사록을 분석하여 핵심 내용을 추출',
               },
               {
                 icon: <Search size={24} />,
                 step: '02',
                 title: '의도 분석',
-                desc: '고객의 니즈와 비즈니스 요구사항 핵심 추출',
+                desc: '고객의 니즈와 비즈니스 요구사항 핵심 분석',
               },
               {
                 icon: <Layers size={24} />,
                 step: '03',
                 title: '구조 설계',
-                desc: '추출된 데이터를 바탕으로 제안서 목차 및 흐름 생성',
+                desc: '추출된 데이터를 바탕으로 제안서 목차 및 본문 생성',
               },
               {
                 icon: <FileText size={24} />,
@@ -353,7 +353,7 @@ export default function LandingPage() {
                 </div>
               </div>
               {/* Floating Tags */}
-              <div className="absolute -left-6 -top-6 animate-bounce rounded-2xl bg-blue-600 px-6 py-3 text-sm font-black shadow-xl">
+              <div className="absolute -left-6 -top-6 z-10 animate-bounce rounded-2xl bg-blue-600 px-6 py-3 text-sm font-black shadow-xl">
                 Accuracy 99.8%
               </div>
             </div>
@@ -374,7 +374,7 @@ export default function LandingPage() {
                 <Zap className="mb-8 text-blue-600" size={40} />
                 <h3 className="mb-6 text-3xl font-black text-slate-900">초고속 엔진</h3>
                 <p className="text-lg font-medium leading-relaxed text-slate-500">
-                  수시간 분량의 미팅 녹취록도 수초 내에 파악합니다. 핵심 주제 분류부터 세부 액션
+                  수시간 분량의 미팅 녹취록도 수분 내에 파악합니다. 핵심 주제 분류부터 세부 액션
                   아이템 도출까지, 당신이 생각하는 속도보다 빠르게 제안서를 설계합니다.
                 </p>
               </div>
@@ -425,32 +425,6 @@ export default function LandingPage() {
                   지금 상담받기
                 </Button>
               </div>
-            </div>
-          </div>
-
-          <div className="mt-20 flex flex-col items-center justify-between gap-8 border-t border-slate-50 pt-16 md:flex-row">
-            <div className="flex items-center gap-10">
-              <div className="flex items-center gap-2">
-                <div className="rounded-lg bg-indigo-600 p-2">
-                  <Layout className="text-white" size={20} />
-                </div>
-                <span className="text-xl font-black tracking-tighter text-slate-800">Deckly</span>
-              </div>
-              <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">
-                <span>© 2026 Deckly Inc.</span>
-                <Link href="#" className="transition-colors hover:text-blue-600">
-                  Privacy Policy
-                </Link>
-                <Link href="#" className="transition-colors hover:text-blue-600">
-                  Terms of Service
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center gap-6">
-              <p className="text-sm font-black text-slate-400">support@deckly.com</p>
-              <button className="rounded-xl border border-slate-100 px-5 py-2 text-xs font-black uppercase tracking-widest text-slate-400 transition-all hover:bg-slate-50">
-                Language: KR
-              </button>
             </div>
           </div>
         </div>
