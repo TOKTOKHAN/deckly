@@ -1,28 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Mail, Lock, User, ArrowRight, ChevronLeft, Layout, CheckCircle2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
+import { signupSchema, type SignupFormData } from '@/lib/validations/authSchema';
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: SignupFormData) => {
     // 회원가입 로직이 들어갈 자리입니다.
-    console.log('Signup attempt:', formData);
+    console.log('Signup attempt:', data);
   };
 
   return (
@@ -78,68 +77,60 @@ export default function SignupPage() {
             </div>
 
             {/* Auth Form */}
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="mb-0">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div>
                 <label className="mb-1.5 ml-1 block text-xs font-bold text-slate-500">이름</label>
                 <Input
                   type="text"
-                  name="name"
                   label=""
                   placeholder="홍길동"
-                  required
-                  value={formData.name}
                   icon={<User size={18} />}
-                  onChange={handleInputChange}
-                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                  {...register('name')}
+                  error={errors.name?.message}
+                  className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
 
-              <div className="mb-0">
+              <div>
                 <label className="mb-1.5 ml-1 block text-xs font-bold text-slate-500">
                   이메일 주소
                 </label>
                 <Input
                   type="email"
-                  name="email"
                   label=""
                   placeholder="example@deckly.com"
-                  required
-                  value={formData.email}
                   icon={<Mail size={18} />}
-                  onChange={handleInputChange}
-                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                  {...register('email')}
+                  error={errors.email?.message}
+                  className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
 
-              <div className="mb-0">
+              <div>
                 <label className="mb-1.5 block text-xs font-bold text-slate-500">비밀번호</label>
                 <Input
                   type="password"
-                  name="password"
                   label=""
                   placeholder="••••••••"
-                  required
-                  value={formData.password}
                   icon={<Lock size={18} />}
-                  onChange={handleInputChange}
-                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                  {...register('password')}
+                  error={errors.password?.message}
+                  className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
 
-              <div className="mb-0">
+              <div>
                 <label className="mb-1.5 ml-1 block text-xs font-bold text-slate-500">
                   비밀번호 확인
                 </label>
                 <Input
                   type="password"
-                  name="confirmPassword"
                   label=""
                   placeholder="••••••••"
-                  required
-                  value={formData.confirmPassword}
                   icon={<Lock size={18} />}
-                  onChange={handleInputChange}
-                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                  {...register('confirmPassword')}
+                  error={errors.confirmPassword?.message}
+                  className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
 
@@ -150,6 +141,8 @@ export default function SignupPage() {
                 icon={<ArrowRight size={18} />}
                 iconPosition="right"
                 className="mt-4 w-full"
+                disabled={isSubmitting}
+                isLoading={isSubmitting}
               >
                 무료로 시작하기
               </Button>

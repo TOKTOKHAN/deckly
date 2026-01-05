@@ -14,10 +14,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
     return (
-      <div className="mb-4 flex flex-col gap-1.5">
-        <label htmlFor={inputId} className="text-sm font-semibold text-gray-700">
-          {label}
-        </label>
+      <div className="mb-4 flex flex-col gap-1">
+        {label && (
+          <label htmlFor={inputId} className="text-sm font-semibold text-gray-700">
+            {label}
+          </label>
+        )}
         <div className={icon ? 'relative' : ''}>
           {icon && (
             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">{icon}</div>
@@ -36,7 +38,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
         </div>
-        {error && <span className="mt-0.5 text-xs font-medium text-red-500">{error}</span>}
+        <div className="min-h-[20px]">
+          {error && <span className="mt-0.5 text-xs font-medium text-red-500">{error}</span>}
+        </div>
       </div>
     );
   },
