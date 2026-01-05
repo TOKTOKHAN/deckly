@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Layout, ChevronLeft } from 'lucide-react';
+import { LogOut, Layout } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
@@ -84,14 +84,6 @@ export default function Navbar() {
         cancelText="취소"
         onConfirm={handleLogout}
         variant="default"
-        extraButton={{
-          text: '돌아가기',
-          onClick: () => {
-            router.back();
-            setShowLogoutModal(false);
-          },
-          icon: <ChevronLeft size={16} />,
-        }}
       />
     </nav>
   );

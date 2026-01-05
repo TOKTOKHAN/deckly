@@ -16,11 +16,6 @@ interface ModalProps {
   onCancel?: () => void;
   variant?: 'default' | 'danger';
   showCloseButton?: boolean;
-  extraButton?: {
-    text: string;
-    onClick: () => void;
-    icon?: React.ReactNode;
-  };
 }
 
 export default function Modal({
@@ -35,7 +30,6 @@ export default function Modal({
   onCancel,
   variant = 'default',
   showCloseButton = true,
-  extraButton,
 }: ModalProps) {
   // ESC 키로 모달 닫기
   useEffect(() => {
