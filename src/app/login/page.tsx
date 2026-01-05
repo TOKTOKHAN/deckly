@@ -1,26 +1,39 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Mail, Lock, ArrowRight, ChevronLeft, Layout, CheckCircle2 } from 'lucide-react';
+import {
+  Mail,
+  Lock,
+  ArrowRight,
+  ChevronLeft,
+  Layout,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
+import { loginSchema, type LoginFormData } from '@/lib/validations/authSchema';
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormData) => {
     // 로그인 로직이 들어갈 자리입니다.
-    console.log('Login attempt:', formData);
+    console.log('Login attempt:', data);
   };
 
   return (
@@ -74,25 +87,23 @@ export default function LoginPage() {
             </div>
 
             {/* Auth Form */}
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="mb-0">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
+              <div>
                 <label className="mb-1.5 ml-1 block text-xs font-bold text-slate-500">
                   이메일 주소
                 </label>
                 <Input
                   type="email"
-                  name="email"
                   label=""
                   placeholder="example@deckly.com"
-                  required
-                  value={formData.email}
                   icon={<Mail size={18} />}
-                  onChange={handleInputChange}
-                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                  {...register('email')}
+                  error={errors.email?.message}
+                  className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
 
-              <div className="mb-0">
+              <div>
                 <div className="mb-1.5 flex items-center justify-between px-1">
                   <label className="text-xs font-bold text-slate-500">비밀번호</label>
                   <button
@@ -103,15 +114,22 @@ export default function LoginPage() {
                   </button>
                 </div>
                 <Input
-                  type="password"
-                  name="password"
+                  type={showPassword ? 'text' : 'password'}
                   label=""
                   placeholder="••••••••"
-                  required
-                  value={formData.password}
                   icon={<Lock size={18} />}
-                  onChange={handleInputChange}
-                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                  rightIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="transition-colors hover:text-slate-600"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  }
+                  {...register('password')}
+                  error={errors.password?.message}
+                  className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
 
@@ -122,6 +140,8 @@ export default function LoginPage() {
                 icon={<ArrowRight size={18} />}
                 iconPosition="right"
                 className="mt-4 w-full"
+                disabled={isSubmitting}
+                isLoading={isSubmitting}
               >
                 로그인하기
               </Button>

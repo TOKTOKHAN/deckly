@@ -1,23 +1,54 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Mail, Lock, User, ArrowRight, ChevronLeft, Layout, CheckCircle2 } from 'lucide-react';
+import {
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+  ChevronLeft,
+  Layout,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
 import { signupSchema, type SignupFormData } from '@/lib/validations/authSchema';
 
 export default function SignupPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
+    watch,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
   });
+
+  const password = watch('password');
+
+  const handleConfirmPasswordBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const confirmPasswordValue = e.target.value;
+    if (confirmPasswordValue && password && password !== confirmPasswordValue) {
+      setError('confirmPassword', {
+        type: 'manual',
+        message: '비밀번호가 일치하지 않습니다',
+      });
+    } else if (confirmPasswordValue && password && password === confirmPasswordValue) {
+      clearErrors('confirmPassword');
+    }
+  };
 
   const onSubmit = async (data: SignupFormData) => {
     // 회원가입 로직이 들어갈 자리입니다.
@@ -77,7 +108,7 @@ export default function SignupPage() {
             </div>
 
             {/* Auth Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
               <div>
                 <label className="mb-1.5 ml-1 block text-xs font-bold text-slate-500">이름</label>
                 <Input
@@ -109,10 +140,19 @@ export default function SignupPage() {
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-slate-500">비밀번호</label>
                 <Input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   label=""
                   placeholder="••••••••"
                   icon={<Lock size={18} />}
+                  rightIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="transition-colors hover:text-slate-600"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  }
                   {...register('password')}
                   error={errors.password?.message}
                   className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
@@ -124,11 +164,22 @@ export default function SignupPage() {
                   비밀번호 확인
                 </label>
                 <Input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   label=""
                   placeholder="••••••••"
                   icon={<Lock size={18} />}
-                  {...register('confirmPassword')}
+                  rightIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="transition-colors hover:text-slate-600"
+                    >
+                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  }
+                  {...register('confirmPassword', {
+                    onBlur: handleConfirmPasswordBlur,
+                  })}
                   error={errors.confirmPassword?.message}
                   className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
