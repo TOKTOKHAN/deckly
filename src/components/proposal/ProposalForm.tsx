@@ -12,7 +12,6 @@ import FormView from './FormView';
 import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
 import ResultView from './ResultView';
-import { CheckCircle2 } from '@/components/icons';
 
 const initialFormData: ProposalFormData = {
   // 기본 정보
@@ -271,19 +270,6 @@ export default function ProposalForm() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="sticky top-0 z-40 border-b border-gray-100 bg-white/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-          <div
-            className="flex cursor-pointer items-center gap-2"
-            onClick={() => setView('dashboard')}
-          >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
-              <CheckCircle2 className="text-white" size={20} />
-            </div>
-            <span className="text-xl font-black tracking-tight text-gray-900">DECKLY</span>
-          </div>
-        </div>
-      </nav>
       <main className="pb-20">
         {view === 'dashboard' && (
           <DashboardView

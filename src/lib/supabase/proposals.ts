@@ -50,12 +50,20 @@ interface ProposalRow {
   status: ProposalStatus;
   progress: number | null;
   error: string | null;
+  user_id: string; // 사용자 ID
   created_at: string;
   updated_at: string;
 }
 
 // Proposal → ProposalRow 변환
-function proposalToRow(proposal: Proposal): Omit<ProposalRow, 'id' | 'created_at' | 'updated_at'> {
+function proposalToRow(
+  proposal: Proposal,
+  userId?: string,
+): Omit<ProposalRow, 'id' | 'created_at' | 'updated_at'> {
+  if (!userId) {
+    throw new Error('사용자 ID가 필요합니다.');
+  }
+
   return {
     title: proposal.projectName,
     client: proposal.clientCompanyName,
@@ -67,6 +75,7 @@ function proposalToRow(proposal: Proposal): Omit<ProposalRow, 'id' | 'created_at
     our_contact: null,
     content: proposal.content || null,
     meeting_notes: proposal.transcriptText,
+    user_id: userId, // 사용자 ID 추가
     metadata: {
       // 기본 정보
       slogan: proposal.slogan,
@@ -155,16 +164,28 @@ function rowToProposal(row: ProposalRow): Proposal {
   };
 }
 
-// 제안서 목록 조회
+// 제안서 목록 조회 (현재 사용자의 제안서만)
 export async function getProposals(): Promise<Proposal[]> {
   if (!supabase) {
     throw new Error('Supabase가 설정되지 않았습니다.');
   }
 
   try {
+    // 현재 로그인한 사용자 확인
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      // 로그인하지 않은 경우 빈 배열 반환
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('proposals')
       .select('*')
+      .eq('user_id', user.id) // 현재 사용자의 제안서만 조회
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -186,10 +207,20 @@ export async function createProposal(proposal: Proposal): Promise<Proposal> {
   }
 
   try {
+    // 현재 로그인한 사용자 확인
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error('로그인이 필요합니다.');
+    }
+
     // id가 있으면 포함, 없으면 제외 (Supabase가 자동 생성)
     const insertData = proposal.id
-      ? { id: proposal.id, ...proposalToRow(proposal) }
-      : proposalToRow(proposal);
+      ? { id: proposal.id, ...proposalToRow(proposal, user.id) }
+      : proposalToRow(proposal, user.id);
 
     const { data, error } = await supabase.from('proposals').insert(insertData).select().single();
 
@@ -212,7 +243,32 @@ export async function updateProposal(proposal: Proposal): Promise<Proposal> {
   }
 
   try {
-    const rowData = proposalToRow(proposal);
+    // 현재 로그인한 사용자 확인
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error('로그인이 필요합니다.');
+    }
+
+    // 먼저 제안서가 존재하고 본인 것인지 확인
+    const { data: existingProposal, error: fetchError } = await supabase
+      .from('proposals')
+      .select('user_id')
+      .eq('id', proposal.id)
+      .single();
+
+    if (fetchError || !existingProposal) {
+      throw new Error('제안서를 찾을 수 없습니다.');
+    }
+
+    if (existingProposal.user_id !== user.id) {
+      throw new Error('본인의 제안서만 수정할 수 있습니다.');
+    }
+
+    const rowData = proposalToRow(proposal, user.id);
     console.log('업데이트할 데이터:', {
       id: proposal.id,
       contentLength: rowData.content?.length || 0,
@@ -226,6 +282,7 @@ export async function updateProposal(proposal: Proposal): Promise<Proposal> {
         updated_at: new Date().toISOString(),
       })
       .eq('id', proposal.id)
+      .eq('user_id', user.id) // 추가 보안: 본인 것만 업데이트
       .select()
       .single();
 
@@ -275,14 +332,30 @@ export async function deleteProposal(id: string): Promise<void> {
   }
 }
 
-// 제안서 단일 조회
+// 제안서 단일 조회 (현재 사용자의 제안서만)
 export async function getProposal(id: string): Promise<Proposal | null> {
   if (!supabase) {
     throw new Error('Supabase가 설정되지 않았습니다.');
   }
 
   try {
-    const { data, error } = await supabase.from('proposals').select('*').eq('id', id).single();
+    // 현재 로그인한 사용자 확인
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      // 로그인하지 않은 경우 null 반환
+      return null;
+    }
+
+    const { data, error } = await supabase
+      .from('proposals')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', user.id) // 현재 사용자의 제안서만 조회
+      .single();
 
     if (error) {
       if (error.code === 'PGRST116') {
