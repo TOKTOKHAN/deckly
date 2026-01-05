@@ -1,14 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Layout } from 'lucide-react';
+import { LogOut, Layout, ChevronLeft } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 
 export default function Navbar() {
   const router = useRouter();
   const { user, isLoading, logout } = useAuthStore();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -43,7 +46,7 @@ export default function Navbar() {
                 variant="ghost"
                 size="sm"
                 icon={<LogOut size={16} />}
-                onClick={handleLogout}
+                onClick={() => setShowLogoutModal(true)}
                 className="text-slate-600 hover:text-slate-900"
               >
                 로그아웃
@@ -70,6 +73,26 @@ export default function Navbar() {
           )}
         </div>
       </div>
+
+      {/* 로그아웃 확인 모달 */}
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        title="로그아웃"
+        message="정말 로그아웃하시겠습니까?"
+        confirmText="로그아웃"
+        cancelText="취소"
+        onConfirm={handleLogout}
+        variant="default"
+        extraButton={{
+          text: '돌아가기',
+          onClick: () => {
+            router.back();
+            setShowLogoutModal(false);
+          },
+          icon: <ChevronLeft size={16} />,
+        }}
+      />
     </nav>
   );
 }
