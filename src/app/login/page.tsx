@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Lock, ArrowRight, ChevronLeft, Layout, CheckCircle2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import Input from '@/components/form/Input';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -74,27 +75,25 @@ export default function LoginPage() {
 
             {/* Auth Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="space-y-1">
-                <label className="ml-1 text-xs font-bold text-slate-500">이메일 주소</label>
-                <div className="relative">
-                  <Mail
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                    size={18}
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="example@deckly.com"
-                    required
-                    value={formData.email}
-                    className="w-full rounded-xl border border-transparent bg-slate-50 py-3 pl-12 pr-4 text-sm outline-none transition-all focus:border-indigo-500 focus:bg-white"
-                    onChange={handleInputChange}
-                  />
-                </div>
+              <div className="mb-0">
+                <label className="mb-1.5 ml-1 block text-xs font-bold text-slate-500">
+                  이메일 주소
+                </label>
+                <Input
+                  type="email"
+                  name="email"
+                  label=""
+                  placeholder="example@deckly.com"
+                  required
+                  value={formData.email}
+                  icon={<Mail size={18} />}
+                  onChange={handleInputChange}
+                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                />
               </div>
 
-              <div className="space-y-1">
-                <div className="flex items-center justify-between px-1">
+              <div className="mb-0">
+                <div className="mb-1.5 flex items-center justify-between px-1">
                   <label className="text-xs font-bold text-slate-500">비밀번호</label>
                   <button
                     type="button"
@@ -103,21 +102,17 @@ export default function LoginPage() {
                     비밀번호를 잊으셨나요?
                   </button>
                 </div>
-                <div className="relative">
-                  <Lock
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                    size={18}
-                  />
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="••••••••"
-                    required
-                    value={formData.password}
-                    className="w-full rounded-xl border border-transparent bg-slate-50 py-3 pl-12 pr-4 text-sm outline-none transition-all focus:border-indigo-500 focus:bg-white"
-                    onChange={handleInputChange}
-                  />
-                </div>
+                <Input
+                  type="password"
+                  name="password"
+                  label=""
+                  placeholder="••••••••"
+                  required
+                  value={formData.password}
+                  icon={<Lock size={18} />}
+                  onChange={handleInputChange}
+                  className="mb-0 bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
+                />
               </div>
 
               <Button

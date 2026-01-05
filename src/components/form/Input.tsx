@@ -1,15 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   required?: boolean;
   error?: string;
+  icon?: ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, required, error, id, className = '', ...props }, ref) => {
+  ({ label, required, error, id, className = '', icon, ...props }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
     return (
@@ -17,17 +18,24 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <label htmlFor={inputId} className="text-sm font-semibold text-gray-700">
           {label}
         </label>
-        <input
-          ref={ref}
-          id={inputId}
-          required={required}
-          className={`rounded-xl border p-2.5 text-black transition focus:outline-none focus:ring-2 ${
-            error
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
-          } ${className}`}
-          {...props}
-        />
+        <div className={icon ? 'relative' : ''}>
+          {icon && (
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">{icon}</div>
+          )}
+          <input
+            ref={ref}
+            id={inputId}
+            required={required}
+            className={`w-full rounded-xl border text-black transition focus:outline-none focus:ring-2 ${
+              icon ? 'py-3 pl-12 pr-4' : 'p-2.5'
+            } ${
+              error
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
+            } ${className}`}
+            {...props}
+          />
+        </div>
         {error && <span className="mt-0.5 text-xs font-medium text-red-500">{error}</span>}
       </div>
     );
