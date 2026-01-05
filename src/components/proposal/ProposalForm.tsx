@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
@@ -51,12 +52,18 @@ const initialFormData: ProposalFormData = {
 };
 
 export default function ProposalForm() {
+  const queryClient = useQueryClient();
   const [view, setView] = useState<'dashboard' | 'form' | 'result'>('dashboard');
-  const [proposals, setProposals] = useState<Proposal[]>([]);
   const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null);
   const [step, setStep] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStatus, setGenStatus] = useState<GenerationStatus>({ progress: 0, message: '' });
+
+  // React Query로 제안서 목록 조회
+  const { data: proposals = [] } = useQuery({
+    queryKey: ['proposals'],
+    queryFn: getProposals,
+  });
 
   // react-hook-form 설정
   const {
@@ -76,33 +83,23 @@ export default function ProposalForm() {
   // formData는 watch로 실시간 추적
   const formData = watch() as ProposalFormData;
 
-  // Supabase에서 제안서 목록 로드
-  useEffect(() => {
-    const loadProposals = async () => {
-      try {
-        const data = await getProposals();
-        setProposals(data);
-      } catch (err) {
-        console.error('제안서 로드 오류:', err);
-        const stored = localStorage.getItem('deckly_proposals');
-        if (stored) {
-          try {
-            const parsed = JSON.parse(stored);
-            setProposals(
-              parsed.sort((a: Proposal, b: Proposal) => {
-                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-                return dateB - dateA;
-              }),
-            );
-          } catch (parseErr) {
-            console.error('로컬 스토리지 파싱 오류:', parseErr);
-          }
-        }
-      }
-    };
-    loadProposals();
-  }, []);
+  // 제안서 생성 Mutation
+  const createMutation = useMutation({
+    mutationFn: createProposal,
+    onSuccess: () => {
+      // 제안서 목록 자동 리프레시
+      queryClient.invalidateQueries({ queryKey: ['proposals'] });
+    },
+  });
+
+  // 제안서 업데이트 Mutation
+  const updateMutation = useMutation({
+    mutationFn: updateProposal,
+    onSuccess: () => {
+      // 제안서 목록 자동 리프레시
+      queryClient.invalidateQueries({ queryKey: ['proposals'] });
+    },
+  });
 
   // 제안서 생성
   const generateProposal = async (proposalId: string, data: ProposalFormData) => {
@@ -112,19 +109,16 @@ export default function ProposalForm() {
     const updateProgress = async (progress: number, message: string) => {
       setGenStatus({ progress, message });
       try {
-        const currentProposal = proposals.find(p => p.id === proposalId);
+        // 현재 캐시에서 제안서 가져오기
+        const cachedProposals = queryClient.getQueryData<Proposal[]>(['proposals']) || [];
+        const currentProposal = cachedProposals.find(p => p.id === proposalId);
         if (currentProposal) {
           const updated = { ...currentProposal, progress, status: 'generating' as ProposalStatus };
-          await updateProposal(updated);
-          setProposals(prev => prev.map(p => (p.id === proposalId ? updated : p)));
+          await updateMutation.mutateAsync(updated);
         }
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('진행 상태 업데이트 오류:', err);
-        setProposals(prev =>
-          prev.map(p =>
-            p.id === proposalId ? { ...p, progress, status: 'generating' as ProposalStatus } : p,
-          ),
-        );
       }
     };
 
@@ -181,27 +175,17 @@ export default function ProposalForm() {
       };
 
       try {
-        await updateProposal(completedProposal);
-        setProposals(prev => prev.map(p => (p.id === proposalId ? completedProposal : p)));
+        await updateMutation.mutateAsync(completedProposal);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('제안서 저장 오류:', err);
-        setProposals(prev => prev.map(p => (p.id === proposalId ? completedProposal : p)));
-        try {
-          const stored = localStorage.getItem('deckly_proposals');
-          const parsed = stored ? JSON.parse(stored) : [];
-          const updated = parsed.map((p: Proposal) =>
-            p.id === proposalId ? completedProposal : p,
-          );
-          localStorage.setItem('deckly_proposals', JSON.stringify(updated));
-        } catch (localErr) {
-          console.error('로컬 스토리지 백업 오류:', localErr);
-        }
       }
 
       setIsGenerating(false);
       setView('result');
       setCurrentProposal(completedProposal);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('제안서 생성 오류:', err);
       const errorProposal: Proposal = {
         id: proposalId,
@@ -211,11 +195,10 @@ export default function ProposalForm() {
         createdAt: new Date().toISOString(),
       };
       try {
-        await updateProposal(errorProposal);
-        setProposals(prev => prev.map(p => (p.id === proposalId ? errorProposal : p)));
+        await updateMutation.mutateAsync(errorProposal);
       } catch (updateErr) {
+        // eslint-disable-next-line no-console
         console.error('에러 상태 저장 오류:', updateErr);
-        setProposals(prev => prev.map(p => (p.id === proposalId ? errorProposal : p)));
       }
       setIsGenerating(false);
       alert('제안서 생성 중 오류가 발생했습니다.');
@@ -240,21 +223,11 @@ export default function ProposalForm() {
 
     try {
       // Supabase에 저장 (id는 자동 생성됨)
-      createdProposal = await createProposal(newProposal);
-      setProposals(prev => [createdProposal, ...prev]);
+      createdProposal = await createMutation.mutateAsync(newProposal);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('제안서 생성 오류:', err);
-      // Supabase 실패 시 로컬 상태만 업데이트
-      const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      createdProposal = { ...newProposal, id: tempId };
-      setProposals(prev => [createdProposal, ...prev]);
-      try {
-        const stored = localStorage.getItem('deckly_proposals');
-        const parsed = stored ? JSON.parse(stored) : [];
-        localStorage.setItem('deckly_proposals', JSON.stringify([createdProposal, ...parsed]));
-      } catch (localErr) {
-        console.error('로컬 스토리지 백업 오류:', localErr);
-      }
+      throw err; // 에러를 상위로 전달
     }
 
     // 제안서 생성 시작
@@ -303,11 +276,9 @@ export default function ProposalForm() {
             proposal={currentProposal}
             onBack={() => setView('dashboard')}
             onRegenerate={generateProposal}
-            onUpdate={updatedProposal => {
+            onUpdate={async updatedProposal => {
               setCurrentProposal(updatedProposal);
-              setProposals(prev =>
-                prev.map(p => (p.id === updatedProposal.id ? updatedProposal : p)),
-              );
+              await updateMutation.mutateAsync(updatedProposal);
             }}
           />
         )}
