@@ -25,7 +25,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className={icon || rightIcon ? 'relative' : ''}>
           {icon && (
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">{icon}</div>
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center text-slate-400 leading-none">
+              {icon}
+            </div>
           )}
           <input
             ref={ref}
@@ -41,7 +43,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer text-slate-400 leading-none">
               {rightIcon}
             </div>
           )}
