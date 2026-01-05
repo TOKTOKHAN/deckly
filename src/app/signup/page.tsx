@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Mail,
@@ -18,10 +19,13 @@ import {
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
 import { signupSchema, type SignupFormData } from '@/lib/validations/authSchema';
+import { supabase } from '@/lib/supabase/client';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -51,8 +55,49 @@ export default function SignupPage() {
   };
 
   const onSubmit = async (data: SignupFormData) => {
-    // 회원가입 로직이 들어갈 자리입니다.
-    console.log('Signup attempt:', data);
+    if (!supabase) {
+      setSubmitError('Supabase 클라이언트를 초기화할 수 없습니다.');
+      return;
+    }
+
+    setSubmitError(null);
+
+    try {
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+          },
+        },
+      });
+
+      if (error) {
+        // 에러 메시지를 사용자 친화적으로 변환
+        if (error.message.includes('already registered')) {
+          setError('email', {
+            type: 'manual',
+            message: '이미 가입된 이메일입니다.',
+          });
+        } else if (error.message.includes('Password')) {
+          setError('password', {
+            type: 'manual',
+            message: error.message,
+          });
+        } else {
+          setSubmitError(error.message || '회원가입 중 오류가 발생했습니다.');
+        }
+        return;
+      }
+
+      // 회원가입 성공 - 바로 로그인된 상태로 홈으로 이동
+      if (authData.user) {
+        router.push('/');
+      }
+    } catch {
+      setSubmitError('예상치 못한 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -182,6 +227,12 @@ export default function SignupPage() {
                   className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
+
+              {submitError && (
+                <div className="mt-2 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                  {submitError}
+                </div>
+              )}
 
               <Button
                 type="submit"

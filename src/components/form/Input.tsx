@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useId } from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -12,7 +12,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ label, required, error, id, className = '', icon, rightIcon, ...props }, ref) => {
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+    // Hydration 문제 방지를 위해 useId 사용
+    const generatedId = useId();
+    const inputId = id || generatedId;
 
     return (
       <div className="mb-1 flex flex-col gap-1">

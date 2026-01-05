@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Mail,
@@ -17,13 +18,17 @@ import {
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
 import { loginSchema, type LoginFormData } from '@/lib/validations/authSchema';
+import { supabase } from '@/lib/supabase/client';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -32,8 +37,75 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    // 로그인 로직이 들어갈 자리입니다.
-    console.log('Login attempt:', data);
+    if (!supabase) {
+      setSubmitError('Supabase 클라이언트를 초기화할 수 없습니다. 환경 변수를 확인해주세요.');
+      return;
+    }
+
+    // 입력값 검증
+    if (!data.email || !data.password) {
+      setSubmitError('이메일과 비밀번호를 모두 입력해주세요.');
+      return;
+    }
+
+    // 이메일 형식 검증
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email.trim())) {
+      setError('email', {
+        type: 'manual',
+        message: '올바른 이메일 형식이 아닙니다.',
+      });
+      return;
+    }
+
+    setSubmitError(null);
+
+    try {
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email.trim(),
+        password: data.password,
+      });
+
+      if (error) {
+        // eslint-disable-next-line no-console
+        console.error('Supabase 로그인 에러:', {
+          message: error.message,
+          status: error.status,
+          name: error.name,
+        });
+
+        // 에러 메시지를 사용자 친화적으로 변환
+        if (error.message.includes('Invalid login credentials') || error.status === 400) {
+          setError('email', {
+            type: 'manual',
+            message: '이메일 또는 비밀번호가 올바르지 않습니다.',
+          });
+          setError('password', {
+            type: 'manual',
+            message: '이메일 또는 비밀번호가 올바르지 않습니다.',
+          });
+          setSubmitError('이메일 또는 비밀번호를 확인해주세요.');
+        } else {
+          setSubmitError(error.message || '로그인 중 오류가 발생했습니다.');
+        }
+        return;
+      }
+
+      // 로그인 성공
+      if (authData.user) {
+        router.push('/');
+        router.refresh();
+      }
+    } catch (error) {
+      // 네트워크 에러나 기타 예외 처리
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.';
+      setSubmitError(errorMessage);
+      // eslint-disable-next-line no-console
+      console.error('로그인 오류:', error);
+    }
   };
 
   return (
@@ -130,6 +202,12 @@ export default function LoginPage() {
                   className="bg-slate-50 text-sm focus:border-indigo-500 focus:bg-white focus:ring-0"
                 />
               </div>
+
+              {submitError && (
+                <div className="mt-2 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                  {submitError}
+                </div>
+              )}
 
               <Button
                 type="submit"
