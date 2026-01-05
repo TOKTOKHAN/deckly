@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
 import { getProposals, createProposal, updateProposal } from '@/lib/supabase/proposals';
+import { proposalFormSchema } from '@/lib/validations/proposalSchema';
 import FormView from './FormView';
 import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
@@ -12,22 +15,35 @@ import ResultView from './ResultView';
 import { CheckCircle2 } from '@/components/icons';
 
 const initialFormData: ProposalFormData = {
+  // 기본 정보
   clientCompanyName: '',
   projectName: '',
-  meetingDate: new Date().toISOString().substring(0, 10),
-  proposalDate: new Date().toISOString().substring(0, 10),
-  clientContact: '',
-  ourContact: '',
+  slogan: '',
+  brandColor1: '#4f46e5', // indigo-600 (기본 브랜드 컬러)
+  brandColor2: '#1f2937', // gray-800 (기본 브랜드 컬러)
+  brandColor3: '#ffffff', // white (기본 브랜드 컬러)
+  clientLogo: undefined,
+  ourLogo: undefined,
+  clientWebsite: undefined,
+  font: 'Pretendard',
+
+  // 프로젝트 정보
+  teamSize: '',
+  startDate: new Date().toISOString().substring(0, 10),
+  endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().substring(0, 10),
+  reviewPeriod: '',
+  maintenancePeriod: '',
+  openDate: undefined,
+
+  // 예산
+  budgetMin: '',
+
+  // 기타
   target: ['실무자'],
   includeSummary: '',
   excludeScope: '',
   priorityFeatures: '',
   projectPhase: '',
-  startDate: new Date().toISOString().substring(0, 10),
-  openDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().substring(0, 10),
-  budgetMin: '',
-  budgetMax: '',
-  budgetConfirmed: '협의 중',
   priorityFactor: '',
   transcriptText: '',
   volume: '표준',
@@ -40,9 +56,26 @@ export default function ProposalForm() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null);
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<ProposalFormData>(initialFormData);
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStatus, setGenStatus] = useState<GenerationStatus>({ progress: 0, message: '' });
+
+  // react-hook-form 설정
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm<ProposalFormData>({
+    resolver: zodResolver(proposalFormSchema),
+    defaultValues: initialFormData,
+    mode: 'all',
+    reValidateMode: 'onChange',
+  });
+
+  // formData는 watch로 실시간 추적
+  const formData = watch() as ProposalFormData;
 
   // Supabase에서 제안서 목록 로드
   useEffect(() => {
@@ -99,21 +132,32 @@ export default function ProposalForm() {
     try {
       updateProgress(30, '제안서 구조 설계 중...');
 
-      // API 호출
+      // API 호출 - Step 1의 모든 필드 포함
       const requestData: ProposalRequest = {
         meetingNotes: data.transcriptText,
         title: data.projectName,
         client: data.clientCompanyName,
-        date: data.meetingDate,
-        clientContact: data.clientContact,
-        proposalDate: data.proposalDate,
-        ourContact: data.ourContact,
         projectOverview: data.includeSummary,
-        budget:
-          data.budgetMin && data.budgetMax ? `${data.budgetMin}~${data.budgetMax}` : undefined,
+        budget: data.budgetMin || undefined,
         period:
           data.startDate && data.openDate ? `${data.startDate} ~ ${data.openDate}` : undefined,
         requirements: data.priorityFeatures,
+
+        // Step 1 추가 필드들
+        slogan: data.slogan || undefined,
+        brandColor1: data.brandColor1 || undefined,
+        brandColor2: data.brandColor2 || undefined,
+        brandColor3: data.brandColor3 || undefined,
+        clientLogo: data.clientLogo || undefined,
+        ourLogo: data.ourLogo || undefined,
+        clientWebsite: data.clientWebsite || undefined,
+        font: data.font || undefined,
+        teamSize: data.teamSize || undefined,
+        startDate: data.startDate || undefined,
+        endDate: data.endDate || undefined,
+        reviewPeriod: data.reviewPeriod || undefined,
+        maintenancePeriod: data.maintenancePeriod || undefined,
+        openDate: data.openDate || undefined,
       };
 
       updateProgress(60, 'AI가 상세 내용을 작성하는 중...');
@@ -179,14 +223,15 @@ export default function ProposalForm() {
     }
   };
 
-  const handleCreate = async () => {
-    if (!formData.transcriptText.trim()) return;
+  const handleCreate = handleSubmit(async data => {
+    // Zod 검증 통과 시 실행됨 (모든 필드가 자동으로 기본값으로 채워짐)
+    const validatedData = data as ProposalFormData;
 
     // 새 제안서 생성 (Supabase)
     // id는 명시하지 않음 - Supabase가 자동으로 UUID 생성
     const newProposal: Proposal = {
       id: '', // 임시 값 (Supabase가 생성한 ID로 교체됨)
-      ...formData,
+      ...validatedData,
       status: 'generating',
       progress: 0,
       createdAt: new Date().toISOString(),
@@ -214,13 +259,13 @@ export default function ProposalForm() {
     }
 
     // 제안서 생성 시작
-    generateProposal(createdProposal.id, formData);
-  };
+    generateProposal(createdProposal.id, validatedData);
+  });
 
-  // 단일 핸들러로 통합 (더 간결하고 유지보수 용이)
+  // react-hook-form의 setValue를 사용하도록 변경
   const handleInputChange = (field: keyof ProposalFormData) => {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFormData(prev => ({ ...prev, [field]: e.target.value }));
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      setValue(field, e.target.value as never, { shouldValidate: true });
     };
   };
 
@@ -244,7 +289,7 @@ export default function ProposalForm() {
           <DashboardView
             proposals={proposals}
             onCreateNew={() => {
-              setFormData(initialFormData);
+              reset(initialFormData);
               setStep(1);
               setView('form');
             }}
@@ -258,6 +303,9 @@ export default function ProposalForm() {
           <FormView
             step={step}
             formData={formData}
+            errors={errors}
+            register={register}
+            setValue={setValue}
             onInputChange={handleInputChange}
             onStepChange={setStep}
             onClose={() => setView('dashboard')}
