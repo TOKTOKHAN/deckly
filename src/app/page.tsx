@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import ProposalForm from '@/components/proposal/ProposalForm';
+import LandingPage from '@/components/landing/LandingPage';
 
 export const metadata: Metadata = {
   title: '홈',
@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <ProposalForm />;
+  return <LandingPage />;
 }

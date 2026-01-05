@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import Navbar from '@/components/layout/Navbar';
+import ConditionalNavbar from '@/components/layout/ConditionalNavbar';
 import AuthProvider from '@/components/providers/AuthProvider';
 import QueryProvider from '@/components/providers/QueryProvider';
 
@@ -98,7 +98,7 @@ export default function RootLayout({
       <body>
         <QueryProvider>
           <AuthProvider>
-            <Navbar />
+            <ConditionalNavbar />
             {children}
           </AuthProvider>
         </QueryProvider>
