@@ -44,6 +44,10 @@ export default function LandingPage() {
     }
   };
 
+  const handleInquiryClick = () => {
+    window.open('https://www.pluuug.com/', '_blank');
+  };
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -87,10 +91,10 @@ export default function LandingPage() {
               type="button"
               variant="primary"
               size="sm"
-              onClick={handleCTAClick}
+              onClick={handleInquiryClick}
               className="rounded-full px-6 py-2.5 text-sm font-black shadow-lg shadow-blue-100"
             >
-              무료 체험하기
+              무료 상담받기
             </Button>
           </div>
 
@@ -133,7 +137,7 @@ export default function LandingPage() {
             variant="primary"
             size="lg"
             onClick={() => {
-              handleCTAClick();
+              handleInquiryClick();
               setIsMenuOpen(false);
             }}
             className="mt-10 w-full"
@@ -170,7 +174,7 @@ export default function LandingPage() {
               type="button"
               variant="primary"
               size="lg"
-              onClick={handleCTAClick}
+              onClick={handleInquiryClick}
               icon={<ArrowRight size={20} />}
               iconPosition="right"
               className="w-full rounded-2xl px-12 py-5 text-xl font-black shadow-2xl shadow-slate-200 transition-all hover:scale-105 md:w-auto"
@@ -415,7 +419,7 @@ export default function LandingPage() {
                   type="button"
                   variant="primary"
                   size="lg"
-                  onClick={handleCTAClick}
+                  onClick={handleInquiryClick}
                   className="w-full rounded-3xl bg-white px-16 py-6 text-2xl font-black !text-indigo-600 shadow-2xl transition-all hover:scale-110 hover:bg-white hover:!text-indigo-700 active:scale-95 md:w-auto"
                 >
                   지금 상담받기
