@@ -78,7 +78,6 @@ export default function LoginPage() {
         {/* Right Side: Form Area */}
         <div className="flex flex-1 flex-col justify-center p-8 md:p-16">
           <div className="mx-auto w-full max-w-md">
-            {/* Header */}
             <div className="mb-10 text-center md:text-left">
               <h2 className="mb-2 text-3xl font-black text-slate-800">
                 Deckly에 오신것을 환영합니다!
@@ -86,7 +85,6 @@ export default function LoginPage() {
               <p className="font-medium text-slate-500">계정에 로그인하여 Deckly를 시작하세요.</p>
             </div>
 
-            {/* Auth Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
               <div>
                 <label className="mb-1.5 ml-1 block text-xs font-bold text-slate-500">
@@ -147,7 +145,6 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            {/* Footer Toggle */}
             <div className="mt-8 text-center">
               <p className="text-sm text-slate-500">
                 아직 계정이 없으신가요?
@@ -160,7 +157,6 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Go Back button */}
             <div className="mt-10 flex justify-center">
               <Link
                 href="/"
