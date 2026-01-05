@@ -116,19 +116,21 @@ export default function SignupPage() {
             </div>
 
             <h1 className="mb-6 text-4xl font-bold leading-tight">
-              아이디어를 <br />
-              <span className="text-indigo-200">완벽한 데크</span>로 만드세요.
+              복잡한 제안서 생성을 <br />
+              <span className="text-indigo-200">단 5분 만에</span> 끝내세요.
             </h1>
 
             <div className="space-y-4">
-              {['지능형 템플릿 추천', '실시간 팀 협업 도구', '강력한 데이터 시각화'].map(
-                (text, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <CheckCircle2 size={18} className="text-indigo-300" />
-                    <span className="text-sm font-medium text-indigo-100">{text}</span>
-                  </div>
-                ),
-              )}
+              {[
+                'AI 기반 맞춤형 제안서 초안 생성',
+                '데이터 시각화로 완성하는 압도적 설득력',
+                '성공 사례 분석 기반의 전략적 문구 추천',
+              ].map((text, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <CheckCircle2 size={18} className="text-indigo-300" />
+                  <span className="text-sm font-medium text-indigo-100">{text}</span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -244,7 +246,7 @@ export default function SignupPage() {
                 disabled={isSubmitting}
                 isLoading={isSubmitting}
               >
-                무료로 시작하기
+                Deckly 시작하기
               </Button>
             </form>
 
