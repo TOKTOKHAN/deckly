@@ -12,13 +12,11 @@ import {
   ArrowUpRight,
   CheckCircle2,
   MoreVertical,
-  RefreshCw,
-  AlertCircle,
-  CalendarDays,
 } from 'lucide-react';
-import Button from '@/components/ui/Button';
 import type { UserWithStats } from '@/lib/supabase/admin/users';
-import { useAuthStore } from '@/stores/authStore';
+import PageHeader from '@/components/admin/PageHeader';
+import LoadingState from '@/components/admin/LoadingState';
+import ErrorState from '@/components/admin/ErrorState';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -73,15 +71,6 @@ const StatCard = ({
 export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const { user } = useAuthStore();
-
-  // 오늘 날짜 포맷팅
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  });
 
   const {
     data: users,
@@ -132,82 +121,25 @@ export default function AdminUsersPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="mb-4 text-lg font-medium text-slate-600">사용자를 불러오는 중...</div>
-          <div className="text-sm text-slate-500">잠시만 기다려주세요.</div>
-        </div>
-      </div>
-    );
+    return <LoadingState message="사용자를 불러오는 중..." />;
   }
 
   if (isError) {
-    const errorMessage =
-      error instanceof Error ? error.message : '사용자를 불러오는 중 오류가 발생했습니다.';
-
-    // Service Role Key 관련 에러인지 확인
-    const isServiceRoleError =
-      errorMessage.includes('Service Role Key') || errorMessage.includes('어드민 클라이언트');
-
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="max-w-md rounded-xl border border-red-200 bg-red-50 p-6 text-center">
-          <div className="mb-4 flex justify-center">
-            <AlertCircle className="text-red-600" size={48} />
-          </div>
-          <h3 className="mb-2 text-lg font-bold text-red-900">오류 발생</h3>
-          <p className="mb-4 text-sm text-red-700">{errorMessage}</p>
-          {isServiceRoleError && (
-            <div className="mb-4 rounded-lg bg-red-100 p-3 text-left text-xs text-red-800">
-              <p className="font-semibold">해결 방법:</p>
-              <p className="mt-1">
-                .env.local 파일에{' '}
-                <code className="rounded bg-red-200 px-1">SUPABASE_SERVICE_ROLE_KEY</code>를
-                추가해주세요.
-              </p>
-            </div>
-          )}
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={() => refetch()}
-            icon={<RefreshCw size={16} />}
-          >
-            다시 시도
-          </Button>
-        </div>
-      </div>
-    );
+    return <ErrorState error={error} onRetry={() => refetch()} showServiceRoleKeyHelp={true} />;
   }
 
   return (
     <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
       <div className="animate-in fade-in mx-auto max-w-7xl space-y-12 duration-700">
-        {/* 상단 헤더 섹션 */}
-        <div className="flex flex-col justify-between gap-6 border-b border-slate-200 pb-2 md:flex-row md:items-end">
-          <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-blue-600">
-              <ShieldCheck size={12} /> Deckly Admin System
-            </div>
-            <h1 className="text-5xl font-black tracking-tighter text-slate-900">사용자 관리</h1>
-            <p className="mt-3 text-balance text-lg font-medium italic text-slate-500 opacity-80">
-              플랫폼 내 모든 사용자의 활동과 지표를 실시간으로 모니터링합니다.
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-1.5 sm:flex">
-              <CalendarDays size={14} className="text-slate-400" />
-              <span className="text-[11px] font-bold uppercase tracking-tighter text-slate-600">
-                {formattedDate}
-              </span>
-            </div>
-            <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-blue-600 text-xs font-black text-white shadow-lg shadow-blue-100 transition-transform hover:scale-105">
-              {user?.email?.substring(0, 2).toUpperCase() || 'AD'}
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          badge={{
+            icon: <ShieldCheck size={12} />,
+            text: 'Deckly Admin System',
+          }}
+          title="사용자 관리"
+          description="플랫폼 내 모든 사용자의 활동과 지표를 실시간으로 모니터링합니다."
+          className="border-b border-slate-200 pb-2"
+        />
 
         {/* 통계 그리드 */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

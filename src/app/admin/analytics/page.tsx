@@ -2,10 +2,11 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { BarChart3, Calendar, AlertCircle, RefreshCw, CalendarDays } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { BarChart3, Calendar } from 'lucide-react';
 import { ProposalStatsByDate } from '@/lib/supabase/admin/analytics';
-import { useAuthStore } from '@/stores/authStore';
+import PageHeader from '@/components/admin/PageHeader';
+import LoadingState from '@/components/admin/LoadingState';
+import ErrorState from '@/components/admin/ErrorState';
 
 async function fetchStats(start: string, end: string, interval: 'day' | 'week' | 'month') {
   const params = new URLSearchParams();
@@ -24,15 +25,6 @@ async function fetchStats(start: string, end: string, interval: 'day' | 'week' |
 export default function AdminAnalyticsPage() {
   const [dateRange, setDateRange] = useState<'week' | 'month' | '3months'>('month');
   const [interval, setInterval] = useState<'day' | 'week' | 'month'>('day');
-  const { user } = useAuthStore();
-
-  // 오늘 날짜 포맷팅
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  });
 
   // dateRange와 interval이 변경될 때만 날짜 범위 재계산
   const { start, end } = useMemo(() => {
@@ -67,23 +59,7 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900">통계 및 분석</h1>
-          <p className="mt-2 text-slate-600">제안서 생성 추이 및 통계</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="hidden items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-1.5 sm:flex">
-            <CalendarDays size={14} className="text-slate-400" />
-            <span className="text-[11px] font-bold uppercase tracking-tighter text-slate-600">
-              {formattedDate}
-            </span>
-          </div>
-          <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-blue-600 text-xs font-black text-white shadow-lg shadow-blue-100 transition-transform hover:scale-105">
-            {user?.email?.substring(0, 2).toUpperCase() || 'AD'}
-          </div>
-        </div>
-      </div>
+      <PageHeader title="통계 및 분석" description="제안서 생성 추이 및 통계" className="mb-8" />
 
       {/* 필터 */}
       <div className="mb-6 flex flex-wrap items-center gap-4">
@@ -115,38 +91,18 @@ export default function AdminAnalyticsPage() {
 
       {/* 에러 처리 */}
       {error && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-6">
-          <div className="flex items-start gap-4">
-            <AlertCircle className="mt-0.5 text-red-600" size={24} />
-            <div className="flex-1">
-              <h3 className="mb-1 font-bold text-red-900">
-                통계를 불러오는 중 오류가 발생했습니다.
-              </h3>
-              <p className="mb-4 text-sm text-red-700">
-                {error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
-              </p>
-              <Button
-                type="button"
-                variant="primary"
-                size="sm"
-                onClick={() => refetch()}
-                icon={<RefreshCw size={16} />}
-              >
-                다시 시도
-              </Button>
-            </div>
-          </div>
+        <div className="mb-6">
+          <ErrorState
+            error={error}
+            onRetry={() => refetch()}
+            title="통계를 불러오는 중 오류가 발생했습니다."
+          />
         </div>
       )}
 
       {/* 통계 표시 */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="mb-2 text-lg font-medium text-slate-600">통계를 불러오는 중...</div>
-            <div className="text-sm text-slate-500">잠시만 기다려주세요.</div>
-          </div>
-        </div>
+        <LoadingState message="통계를 불러오는 중..." />
       ) : stats && stats.length > 0 ? (
         <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
           <table className="w-full">

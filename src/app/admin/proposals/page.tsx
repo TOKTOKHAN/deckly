@@ -7,18 +7,17 @@ import {
   Search,
   Filter,
   AlertCircle,
-  RefreshCw,
   CheckCircle2,
   Clock,
   FileText,
   MoreVertical,
   Eye,
   Zap,
-  CalendarDays,
 } from 'lucide-react';
-import Button from '@/components/ui/Button';
 import { ProposalWithUser } from '@/lib/supabase/admin/proposals';
-import { useAuthStore } from '@/stores/authStore';
+import PageHeader from '@/components/admin/PageHeader';
+import LoadingState from '@/components/admin/LoadingState';
+import ErrorState from '@/components/admin/ErrorState';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -94,15 +93,6 @@ export default function AdminProposalsPage() {
   const [page, setPage] = useState(1);
   const [statusFilter] = useState<ProposalStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const { user } = useAuthStore();
-
-  // 오늘 날짜 포맷팅
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  });
 
   const {
     data: proposals,
@@ -146,31 +136,21 @@ export default function AdminProposalsPage() {
     setPage(1);
   };
 
+  if (isLoading) {
+    return <LoadingState message="제안서를 불러오는 중..." />;
+  }
+
   return (
     <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
       <div className="animate-in fade-in mx-auto max-w-7xl space-y-8 duration-700">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-blue-600">
-              <Zap size={12} /> Asset Management
-            </div>
-            <h1 className="text-5xl font-black tracking-tighter text-slate-900">제안서 관리</h1>
-            <p className="mt-3 text-lg font-medium italic text-slate-500 opacity-80">
-              플랫폼에서 생성된 모든 비즈니스 제안서의 현황을 확인합니다.
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-1.5 sm:flex">
-              <CalendarDays size={14} className="text-slate-400" />
-              <span className="text-[11px] font-bold uppercase tracking-tighter text-slate-600">
-                {formattedDate}
-              </span>
-            </div>
-            <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-blue-600 text-xs font-black text-white shadow-lg shadow-blue-100 transition-transform hover:scale-105">
-              {user?.email?.substring(0, 2).toUpperCase() || 'AD'}
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          badge={{
+            icon: <Zap size={12} />,
+            text: 'Asset Management',
+          }}
+          title="제안서 관리"
+          description="플랫폼에서 생성된 모든 비즈니스 제안서의 현황을 확인합니다."
+        />
 
         <div className="flex flex-col items-center gap-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/20 md:flex-row">
           <div className="relative w-full flex-1">
@@ -191,46 +171,18 @@ export default function AdminProposalsPage() {
         </div>
 
         {(proposalsError || countError) && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-6">
-            <div className="flex items-start gap-4">
-              <AlertCircle className="mt-0.5 text-red-600" size={24} />
-              <div className="flex-1">
-                <h3 className="mb-1 font-bold text-red-900">
-                  데이터를 불러오는 중 오류가 발생했습니다.
-                </h3>
-                <p className="mb-4 text-sm text-red-700">
-                  {proposalsError instanceof Error
-                    ? proposalsError.message
-                    : countError instanceof Error
-                      ? countError.message
-                      : '알 수 없는 오류가 발생했습니다.'}
-                </p>
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  onClick={() => {
-                    refetchProposals();
-                    refetchCount();
-                  }}
-                  icon={<RefreshCw size={16} />}
-                >
-                  다시 시도
-                </Button>
-              </div>
-            </div>
-          </div>
+          <ErrorState
+            error={proposalsError || countError}
+            onRetry={() => {
+              refetchProposals();
+              refetchCount();
+            }}
+            title="데이터를 불러오는 중 오류가 발생했습니다."
+          />
         )}
 
         {/* 제안서 테이블 카드 */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="mb-2 text-lg font-medium text-slate-600">제안서를 불러오는 중...</div>
-              <div className="text-sm text-slate-500">잠시만 기다려주세요.</div>
-            </div>
-          </div>
-        ) : filteredProposals && filteredProposals.length > 0 ? (
+        {filteredProposals && filteredProposals.length > 0 ? (
           <div className="overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/40">
             <div className="overflow-x-auto">
               <table className="w-full text-left">

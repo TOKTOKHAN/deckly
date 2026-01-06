@@ -11,13 +11,12 @@ import {
   ShieldCheck,
   ArrowUpRight,
   Activity,
-  RefreshCw,
   ChevronRight,
   Zap,
-  CalendarDays,
 } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { useAuthStore } from '@/stores/authStore';
+import PageHeader from '@/components/admin/PageHeader';
+import LoadingState from '@/components/admin/LoadingState';
+import ErrorState from '@/components/admin/ErrorState';
 
 async function fetchDashboardStats() {
   const response = await fetch('/api/admin/analytics/dashboard');
@@ -70,7 +69,6 @@ const DashboardStatCard = ({
 );
 
 export default function AdminDashboard() {
-  const { user } = useAuthStore();
   const {
     data: stats,
     isLoading,
@@ -84,40 +82,11 @@ export default function AdminDashboard() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="mb-4 text-lg font-medium text-slate-600">통계를 불러오는 중...</div>
-          <div className="text-sm text-slate-500">잠시만 기다려주세요.</div>
-        </div>
-      </div>
-    );
+    return <LoadingState message="통계를 불러오는 중..." />;
   }
 
   if (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : '통계를 불러오는 중 오류가 발생했습니다.';
-
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="max-w-md rounded-xl border border-red-200 bg-red-50 p-6 text-center">
-          <div className="mb-4 flex justify-center">
-            <AlertCircle className="text-red-600" size={48} />
-          </div>
-          <h3 className="mb-2 text-lg font-bold text-red-900">오류 발생</h3>
-          <p className="mb-4 text-sm text-red-700">{errorMessage}</p>
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={() => refetch()}
-            icon={<RefreshCw size={16} />}
-          >
-            다시 시도
-          </Button>
-        </div>
-      </div>
-    );
+    return <ErrorState error={error} onRetry={() => refetch()} />;
   }
 
   // 성공률 계산
@@ -132,14 +101,7 @@ export default function AdminDashboard() {
       ? Math.round((stats.completedProposals / stats.totalProposals) * 100 * 10) / 10
       : 0;
 
-  // 오늘 날짜 포맷팅
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  });
-  const formattedTime = today.toLocaleTimeString('ko-KR', {
+  const formattedTime = new Date().toLocaleTimeString('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
   });
@@ -147,33 +109,22 @@ export default function AdminDashboard() {
   return (
     <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
       <div className="animate-in fade-in mx-auto max-w-7xl space-y-12 duration-700">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-indigo-600">
-              <ShieldCheck size={12} /> System Administrator
-            </div>
-            <h1 className="flex items-center gap-4 text-5xl font-black tracking-tighter text-slate-900">
+        <PageHeader
+          badge={{
+            icon: <ShieldCheck size={12} />,
+            text: 'System Administrator',
+            className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
+          }}
+          title={
+            <>
               어드민 대시보드
               <span className="rounded-2xl bg-blue-50 px-3 py-1 text-sm font-black tracking-normal text-blue-600">
                 Live
               </span>
-            </h1>
-            <p className="mt-3 text-lg font-medium italic text-slate-500 opacity-80">
-              실시간 시스템 지표와 제안서 생성 현황을 확인하세요.
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-1.5 sm:flex">
-              <CalendarDays size={14} className="text-slate-400" />
-              <span className="text-[11px] font-bold uppercase tracking-tighter text-slate-600">
-                {formattedDate}
-              </span>
-            </div>
-            <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-blue-600 text-xs font-black text-white shadow-lg shadow-blue-100 transition-transform hover:scale-105">
-              {user?.email?.substring(0, 2).toUpperCase() || 'AD'}
-            </div>
-          </div>
-        </div>
+            </>
+          }
+          description="실시간 시스템 지표와 제안서 생성 현황을 확인하세요."
+        />
 
         {/* 1. 핵심 지표 섹션 (Primary Metrics) */}
         <section className="space-y-6">
