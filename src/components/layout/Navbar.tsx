@@ -10,7 +10,7 @@ import Modal from '@/components/ui/Modal';
 
 export default function Navbar() {
   const router = useRouter();
-  const { user, isLoading, logout } = useAuthStore();
+  const { user, isLoading, logout, isAdmin } = useAuthStore();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = async () => {
@@ -41,6 +41,18 @@ export default function Navbar() {
               <span className="text-sm font-medium text-slate-700">
                 {user?.user_metadata?.name || user?.email || '사용자'}
               </span>
+              {isAdmin && (
+                <Link href="/admin">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-slate-600 hover:text-slate-900"
+                  >
+                    관리자
+                  </Button>
+                </Link>
+              )}
               <Button
                 type="button"
                 variant="ghost"
