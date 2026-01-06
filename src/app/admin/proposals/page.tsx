@@ -3,21 +3,12 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ProposalStatus } from '@/types/proposal';
-import {
-  Search,
-  Filter,
-  AlertCircle,
-  CheckCircle2,
-  Clock,
-  FileText,
-  MoreVertical,
-  Eye,
-  Zap,
-} from 'lucide-react';
+import { Search, Filter, MoreVertical, Eye, Zap } from 'lucide-react';
 import { ProposalWithUser } from '@/lib/supabase/admin/proposals';
 import PageHeader from '@/components/admin/PageHeader';
 import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
+import StatusBadge from '@/components/admin/StatusBadge';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -51,43 +42,6 @@ async function fetchProposalsCount(statusFilter: ProposalStatus | 'all') {
   const data = await response.json();
   return data.count;
 }
-
-/* 상태 배지 컴포넌트 */
-const StatusBadge = ({ status }: { status: ProposalStatus }) => {
-  const configs = {
-    completed: {
-      label: '완료',
-      color: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-      icon: CheckCircle2,
-    },
-    generating: {
-      label: '생성 중',
-      color: 'bg-blue-50 text-blue-600 border-blue-100',
-      icon: Clock,
-    },
-    draft: {
-      label: '초안',
-      color: 'bg-slate-50 text-slate-500 border-slate-100',
-      icon: FileText,
-    },
-    error: {
-      label: '에러',
-      color: 'bg-red-50 text-red-500 border-red-100',
-      icon: AlertCircle,
-    },
-  };
-  const config = configs[status] || configs.draft;
-  const Icon = config.icon;
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-wider ${config.color}`}
-    >
-      <Icon size={10} />
-      {config.label}
-    </span>
-  );
-};
 
 export default function AdminProposalsPage() {
   const [page, setPage] = useState(1);

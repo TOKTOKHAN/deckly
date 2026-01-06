@@ -9,7 +9,6 @@ import {
   Clock,
   TrendingUp,
   ShieldCheck,
-  ArrowUpRight,
   Activity,
   ChevronRight,
   Zap,
@@ -17,6 +16,7 @@ import {
 import PageHeader from '@/components/admin/PageHeader';
 import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
+import StatCard from '@/components/admin/StatCard';
 
 async function fetchDashboardStats() {
   const response = await fetch('/api/admin/analytics/dashboard');
@@ -26,47 +26,6 @@ async function fetchDashboardStats() {
   }
   return response.json();
 }
-
-/* 대시보드 전용 통계 카드 컴포넌트 */
-const DashboardStatCard = ({
-  title,
-  value,
-  icon: Icon,
-  colorClass,
-  trend,
-  subText,
-}: {
-  title: string;
-  value: number;
-  icon: React.ComponentType<{ size?: number | string; className?: string }>;
-  colorClass: string;
-  trend?: string;
-  subText?: string;
-}) => (
-  <div className="group rounded-[2.5rem] border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 transition-all duration-500 hover:border-blue-200 hover:shadow-2xl">
-    <div className="mb-6 flex items-start justify-between">
-      <div
-        className={`${colorClass} rounded-2xl p-4 text-white shadow-lg transition-transform duration-500 group-hover:scale-110`}
-      >
-        <Icon size={24} />
-      </div>
-      {trend && (
-        <div className="flex items-center gap-1 rounded-lg bg-green-50 px-2.5 py-1 text-xs font-black text-green-500">
-          <ArrowUpRight size={14} /> {trend}
-        </div>
-      )}
-    </div>
-    <div>
-      <p className="mb-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-        {title}
-      </p>
-      <h4 className="mb-2 text-4xl font-black tracking-tighter text-slate-900">
-        {value.toLocaleString()}
-      </h4>
-      {subText && <p className="text-xs font-medium italic text-slate-400 opacity-70">{subText}</p>}
-    </div>
-  </div>
-);
 
 export default function AdminDashboard() {
   const {
@@ -135,24 +94,27 @@ export default function AdminDashboard() {
             </h3>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <DashboardStatCard
+            <StatCard
+              variant="dashboard"
               title="Total Proposals"
               value={stats?.totalProposals || 0}
-              icon={FileText}
+              icon={<FileText size={24} />}
               colorClass="bg-blue-600"
               subText="누적 제안서 생성량"
             />
-            <DashboardStatCard
+            <StatCard
+              variant="dashboard"
               title="Total Users"
               value={stats?.totalUsers || 0}
-              icon={Users}
+              icon={<Users size={24} />}
               colorClass="bg-indigo-600"
               subText="플랫폼 가입 사용자"
             />
-            <DashboardStatCard
+            <StatCard
+              variant="dashboard"
               title="Success Rate"
               value={stats?.completedProposals || 0}
-              icon={CheckCircle2}
+              icon={<CheckCircle2 size={24} />}
               colorClass="bg-emerald-500"
               trend={`${successRate}%`}
               subText="제안서 최종 생성 완료"

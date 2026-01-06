@@ -9,7 +9,6 @@ import {
   Calendar,
   ShieldCheck,
   Activity,
-  ArrowUpRight,
   CheckCircle2,
   MoreVertical,
 } from 'lucide-react';
@@ -17,6 +16,7 @@ import type { UserWithStats } from '@/lib/supabase/admin/users';
 import PageHeader from '@/components/admin/PageHeader';
 import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
+import StatCard from '@/components/admin/StatCard';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,45 +28,6 @@ async function fetchUsers(): Promise<UserWithStats[]> {
   }
   return response.json();
 }
-
-/**
- * 통계 카드 컴포넌트
- */
-const StatCard = ({
-  label,
-  value,
-  icon,
-  color,
-  trend,
-  subText,
-}: {
-  label: string;
-  value: string | number;
-  icon: React.ReactNode;
-  color: string;
-  trend?: string;
-  subText?: string;
-}) => (
-  <div className="group rounded-[2rem] border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 transition-all duration-300 hover:border-blue-200">
-    <div className="mb-6 flex items-start justify-between">
-      <div
-        className={`${color} rounded-2xl p-4 text-white shadow-lg shadow-indigo-100 transition-transform group-hover:scale-110`}
-      >
-        {icon}
-      </div>
-      {trend && (
-        <div className="flex items-center gap-1 rounded-lg bg-green-50 px-2 py-1 text-xs font-black text-green-500">
-          <ArrowUpRight size={12} /> {trend}
-        </div>
-      )}
-    </div>
-    <div>
-      <p className="mb-1 text-xs font-black uppercase tracking-widest text-slate-400">{label}</p>
-      <h4 className="mb-2 text-4xl font-black tracking-tighter text-slate-900">{value}</h4>
-      {subText && <p className="text-xs font-medium italic text-slate-400">{subText}</p>}
-    </div>
-  </div>
-);
 
 export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -144,24 +105,24 @@ export default function AdminUsersPage() {
         {/* 통계 그리드 */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <StatCard
-            label="Total Users"
+            title="Total Users"
             value={totalUsers.toLocaleString()}
             icon={<Users size={26} />}
-            color="bg-blue-600"
+            colorClass="bg-blue-600"
             subText="전체 등록된 사용자 수"
           />
           <StatCard
-            label="Active Accounts"
+            title="Active Accounts"
             value={activeUsers.toLocaleString()}
             icon={<Activity size={26} />}
-            color="bg-indigo-600"
+            colorClass="bg-indigo-600"
             subText="최근 30일 내 활동 사용자"
           />
           <StatCard
-            label="Total Decks"
+            title="Total Decks"
             value={totalProposals.toLocaleString()}
             icon={<FileText size={26} />}
-            color="bg-slate-900"
+            colorClass="bg-slate-900"
             subText="AI 제안서 생성 가속화"
           />
         </div>
