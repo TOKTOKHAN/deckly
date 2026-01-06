@@ -381,7 +381,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="mt-12 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-blue-600">
-                Learn more <ChevronRight size={16} />
+                Experience the Speed <ChevronRight size={16} />
               </div>
             </div>
 
@@ -397,7 +397,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="mt-12 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-indigo-600">
-                Security Whitepaper <ChevronRight size={16} />
+                AI Conversion Whitepaper <ChevronRight size={16} />
               </div>
             </div>
           </div>
