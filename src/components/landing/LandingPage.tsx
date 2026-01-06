@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   ArrowRight,
   Mic,
@@ -15,16 +15,12 @@ import {
   X,
   Clock,
   Layers,
-  BarChart3,
   Search,
   Layout,
 } from 'lucide-react';
-import { useAuthStore } from '@/stores/authStore';
 import Button from '@/components/ui/Button';
 
 export default function LandingPage() {
-  const router = useRouter();
-  const { user } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -35,14 +31,6 @@ export default function LandingPage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleCTAClick = () => {
-    if (user) {
-      router.push('/dashboard');
-    } else {
-      router.push('/signup');
-    }
-  };
 
   const handleInquiryClick = () => {
     window.open('https://www.pluuug.com/', '_blank');
@@ -340,21 +328,35 @@ export default function LandingPage() {
                 ))}
               </div>
             </div>
-            <div className="relative flex-1">
-              <div className="group relative z-10 flex aspect-[4/3] cursor-default items-center justify-center overflow-hidden rounded-3xl border border-slate-700 bg-slate-800 p-4 shadow-2xl">
-                <div className="text-center">
-                  <BarChart3
-                    size={64}
-                    className="mx-auto mb-6 text-blue-500 transition-transform duration-500 group-hover:scale-110"
+            {/* 스크린샷 2장이 겹쳐진 비주얼 영역 */}
+            <div className="relative flex h-[480px] w-full flex-1 items-center justify-center">
+              <div className="group absolute left-0 top-0 z-10 w-4/5 transition-all duration-700 hover:z-30">
+                <div className="relative aspect-[4/3] -rotate-3 transform overflow-hidden rounded-[2.5rem] border-4 border-slate-700 bg-slate-800 shadow-2xl transition-transform duration-500 hover:rotate-0">
+                  <Image
+                    src="/images/inputs-screenshot.png"
+                    alt="Meeting Transcription Screenshot"
+                    fill
+                    quality={95}
+                    priority
+                    className="object-cover opacity-90 group-hover:opacity-100"
                   />
-                  <p className="text-lg font-black uppercase italic tracking-widest text-slate-400">
-                    Analysis Module v2.0
-                  </p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                  <div className="absolute bottom-6 left-6 flex items-center gap-2"></div>
                 </div>
               </div>
-              {/* Floating Tags */}
-              <div className="absolute -left-6 -top-6 z-10 animate-bounce rounded-2xl bg-blue-600 px-6 py-3 text-sm font-black shadow-xl">
-                Accuracy 99.8%
+
+              {/* 2. 생성된 제안서 스크린샷 (상단/우측 배치) */}
+              <div className="group absolute bottom-0 right-0 z-20 w-4/5 transition-all duration-700 hover:z-30">
+                <div className="relative aspect-[4/3] rotate-3 transform overflow-hidden rounded-[2.5rem] border-4 border-slate-100 bg-white shadow-[0_30px_60px_rgba(0,0,0,0.3)] transition-transform duration-500 hover:rotate-0">
+                  <Image
+                    src="/images/transcript-screenshot.png"
+                    alt="Generated Proposal Screenshot"
+                    fill
+                    quality={95}
+                    priority
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>
