@@ -13,8 +13,6 @@ import {
   CheckCircle2,
   MoreVertical,
   RefreshCw,
-  Filter,
-  UserPlus,
   AlertCircle,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
@@ -177,7 +175,7 @@ export default function AdminUsersPage() {
     <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
       <div className="animate-in fade-in mx-auto max-w-7xl space-y-12 duration-700">
         {/* 상단 헤더 섹션 */}
-        <div className="flex flex-col justify-between gap-6 border-b border-slate-200 pb-8 md:flex-row md:items-end">
+        <div className="flex flex-col justify-between gap-6 border-b border-slate-200 pb-2 md:flex-row md:items-end">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-blue-600">
               <ShieldCheck size={12} /> Deckly Admin System

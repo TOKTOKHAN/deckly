@@ -26,6 +26,24 @@ body {
   }
 }
 
+/* Admin 사이드바 스크롤바 커스텀 */
+.admin-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
 /* A4 미리보기 스타일 (화면 표시용) */
 .a4-preview-container {
   width: 210mm;

@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, FileText, Users, BarChart3, Settings } from 'lucide-react';
 
 const menuItems = [
@@ -12,57 +12,109 @@ const menuItems = [
   { href: '/admin/settings', label: '설정', icon: Settings },
 ];
 
-export default function AdminSidebar() {
+/* 사이드바 아이템 컴포넌트 */
+const SidebarItem = ({
+  icon: Icon,
+  label,
+  isActive,
+  onClick,
+}: {
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={`group mb-1 flex w-full items-center justify-between rounded-2xl px-4 py-3.5 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:translate-x-1 ${
+      isActive
+        ? 'bg-blue-600 text-white shadow-lg shadow-blue-100'
+        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+    }`}
+  >
+    <div className="flex items-center gap-3">
+      <Icon
+        size={20}
+        className={
+          isActive ? 'text-white' : 'text-slate-500 transition-colors group-hover:text-blue-600'
+        }
+      />
+      <span
+        className={`text-sm font-black tracking-tight ${isActive ? 'text-white' : 'text-slate-600'}`}
+      >
+        {label}
+      </span>
+    </div>
+    {isActive && <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-white"></div>}
+  </button>
+);
+
+export default function AdminSidebar({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // 모바일에서 사이드바가 열릴 때 body 스크롤 방지
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r border-gray-200 bg-white">
-      <div className="flex h-full flex-col">
-        {/* 로고 */}
-        <div className="border-b border-gray-200 p-6">
-          <Link href="/admin" className="flex items-center gap-2">
-            <div className="rounded-lg bg-indigo-600 p-2">
-              <LayoutDashboard className="text-white" size={20} />
-            </div>
-            <span className="text-xl font-black tracking-tighter text-slate-800">Admin</span>
-          </Link>
+    <>
+      {/* 모바일 오버레이 */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* 사이드바 */}
+      <aside
+        className={`admin-sidebar fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto border-r border-slate-100 bg-white transition-transform duration-500 ease-in-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        } md:relative md:translate-x-0`}
+      >
+        <div className="flex h-full flex-col p-6">
+          {/* 메인 메뉴 내비게이션 */}
+          <nav className="flex-1">
+            <p className="mb-4 px-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">
+              Main Menu
+            </p>
+            {menuItems.map(item => {
+              const Icon = item.icon;
+              const isActive =
+                pathname === item.href ||
+                (item.href !== '/admin' && pathname.startsWith(item.href));
+
+              return (
+                <SidebarItem
+                  key={item.href}
+                  icon={Icon}
+                  label={item.label}
+                  isActive={isActive}
+                  onClick={() => {
+                    router.push(item.href);
+                    setIsOpen(false);
+                  }}
+                />
+              );
+            })}
+          </nav>
         </div>
-
-        {/* 메뉴 */}
-        <nav className="flex-1 space-y-1 p-4">
-          {menuItems.map(item => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-indigo-50 text-indigo-600'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                <Icon size={20} />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* 하단 링크 */}
-        <div className="border-t border-gray-200 p-4">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
-          >
-            <FileText size={20} />
-            일반 대시보드로 이동
-          </Link>
-        </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
-
