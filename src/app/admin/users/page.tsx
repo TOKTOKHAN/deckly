@@ -14,9 +14,11 @@ import {
   MoreVertical,
   RefreshCw,
   AlertCircle,
+  CalendarDays,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import type { UserWithStats } from '@/lib/supabase/admin/users';
+import { useAuthStore } from '@/stores/authStore';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -71,6 +73,15 @@ const StatCard = ({
 export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const { user } = useAuthStore();
+
+  // 오늘 날짜 포맷팅
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  });
 
   const {
     data: users,
@@ -184,6 +195,17 @@ export default function AdminUsersPage() {
             <p className="mt-3 text-balance text-lg font-medium italic text-slate-500 opacity-80">
               플랫폼 내 모든 사용자의 활동과 지표를 실시간으로 모니터링합니다.
             </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="hidden items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-1.5 sm:flex">
+              <CalendarDays size={14} className="text-slate-400" />
+              <span className="text-[11px] font-bold uppercase tracking-tighter text-slate-600">
+                {formattedDate}
+              </span>
+            </div>
+            <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-blue-600 text-xs font-black text-white shadow-lg shadow-blue-100 transition-transform hover:scale-105">
+              {user?.email?.substring(0, 2).toUpperCase() || 'AD'}
+            </div>
           </div>
         </div>
 

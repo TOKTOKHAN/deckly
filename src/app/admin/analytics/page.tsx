@@ -2,9 +2,10 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { BarChart3, Calendar, AlertCircle, RefreshCw } from 'lucide-react';
+import { BarChart3, Calendar, AlertCircle, RefreshCw, CalendarDays } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ProposalStatsByDate } from '@/lib/supabase/admin/analytics';
+import { useAuthStore } from '@/stores/authStore';
 
 async function fetchStats(start: string, end: string, interval: 'day' | 'week' | 'month') {
   const params = new URLSearchParams();
@@ -23,6 +24,15 @@ async function fetchStats(start: string, end: string, interval: 'day' | 'week' |
 export default function AdminAnalyticsPage() {
   const [dateRange, setDateRange] = useState<'week' | 'month' | '3months'>('month');
   const [interval, setInterval] = useState<'day' | 'week' | 'month'>('day');
+  const { user } = useAuthStore();
+
+  // 오늘 날짜 포맷팅
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  });
 
   // dateRange와 interval이 변경될 때만 날짜 범위 재계산
   const { start, end } = useMemo(() => {
@@ -57,9 +67,22 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-black text-slate-900">통계 및 분석</h1>
-        <p className="mt-2 text-slate-600">제안서 생성 추이 및 통계</p>
+      <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900">통계 및 분석</h1>
+          <p className="mt-2 text-slate-600">제안서 생성 추이 및 통계</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="hidden items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-1.5 sm:flex">
+            <CalendarDays size={14} className="text-slate-400" />
+            <span className="text-[11px] font-bold uppercase tracking-tighter text-slate-600">
+              {formattedDate}
+            </span>
+          </div>
+          <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl bg-blue-600 text-xs font-black text-white shadow-lg shadow-blue-100 transition-transform hover:scale-105">
+            {user?.email?.substring(0, 2).toUpperCase() || 'AD'}
+          </div>
+        </div>
       </div>
 
       {/* 필터 */}
