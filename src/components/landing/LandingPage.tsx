@@ -386,10 +386,12 @@ export default function LandingPage() {
             <div className="group flex flex-col justify-between rounded-[3rem] border border-slate-100 bg-white p-12 shadow-xl transition-all hover:border-indigo-600/30">
               <div>
                 <ShieldCheck className="mb-8 text-indigo-600" size={40} />
-                <h3 className="mb-6 text-3xl font-black text-slate-900">엔터프라이즈 보안</h3>
+                <h3 className="mb-6 text-3xl font-black text-slate-900">
+                  승률을 높이는 전략 인사이트
+                </h3>
                 <p className="text-lg font-medium leading-relaxed text-slate-500">
-                  당신의 비즈니스 기밀은 안전합니다. 업계 최고 수준의 암호화 기술과 데이터 처리
-                  가이드라인을 준수하여, 모든 미팅 정보는 오직 당신의 팀만을 위해 존재합니다.
+                  AI가 계약 성사 확률을 높이는 최적의 구조와 핵심 문구를 추천합니다. 단순한 기록
+                  정리가 아닌, 고객을 설득하는 가장 강력한 도구가 되어 드립니다.
                 </p>
               </div>
               <div className="mt-12 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-indigo-600">

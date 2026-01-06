@@ -1,12 +1,23 @@
 'use client';
 
-import Link from 'next/link';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Home, ArrowLeft, Search, Globe, LifeBuoy, Layout } from 'lucide-react';
+import { Home, ArrowLeft } from 'lucide-react';
+import { useNotFound } from '@/contexts/NotFoundContext';
 import Button from '@/components/ui/Button';
 
 export default function NotFound() {
   const router = useRouter();
+  const { setIsNotFound } = useNotFound();
+
+  useEffect(() => {
+    setIsNotFound(true);
+
+    return () => {
+      // 컴포넌트 언마운트 시 상태 복원
+      setIsNotFound(false);
+    };
+  }, [setIsNotFound]);
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-white font-sans text-slate-900">

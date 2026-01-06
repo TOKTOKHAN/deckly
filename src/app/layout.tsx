@@ -3,6 +3,7 @@ import './globals.css';
 import ConditionalNavbar from '@/components/layout/ConditionalNavbar';
 import AuthProvider from '@/components/providers/AuthProvider';
 import QueryProvider from '@/components/providers/QueryProvider';
+import { NotFoundProvider } from '@/contexts/NotFoundContext';
 
 export const metadata: Metadata = {
   title: {
@@ -96,12 +97,14 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <QueryProvider>
-          <AuthProvider>
-            <ConditionalNavbar />
-            {children}
-          </AuthProvider>
-        </QueryProvider>
+        <NotFoundProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <ConditionalNavbar />
+              {children}
+            </AuthProvider>
+          </QueryProvider>
+        </NotFoundProvider>
       </body>
     </html>
   );
