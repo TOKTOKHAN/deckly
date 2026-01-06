@@ -77,7 +77,7 @@ export default function AdminDashboard() {
           title={
             <>
               어드민 대시보드
-              <span className="rounded-2xl bg-blue-50 px-3 py-1 text-sm font-black tracking-normal text-blue-600">
+              <span className="ml-4 rounded-2xl bg-blue-50 px-3 py-1 text-sm font-black tracking-normal text-blue-600">
                 Live
               </span>
             </>
