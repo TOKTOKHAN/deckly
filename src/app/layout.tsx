@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import Navbar from '@/components/layout/Navbar';
+import ConditionalNavbar from '@/components/layout/ConditionalNavbar';
 import AuthProvider from '@/components/providers/AuthProvider';
 import QueryProvider from '@/components/providers/QueryProvider';
+import { NotFoundProvider } from '@/contexts/NotFoundContext';
 
 export const metadata: Metadata = {
   title: {
@@ -96,12 +97,14 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <QueryProvider>
-          <AuthProvider>
-            <Navbar />
-            {children}
-          </AuthProvider>
-        </QueryProvider>
+        <NotFoundProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <ConditionalNavbar />
+              {children}
+            </AuthProvider>
+          </QueryProvider>
+        </NotFoundProvider>
       </body>
     </html>
   );
