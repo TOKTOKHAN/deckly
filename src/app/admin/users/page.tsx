@@ -14,11 +14,11 @@ import {
 } from 'lucide-react';
 import type { UserWithStats } from '@/lib/supabase/admin/users';
 import PageHeader from '@/components/admin/PageHeader';
-import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
 import StatCard from '@/components/admin/StatCard';
 import Pagination from '@/components/admin/Pagination';
 import EmptyState from '@/components/admin/EmptyState';
+import UsersPageSkeleton from '@/components/skeletons/UsersPageSkeleton';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -84,7 +84,7 @@ export default function AdminUsersPage() {
   };
 
   if (isLoading) {
-    return <LoadingState message="사용자를 불러오는 중..." />;
+    return <UsersPageSkeleton />;
   }
 
   if (isError) {

@@ -12,6 +12,7 @@ import StatusBadge from '@/components/admin/StatusBadge';
 import SearchBar from '@/components/admin/SearchBar';
 import Pagination from '@/components/admin/Pagination';
 import EmptyState from '@/components/admin/EmptyState';
+import ProposalsPageSkeleton from '@/components/skeletons/ProposalsPageSkeleton';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -94,7 +95,13 @@ export default function AdminProposalsPage() {
   };
 
   if (isLoading) {
-    return <LoadingState message="제안서를 불러오는 중..." />;
+    return (
+      <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
+        <div className="animate-in fade-in mx-auto max-w-7xl space-y-8 duration-700">
+          <ProposalsPageSkeleton />
+        </div>
+      </div>
+    );
   }
 
   return (

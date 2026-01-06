@@ -21,19 +21,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [user, isAdmin, isLoading, router]);
 
-  // 로딩 중이거나 권한이 없으면 아무것도 렌더링하지 않음
-  if (isLoading || !user || !isAdmin) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mb-4 text-lg font-medium text-slate-600">로딩 중...</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC] font-sans text-slate-900 selection:bg-blue-100">
+    <div className="flex min-h-[calc(100vh-64px)] bg-[#F8FAFC] font-sans text-slate-900 selection:bg-blue-100">
       <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
 
       {/* 메인 콘텐츠 */}

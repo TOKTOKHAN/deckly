@@ -17,6 +17,7 @@ import PageHeader from '@/components/admin/PageHeader';
 import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
 import StatCard from '@/components/admin/StatCard';
+import DashboardPageSkeleton from '@/components/skeletons/DashboardPageSkeleton';
 
 async function fetchDashboardStats() {
   const response = await fetch('/api/admin/analytics/dashboard');
@@ -41,7 +42,13 @@ export default function AdminDashboard() {
   });
 
   if (isLoading) {
-    return <LoadingState message="통계를 불러오는 중..." />;
+    return (
+      <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
+        <div className="animate-in fade-in mx-auto max-w-7xl space-y-12 duration-700">
+          <DashboardPageSkeleton />
+        </div>
+      </div>
+    );
   }
 
   if (error) {

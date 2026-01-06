@@ -7,6 +7,7 @@ import { LogOut, Layout } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import NavbarSkeleton from '@/components/skeletons/NavbarSkeleton';
 
 export default function Navbar() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function Navbar() {
   };
 
   if (isLoading) {
-    return null;
+    return <NavbarSkeleton />;
   }
 
   const isAuthenticated = !!user;
