@@ -17,6 +17,8 @@ import PageHeader from '@/components/admin/PageHeader';
 import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
 import StatCard from '@/components/admin/StatCard';
+import Pagination from '@/components/admin/Pagination';
+import EmptyState from '@/components/admin/EmptyState';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -231,9 +233,7 @@ export default function AdminUsersPage() {
                 ) : (
                   <tr>
                     <td colSpan={6} className="px-12 py-12 text-center">
-                      <div className="text-lg font-medium text-slate-600">
-                        {searchQuery ? '검색 결과가 없습니다.' : '사용자가 없습니다.'}
-                      </div>
+                      <EmptyState searchQuery={searchQuery} defaultMessage="사용자가 없습니다." />
                     </td>
                   </tr>
                 )}
@@ -243,55 +243,17 @@ export default function AdminUsersPage() {
 
           {/* 하단 페이지네이션 섹션 */}
           {filteredUsers && filteredUsers.length > 0 && (
-            <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-100 bg-slate-50/30 px-10 py-8 sm:flex-row">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)} of{' '}
-                {filteredUsers.length} entries
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-bold text-slate-400 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  이전
-                </button>
-                <div className="flex gap-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum: number;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold transition-all ${
-                          currentPage === pageNum
-                            ? 'bg-blue-600 text-white'
-                            : 'cursor-pointer text-slate-400 hover:bg-slate-100'
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-                </div>
-                <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-blue-100 transition-all hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  다음
-                </button>
-              </div>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={filteredUsers.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              onPageChange={setCurrentPage}
+              itemLabel="entries"
+              showPageNumbers={true}
+              prevLabel="이전"
+              nextLabel="다음"
+            />
           )}
         </div>
       </div>

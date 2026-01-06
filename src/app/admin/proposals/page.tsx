@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ProposalStatus } from '@/types/proposal';
-import { Search, Filter, MoreVertical, Eye, Zap } from 'lucide-react';
+import { MoreVertical, Eye, Zap } from 'lucide-react';
 import { ProposalWithUser } from '@/lib/supabase/admin/proposals';
 import PageHeader from '@/components/admin/PageHeader';
 import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
 import StatusBadge from '@/components/admin/StatusBadge';
+import SearchBar from '@/components/admin/SearchBar';
+import Pagination from '@/components/admin/Pagination';
+import EmptyState from '@/components/admin/EmptyState';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -106,23 +109,12 @@ export default function AdminProposalsPage() {
           description="플랫폼에서 생성된 모든 비즈니스 제안서의 현황을 확인합니다."
         />
 
-        <div className="flex flex-col items-center gap-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/20 md:flex-row">
-          <div className="relative w-full flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
-            <input
-              type="text"
-              placeholder="제안서 제목, 고객사 또는 담당자 검색..."
-              value={searchQuery}
-              onChange={e => handleSearchChange(e.target.value)}
-              className="w-full rounded-2xl border-none bg-slate-50 py-3.5 pl-12 pr-4 text-sm font-medium outline-none transition-all focus:ring-4 focus:ring-blue-50"
-            />
-          </div>
-          <div className="flex w-full gap-3 md:w-auto">
-            <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3.5 text-sm font-black text-slate-600 transition-all hover:bg-slate-50 md:flex-none">
-              <Filter size={16} /> 필터
-            </button>
-          </div>
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="제안서 제목, 고객사 또는 담당자 검색..."
+          showFilter={true}
+        />
 
         {(proposalsError || countError) && (
           <ErrorState
@@ -201,39 +193,18 @@ export default function AdminProposalsPage() {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/30 px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                <div>
-                  Showing {((page - 1) * ITEMS_PER_PAGE + 1).toLocaleString()} to{' '}
-                  {Math.min(page * ITEMS_PER_PAGE, totalCount || 0).toLocaleString()} of{' '}
-                  {(totalCount || 0).toLocaleString()} proposals
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setPage(p => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Prev
-                  </button>
-                  <button
-                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                    className="rounded-xl bg-blue-600 px-4 py-2 text-white shadow-lg shadow-blue-100 transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                totalItems={totalCount || 0}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setPage}
+                itemLabel="proposals"
+              />
             )}
           </div>
         ) : (
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="text-lg font-medium text-slate-600">
-                {searchQuery ? '검색 결과가 없습니다.' : '제안서가 없습니다.'}
-              </div>
-            </div>
-          </div>
+          <EmptyState searchQuery={searchQuery} defaultMessage="제안서가 없습니다." />
         )}
       </div>
     </div>

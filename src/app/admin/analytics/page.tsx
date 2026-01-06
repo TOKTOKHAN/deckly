@@ -7,6 +7,7 @@ import { ProposalStatsByDate } from '@/lib/supabase/admin/analytics';
 import PageHeader from '@/components/admin/PageHeader';
 import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
+import EmptyState from '@/components/admin/EmptyState';
 
 async function fetchStats(start: string, end: string, interval: 'day' | 'week' | 'month') {
   const params = new URLSearchParams();
@@ -135,11 +136,7 @@ export default function AdminAnalyticsPage() {
           </table>
         </div>
       ) : (
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="text-lg font-medium text-slate-600">통계 데이터가 없습니다.</div>
-          </div>
-        </div>
+        <EmptyState defaultMessage="통계 데이터가 없습니다." />
       )}
     </div>
   );
