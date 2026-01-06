@@ -1,13 +1,36 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getDashboardStats } from '@/lib/supabase/admin/analytics';
-import { FileText, Users, CheckCircle2, AlertCircle, Clock, TrendingUp } from 'lucide-react';
+import {
+  FileText,
+  Users,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  TrendingUp,
+  RefreshCw,
+} from 'lucide-react';
+import Button from '@/components/ui/Button';
+
+async function fetchDashboardStats() {
+  const response = await fetch('/api/admin/analytics/dashboard');
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || '통계를 불러오는 중 오류가 발생했습니다.');
+  }
+  return response.json();
+}
 
 export default function AdminDashboard() {
-  const { data: stats, isLoading, error } = useQuery({
+  const {
+    data: stats,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['admin', 'dashboard-stats'],
-    queryFn: getDashboardStats,
+    queryFn: fetchDashboardStats,
+    retry: 2,
+    retryDelay: 1000,
   });
 
   if (isLoading) {
@@ -19,9 +42,27 @@ export default function AdminDashboard() {
   }
 
   if (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : '통계를 불러오는 중 오류가 발생했습니다.';
+
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-lg font-medium text-red-600">통계를 불러오는 중 오류가 발생했습니다.</div>
+        <div className="max-w-md rounded-xl border border-red-200 bg-red-50 p-6 text-center">
+          <div className="mb-4 flex justify-center">
+            <AlertCircle className="text-red-600" size={48} />
+          </div>
+          <h3 className="mb-2 text-lg font-bold text-red-900">오류 발생</h3>
+          <p className="mb-4 text-sm text-red-700">{errorMessage}</p>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => window.location.reload()}
+            icon={<RefreshCw size={16} />}
+          >
+            페이지 새로고침
+          </Button>
+        </div>
       </div>
     );
   }
@@ -102,7 +143,9 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-slate-600">{card.title}</p>
-                  <p className="mt-2 text-3xl font-black text-slate-900">{card.value.toLocaleString()}</p>
+                  <p className="mt-2 text-3xl font-black text-slate-900">
+                    {card.value.toLocaleString()}
+                  </p>
                 </div>
                 <div className={`rounded-lg ${card.color} p-3`}>
                   <Icon className="text-white" size={24} />
@@ -115,4 +158,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-

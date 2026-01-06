@@ -3,8 +3,12 @@ import { adminSupabase, isAdminClientAvailable } from './client';
 export interface UserWithStats {
   id: string;
   email: string | null;
+  phone: string | null;
   createdAt: string;
   lastSignInAt: string | null;
+  emailConfirmed: boolean;
+  phoneConfirmed: boolean;
+  userMetadata: Record<string, unknown> | null;
   proposalCount: number;
 }
 
@@ -29,8 +33,12 @@ export async function getAllUsersWithProposalCount(): Promise<UserWithStats[]> {
   }
 
   try {
-    // 사용자 목록 조회
-    const { data: users, error: usersError } = await client.auth.admin.listUsers();
+    // 사용자 목록 조회 (페이지네이션 지원)
+    // Supabase Admin API는 기본적으로 최대 1000명까지 조회 가능
+    const { data: usersData, error: usersError } = await client.auth.admin.listUsers({
+      page: 1,
+      perPage: 1000, // 최대 1000명까지 조회
+    });
 
     if (usersError) {
       // eslint-disable-next-line no-console
@@ -38,21 +46,49 @@ export async function getAllUsersWithProposalCount(): Promise<UserWithStats[]> {
       throw usersError;
     }
 
-    // 각 사용자의 제안서 수 조회
-    const usersWithStats = await Promise.all(
-      (users.users || []).map(async user => {
-        const { count } = await client
-          .from('proposals')
-          .select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id);
+    const users = usersData?.users || [];
 
-        return {
-          id: user.id,
-          email: user.email || null,
-          createdAt: user.created_at,
-          lastSignInAt: user.last_sign_in_at || null,
-          proposalCount: count || 0,
-        };
+    // 각 사용자의 제안서 수 조회 (에러 발생 시에도 계속 진행)
+    const usersWithStats = await Promise.all(
+      users.map(async user => {
+        try {
+          const { count, error: countError } = await client
+            .from('proposals')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', user.id);
+
+          if (countError) {
+            // eslint-disable-next-line no-console
+            console.warn(`사용자 ${user.id}의 제안서 수 조회 실패:`, countError);
+          }
+
+          return {
+            id: user.id,
+            email: user.email || null,
+            phone: user.phone || null,
+            createdAt: user.created_at,
+            lastSignInAt: user.last_sign_in_at || null,
+            emailConfirmed: !!user.email_confirmed_at,
+            phoneConfirmed: !!user.phone_confirmed_at,
+            userMetadata: user.user_metadata || null,
+            proposalCount: count || 0,
+          };
+        } catch (err) {
+          // 개별 사용자 조회 실패 시에도 기본 정보는 반환
+          // eslint-disable-next-line no-console
+          console.warn(`사용자 ${user.id} 정보 처리 중 오류:`, err);
+          return {
+            id: user.id,
+            email: user.email || null,
+            phone: user.phone || null,
+            createdAt: user.created_at,
+            lastSignInAt: user.last_sign_in_at || null,
+            emailConfirmed: !!user.email_confirmed_at,
+            phoneConfirmed: !!user.phone_confirmed_at,
+            userMetadata: user.user_metadata || null,
+            proposalCount: 0, // 에러 발생 시 0으로 설정
+          };
+        }
       }),
     );
 

@@ -1,18 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getProposalStatsByDate } from '@/lib/supabase/admin/analytics';
-import { BarChart3, Calendar } from 'lucide-react';
+import { BarChart3, Calendar, AlertCircle, RefreshCw } from 'lucide-react';
+import Button from '@/components/ui/Button';
+import { ProposalStatsByDate } from '@/lib/supabase/admin/analytics';
+
+async function fetchStats(start: string, end: string, interval: 'day' | 'week' | 'month') {
+  const params = new URLSearchParams();
+  params.set('startDate', start);
+  params.set('endDate', end);
+  params.set('interval', interval);
+
+  const response = await fetch(`/api/admin/analytics/stats?${params.toString()}`);
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || '통계를 불러오는 중 오류가 발생했습니다.');
+  }
+  return response.json();
+}
 
 export default function AdminAnalyticsPage() {
   const [dateRange, setDateRange] = useState<'week' | 'month' | '3months'>('month');
   const [interval, setInterval] = useState<'day' | 'week' | 'month'>('day');
 
-  const getDateRange = () => {
+  // dateRange와 interval이 변경될 때만 날짜 범위 재계산
+  const { start, end } = useMemo(() => {
     const endDate = new Date();
     const startDate = new Date();
-    
+
     if (dateRange === 'week') {
       startDate.setDate(startDate.getDate() - 7);
     } else if (dateRange === 'month') {
@@ -20,18 +36,23 @@ export default function AdminAnalyticsPage() {
     } else {
       startDate.setMonth(startDate.getMonth() - 3);
     }
-    
+
     return {
       start: startDate.toISOString(),
       end: endDate.toISOString(),
     };
-  };
+  }, [dateRange]);
 
-  const { start, end } = getDateRange();
-
-  const { data: stats, isLoading } = useQuery({
+  const {
+    data: stats,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['admin', 'analytics', start, end, interval],
-    queryFn: () => getProposalStatsByDate(start, end, interval),
+    queryFn: () => fetchStats(start, end, interval),
+    retry: 2,
+    retryDelay: 1000,
   });
 
   return (
@@ -69,10 +90,39 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
+      {/* 에러 처리 */}
+      {error && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-6">
+          <div className="flex items-start gap-4">
+            <AlertCircle className="mt-0.5 text-red-600" size={24} />
+            <div className="flex-1">
+              <h3 className="mb-1 font-bold text-red-900">
+                통계를 불러오는 중 오류가 발생했습니다.
+              </h3>
+              <p className="mb-4 text-sm text-red-700">
+                {error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
+              </p>
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                onClick={() => refetch()}
+                icon={<RefreshCw size={16} />}
+              >
+                다시 시도
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 통계 표시 */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="text-lg font-medium text-slate-600">통계를 불러오는 중...</div>
+          <div className="text-center">
+            <div className="mb-2 text-lg font-medium text-slate-600">통계를 불러오는 중...</div>
+            <div className="text-sm text-slate-500">잠시만 기다려주세요.</div>
+          </div>
         </div>
       ) : stats && stats.length > 0 ? (
         <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
@@ -94,7 +144,7 @@ export default function AdminAnalyticsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {stats.map((stat, index) => (
+              {stats.map((stat: ProposalStatsByDate, index: number) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 font-medium text-slate-900">{stat.date}</td>
                   <td className="px-6 py-4 text-slate-600">{stat.count}</td>
@@ -115,4 +165,3 @@ export default function AdminAnalyticsPage() {
     </div>
   );
 }
-

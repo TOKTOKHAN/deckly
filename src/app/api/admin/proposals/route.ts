@@ -1,0 +1,40 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getAllProposals } from '@/lib/supabase/admin/proposals';
+import { ProposalStatus } from '@/types/proposal';
+
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const statusParam = searchParams.get('status');
+    const status: ProposalStatus | undefined =
+      statusParam && ['draft', 'generating', 'completed', 'error'].includes(statusParam)
+        ? (statusParam as ProposalStatus)
+        : undefined;
+    const userId = searchParams.get('userId') || undefined;
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
+    const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : undefined;
+    const orderBy = (searchParams.get('orderBy') as 'created_at' | 'updated_at') || undefined;
+    const orderDirection = (searchParams.get('orderDirection') as 'asc' | 'desc') || undefined;
+
+    const proposals = await getAllProposals({
+      status,
+      userId,
+      limit,
+      offset,
+      orderBy,
+      orderDirection,
+    });
+
+    return NextResponse.json(proposals);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('제안서 목록 조회 오류:', error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : '제안서 목록을 불러오는 중 오류가 발생했습니다.',
+      },
+      { status: 500 },
+    );
+  }
+}

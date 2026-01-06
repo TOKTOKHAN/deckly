@@ -2,36 +2,75 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getAllProposals, getProposalsCount } from '@/lib/supabase/admin/proposals';
 import { ProposalStatus } from '@/types/proposal';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, AlertCircle, RefreshCw } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { ProposalWithUser } from '@/lib/supabase/admin/proposals';
 
 const ITEMS_PER_PAGE = 20;
+
+async function fetchProposals(page: number, statusFilter: ProposalStatus | 'all') {
+  const params = new URLSearchParams();
+  if (statusFilter !== 'all') {
+    params.set('status', statusFilter);
+  }
+  params.set('limit', ITEMS_PER_PAGE.toString());
+  params.set('offset', ((page - 1) * ITEMS_PER_PAGE).toString());
+
+  const response = await fetch(`/api/admin/proposals?${params.toString()}`);
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || '제안서를 불러오는 중 오류가 발생했습니다.');
+  }
+  return response.json();
+}
+
+async function fetchProposalsCount(statusFilter: ProposalStatus | 'all') {
+  const params = new URLSearchParams();
+  if (statusFilter !== 'all') {
+    params.set('status', statusFilter);
+  }
+
+  const response = await fetch(`/api/admin/proposals/count?${params.toString()}`);
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || '제안서 개수를 불러오는 중 오류가 발생했습니다.');
+  }
+  const data = await response.json();
+  return data.count;
+}
 
 export default function AdminProposalsPage() {
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<ProposalStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: proposals, isLoading } = useQuery({
+  const {
+    data: proposals,
+    isLoading,
+    error: proposalsError,
+    refetch: refetchProposals,
+  } = useQuery({
     queryKey: ['admin', 'proposals', page, statusFilter],
-    queryFn: () =>
-      getAllProposals({
-        status: statusFilter === 'all' ? undefined : statusFilter,
-        limit: ITEMS_PER_PAGE,
-        offset: (page - 1) * ITEMS_PER_PAGE,
-      }),
+    queryFn: () => fetchProposals(page, statusFilter),
+    retry: 2,
+    retryDelay: 1000,
   });
 
-  const { data: totalCount } = useQuery({
+  const {
+    data: totalCount,
+    error: countError,
+    refetch: refetchCount,
+  } = useQuery({
     queryKey: ['admin', 'proposals-count', statusFilter],
-    queryFn: () => getProposalsCount({ status: statusFilter === 'all' ? undefined : statusFilter }),
+    queryFn: () => fetchProposalsCount(statusFilter),
+    retry: 2,
+    retryDelay: 1000,
   });
 
   const totalPages = totalCount ? Math.ceil(totalCount / ITEMS_PER_PAGE) : 0;
 
-  const filteredProposals = proposals?.filter(p => {
+  const filteredProposals = proposals?.filter((p: ProposalWithUser) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
@@ -73,7 +112,7 @@ export default function AdminProposalsPage() {
       {/* 필터 및 검색 */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-4">
-          <div className="relative flex-1 max-w-md">
+          <div className="relative max-w-md flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
             <input
               type="text"
@@ -101,15 +140,49 @@ export default function AdminProposalsPage() {
             </select>
           </div>
         </div>
-        <div className="text-sm text-slate-600">
-          총 {totalCount?.toLocaleString() || 0}개
-        </div>
+        <div className="text-sm text-slate-600">총 {totalCount?.toLocaleString() || 0}개</div>
       </div>
+
+      {/* 에러 처리 */}
+      {(proposalsError || countError) && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-6">
+          <div className="flex items-start gap-4">
+            <AlertCircle className="mt-0.5 text-red-600" size={24} />
+            <div className="flex-1">
+              <h3 className="mb-1 font-bold text-red-900">
+                데이터를 불러오는 중 오류가 발생했습니다.
+              </h3>
+              <p className="mb-4 text-sm text-red-700">
+                {proposalsError instanceof Error
+                  ? proposalsError.message
+                  : countError instanceof Error
+                    ? countError.message
+                    : '알 수 없는 오류가 발생했습니다.'}
+              </p>
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  refetchProposals();
+                  refetchCount();
+                }}
+                icon={<RefreshCw size={16} />}
+              >
+                다시 시도
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 제안서 목록 */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="text-lg font-medium text-slate-600">제안서를 불러오는 중...</div>
+          <div className="text-center">
+            <div className="mb-2 text-lg font-medium text-slate-600">제안서를 불러오는 중...</div>
+            <div className="text-sm text-slate-500">잠시만 기다려주세요.</div>
+          </div>
         </div>
       ) : filteredProposals && filteredProposals.length > 0 ? (
         <>
@@ -135,22 +208,27 @@ export default function AdminProposalsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredProposals.map(item => (
+                {filteredProposals.map((item: ProposalWithUser) => (
                   <tr key={item.proposal.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="font-medium text-slate-900">{item.proposal.projectName}</div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">{item.proposal.clientCompanyName}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600">
+                      {item.proposal.clientCompanyName}
+                    </td>
                     <td className="px-6 py-4 text-sm text-slate-600">{item.userEmail || '-'}</td>
                     <td className="px-6 py-4">
                       <span
                         className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusBadgeColor(item.proposal.status)}`}
                       >
-                        {statusOptions.find(o => o.value === item.proposal.status)?.label || item.proposal.status}
+                        {statusOptions.find(o => o.value === item.proposal.status)?.label ||
+                          item.proposal.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
-                      {new Date(item.proposal.createdAt).toLocaleDateString('ko-KR')}
+                      {item.proposal.createdAt
+                        ? new Date(item.proposal.createdAt).toLocaleDateString('ko-KR')
+                        : '-'}
                     </td>
                   </tr>
                 ))}
@@ -195,4 +273,3 @@ export default function AdminProposalsPage() {
     </div>
   );
 }
-
