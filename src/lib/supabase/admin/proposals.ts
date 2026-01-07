@@ -101,6 +101,7 @@ export interface ProposalWithUser {
 export async function getAllProposals(options?: {
   status?: ProposalStatus;
   userId?: string;
+  clientCompanyName?: string;
   limit?: number;
   offset?: number;
   orderBy?: 'created_at' | 'updated_at';
@@ -124,6 +125,9 @@ export async function getAllProposals(options?: {
     }
     if (options?.userId) {
       query = query.eq('user_id', options.userId);
+    }
+    if (options?.clientCompanyName) {
+      query = query.eq('client', options.clientCompanyName);
     }
 
     // 정렬
@@ -195,6 +199,7 @@ export async function getProposalsByStatus(status: ProposalStatus): Promise<Prop
 export async function getProposalsCount(options?: {
   status?: ProposalStatus;
   userId?: string;
+  clientCompanyName?: string;
 }): Promise<number> {
   if (!isAdminClientAvailable() || !adminSupabase) {
     throw new Error('어드민 클라이언트를 사용할 수 없습니다.');
@@ -208,6 +213,9 @@ export async function getProposalsCount(options?: {
     }
     if (options?.userId) {
       query = query.eq('user_id', options.userId);
+    }
+    if (options?.clientCompanyName) {
+      query = query.eq('client', options.clientCompanyName);
     }
 
     const { count, error } = await query;

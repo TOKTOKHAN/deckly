@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
         ? (statusParam as ProposalStatus)
         : undefined;
     const userId = searchParams.get('userId') || undefined;
+    const clientCompanyName = searchParams.get('clientCompanyName') || undefined;
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
     const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : undefined;
     const orderBy = (searchParams.get('orderBy') as 'created_at' | 'updated_at') || undefined;
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest) {
     const proposals = await getAllProposals({
       status,
       userId,
+      clientCompanyName,
       limit,
       offset,
       orderBy,

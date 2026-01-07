@@ -28,24 +28,24 @@ export default function ProposalsTableSkeleton({ rows = 5 }: { rows?: number }) 
               <tr key={i} className="h-[63.5px]">
                 <td className="h-[63.5px] py-6 pl-6">
                   <div>
-                    <div className="mb-1 h-3.5 w-56 animate-pulse rounded bg-slate-200"></div>
-                    <div className="h-[15px] w-[314.39px] animate-pulse rounded bg-slate-100"></div>
+                    <div className="mb-1 h-[14px] w-56 animate-pulse rounded bg-slate-200"></div>
+                    <div className="h-[10px] w-[314.39px] animate-pulse rounded bg-slate-100"></div>
                   </div>
                 </td>
                 <td className="h-[63.5px] px-6 py-6">
-                  <div className="h-3.5 w-24 animate-pulse rounded bg-slate-200"></div>
+                  <div className="h-[14px] w-24 animate-pulse rounded bg-slate-200"></div>
                 </td>
                 <td className="h-[63.5px] px-3 py-6 text-center">
-                  <div className="mx-auto h-[25px] w-[52.31px] animate-pulse rounded-full bg-slate-200"></div>
+                  <div className="mx-auto h-[20px] w-[52.31px] animate-pulse rounded-full bg-slate-200"></div>
                 </td>
                 <td className="h-[63.5px] px-6 py-6">
                   <div className="flex items-center gap-2">
                     <div className="h-6 w-6 animate-pulse rounded-full bg-slate-200"></div>
-                    <div className="h-3 w-32 animate-pulse rounded bg-slate-200"></div>
+                    <div className="h-[12px] w-32 animate-pulse rounded bg-slate-200"></div>
                   </div>
                 </td>
                 <td className="h-[63.5px] py-6 pl-2">
-                  <div className="h-3 w-20 animate-pulse rounded bg-slate-200"></div>
+                  <div className="h-[12px] w-20 animate-pulse rounded bg-slate-200"></div>
                 </td>
                 <td className="h-[63.5px] px-2 py-6 text-right">
                   <div className="flex items-center justify-center gap-2">

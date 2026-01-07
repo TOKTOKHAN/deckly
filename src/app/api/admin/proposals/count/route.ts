@@ -11,10 +11,12 @@ export async function GET(request: NextRequest) {
         ? (statusParam as ProposalStatus)
         : undefined;
     const userId = searchParams.get('userId') || undefined;
+    const clientCompanyName = searchParams.get('clientCompanyName') || undefined;
 
     const count = await getProposalsCount({
       status,
       userId,
+      clientCompanyName,
     });
 
     return NextResponse.json({ count });

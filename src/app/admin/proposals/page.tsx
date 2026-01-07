@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ProposalStatus } from '@/types/proposal';
-import { MoreVertical, Eye, Zap } from 'lucide-react';
+import { MoreVertical, Eye, Zap, X } from 'lucide-react';
 import { ProposalWithUser } from '@/lib/supabase/admin/proposals';
 import PageHeader from '@/components/admin/PageHeader';
 import ErrorState from '@/components/admin/ErrorState';
@@ -12,16 +11,35 @@ import SearchBar from '@/components/admin/SearchBar';
 import Pagination from '@/components/admin/Pagination';
 import EmptyState from '@/components/admin/EmptyState';
 import ProposalsPageSkeleton from '@/components/skeletons/ProposalsPageSkeleton';
+import FilterDropdown from '@/components/admin/FilterDropdown';
 
 const ITEMS_PER_PAGE = 20;
 
-async function fetchProposals(page: number, statusFilter: ProposalStatus | 'all') {
+// 클라이언트 이름 정규화 함수 (공백 제거, 소문자 변환)
+const normalizeClientName = (name: string) => {
+  return name.replace(/\s+/g, '').toLowerCase();
+};
+
+async function fetchProposals(
+  page: number,
+  statusFilter: 'all' | 'completed' | 'error',
+  ownerFilter: string,
+  clientFilter: string,
+) {
   const params = new URLSearchParams();
   if (statusFilter !== 'all') {
     params.set('status', statusFilter);
   }
-  params.set('limit', ITEMS_PER_PAGE.toString());
-  params.set('offset', ((page - 1) * ITEMS_PER_PAGE).toString());
+  if (ownerFilter !== 'all') {
+    params.set('userId', ownerFilter);
+  }
+  // clientFilter는 정규화된 값이므로 서버에서 처리하지 않고 클라이언트 사이드에서 필터링
+  // 클라이언트 필터가 적용된 경우 전체 데이터를 가져온 후 클라이언트에서 필터링
+  if (clientFilter === 'all') {
+    params.set('limit', ITEMS_PER_PAGE.toString());
+    params.set('offset', ((page - 1) * ITEMS_PER_PAGE).toString());
+  }
+  // clientFilter가 적용된 경우 limit/offset 없이 전체 데이터 가져오기
 
   const response = await fetch(`/api/admin/proposals?${params.toString()}`);
   if (!response.ok) {
@@ -31,11 +49,20 @@ async function fetchProposals(page: number, statusFilter: ProposalStatus | 'all'
   return response.json();
 }
 
-async function fetchProposalsCount(statusFilter: ProposalStatus | 'all') {
+async function fetchProposalsCount(
+  statusFilter: 'all' | 'completed' | 'error',
+  ownerFilter: string,
+  _clientFilter: string, // 클라이언트 필터는 클라이언트 사이드에서 처리
+) {
   const params = new URLSearchParams();
   if (statusFilter !== 'all') {
     params.set('status', statusFilter);
   }
+  if (ownerFilter !== 'all') {
+    params.set('userId', ownerFilter);
+  }
+  // clientFilter는 정규화된 값이므로 서버에서 처리하지 않고 클라이언트 사이드에서 필터링
+  // (서버 사이드 필터링을 사용하려면 서버에서도 정규화 로직 필요)
 
   const response = await fetch(`/api/admin/proposals/count?${params.toString()}`);
   if (!response.ok) {
@@ -48,7 +75,9 @@ async function fetchProposalsCount(statusFilter: ProposalStatus | 'all') {
 
 export default function AdminProposalsPage() {
   const [page, setPage] = useState(1);
-  const [statusFilter] = useState<ProposalStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'error'>('all');
+  const [ownerFilter, setOwnerFilter] = useState<string>('all');
+  const [clientFilter, setClientFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const {
@@ -57,8 +86,8 @@ export default function AdminProposalsPage() {
     error: proposalsError,
     refetch: refetchProposals,
   } = useQuery({
-    queryKey: ['admin', 'proposals', page, statusFilter],
-    queryFn: () => fetchProposals(page, statusFilter),
+    queryKey: ['admin', 'proposals', page, statusFilter, ownerFilter, clientFilter],
+    queryFn: () => fetchProposals(page, statusFilter, ownerFilter, clientFilter),
     retry: 2,
     retryDelay: 1000,
   });
@@ -68,24 +97,88 @@ export default function AdminProposalsPage() {
     error: countError,
     refetch: refetchCount,
   } = useQuery({
-    queryKey: ['admin', 'proposals-count', statusFilter],
-    queryFn: () => fetchProposalsCount(statusFilter),
+    queryKey: ['admin', 'proposals-count', statusFilter, ownerFilter, clientFilter],
+    queryFn: () => fetchProposalsCount(statusFilter, ownerFilter, clientFilter),
     retry: 2,
     retryDelay: 1000,
   });
 
-  const totalPages = totalCount ? Math.ceil(totalCount / ITEMS_PER_PAGE) : 0;
+  // 필터 옵션 추출 (전체 데이터에서 고유한 값 추출)
+  const { ownerOptions, clientOptions } = useMemo(() => {
+    if (!proposals) {
+      return { ownerOptions: [], clientOptions: [] };
+    }
 
-  const filteredProposals = proposals?.filter((p: ProposalWithUser) => {
-    if (!searchQuery) return true;
+    // Owner 옵션 (userId 기준, 이메일로 표시)
+    const ownerMap = new Map<string, string>();
+    proposals.forEach((p: ProposalWithUser) => {
+      if (p.userEmail && !ownerMap.has(p.userId)) {
+        ownerMap.set(p.userId, p.userEmail);
+      }
+    });
+    const ownerOptions = Array.from(ownerMap.entries()).map(([userId, email]) => ({
+      value: userId,
+      label: email,
+    }));
+
+    // Client 옵션 (고객사 이름 기준) - 정규화하여 그룹화
+    // 클라이언트 이름 정규화 함수 (공백 제거, 소문자 변환)
+    const normalizeClientName = (name: string) => {
+      return name.replace(/\s+/g, '').toLowerCase();
+    };
+
+    // 정규화된 값으로 그룹화 (원본 값 중 첫 번째를 대표값으로 사용)
+    const clientMap = new Map<string, string>();
+    proposals.forEach((p: ProposalWithUser) => {
+      const normalized = normalizeClientName(p.proposal.clientCompanyName);
+      if (!clientMap.has(normalized)) {
+        clientMap.set(normalized, p.proposal.clientCompanyName);
+      }
+    });
+
+    const clientOptions = Array.from(clientMap.entries()).map(([normalized, original]) => ({
+      value: normalized,
+      label: original,
+    }));
+
+    return { ownerOptions, clientOptions };
+  }, [proposals]);
+
+  // 클라이언트 필터링 적용 (정규화된 값으로 비교)
+  let filteredProposals = proposals;
+
+  // 클라이언트 필터 적용
+  if (clientFilter !== 'all' && proposals) {
+    filteredProposals = proposals.filter((p: ProposalWithUser) => {
+      const normalizedClient = normalizeClientName(p.proposal.clientCompanyName);
+      return normalizedClient === clientFilter;
+    });
+  }
+
+  // 검색어 필터 적용
+  if (searchQuery && filteredProposals) {
     const query = searchQuery.toLowerCase();
-    return (
-      p.proposal.projectName.toLowerCase().includes(query) ||
-      p.proposal.clientCompanyName.toLowerCase().includes(query) ||
-      p.userEmail?.toLowerCase().includes(query) ||
-      false
-    );
-  });
+    filteredProposals = filteredProposals.filter((p: ProposalWithUser) => {
+      return (
+        p.proposal.projectName.toLowerCase().includes(query) ||
+        p.proposal.clientCompanyName.toLowerCase().includes(query) ||
+        p.userEmail?.toLowerCase().includes(query) ||
+        false
+      );
+    });
+  }
+
+  // 클라이언트 필터가 적용된 경우 페이지네이션을 클라이언트 사이드에서 처리
+  const paginatedProposals =
+    clientFilter !== 'all' && filteredProposals
+      ? filteredProposals.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+      : filteredProposals;
+
+  // 클라이언트 필터가 적용된 경우 totalCount를 클라이언트 사이드에서 계산
+  const effectiveTotalCount =
+    clientFilter !== 'all' ? filteredProposals?.length || 0 : totalCount || 0;
+
+  const totalPages = effectiveTotalCount ? Math.ceil(effectiveTotalCount / ITEMS_PER_PAGE) : 0;
 
   // 검색어 변경 시 첫 페이지로 이동
   const handleSearchChange = (value: string) => {
@@ -93,19 +186,26 @@ export default function AdminProposalsPage() {
     setPage(1);
   };
 
+  // 필터 적용 핸들러
+  const handleFilterApply = (
+    owner: string,
+    client: string,
+    status: 'all' | 'completed' | 'error',
+  ) => {
+    setOwnerFilter(owner);
+    setClientFilter(client);
+    setStatusFilter(status);
+    setPage(1);
+  };
+
   if (isLoading) {
-    return (
-      <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
-        <div className="animate-in fade-in mx-auto max-w-7xl space-y-8 duration-700">
-          <ProposalsPageSkeleton />
-        </div>
-      </div>
-    );
+    return <ProposalsPageSkeleton />;
   }
 
   return (
-    <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
-      <div className="animate-in fade-in mx-auto max-w-7xl space-y-8 duration-700">
+    <div className="-mx-8 flex items-start gap-8 md:-mx-12">
+      {/* 메인 콘텐츠 영역 */}
+      <main className="flex-1 space-y-8">
         <PageHeader
           badge={{
             icon: <Zap size={12} />,
@@ -122,7 +222,7 @@ export default function AdminProposalsPage() {
             // 검색 실행 (현재는 실시간 검색이므로 필터링만 확인)
           }}
           placeholder="제안서 제목, 고객사 또는 담당자 검색..."
-          showFilter={true}
+          showFilter={false}
         />
 
         {(proposalsError || countError) && (
@@ -136,8 +236,94 @@ export default function AdminProposalsPage() {
           />
         )}
 
+        {/* 활성 필터 표시 영역 */}
+        {(ownerFilter !== 'all' ||
+          clientFilter !== 'all' ||
+          statusFilter !== 'all' ||
+          searchQuery) && (
+          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-100 bg-white px-5 py-4 shadow-lg shadow-slate-200/20">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
+              적용된 필터:
+            </span>
+            {ownerFilter !== 'all' && (
+              <div className="flex items-center gap-1.5 rounded-xl border border-blue-100 bg-blue-50 px-3 py-1.5">
+                <span className="text-xs font-bold text-blue-700">
+                  소유자: {ownerOptions.find(o => o.value === ownerFilter)?.label || ownerFilter}
+                </span>
+                <button
+                  onClick={() => {
+                    setOwnerFilter('all');
+                    setPage(1);
+                  }}
+                  className="text-blue-600 transition-colors hover:text-blue-800"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+            {clientFilter !== 'all' && (
+              <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5">
+                <span className="text-xs font-bold text-slate-700">
+                  고객사: {clientOptions.find(c => c.value === clientFilter)?.label || clientFilter}
+                </span>
+                <button
+                  onClick={() => {
+                    setClientFilter('all');
+                    setPage(1);
+                  }}
+                  className="text-slate-600 transition-colors hover:text-slate-800"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+            {statusFilter !== 'all' && (
+              <div className="flex items-center gap-1.5 rounded-xl border border-indigo-100 bg-indigo-50 px-3 py-1.5">
+                <span className="text-xs font-bold text-indigo-700">
+                  상태: {statusFilter === 'completed' ? '완료' : '에러'}
+                </span>
+                <button
+                  onClick={() => {
+                    setStatusFilter('all');
+                    setPage(1);
+                  }}
+                  className="text-indigo-600 transition-colors hover:text-indigo-800"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+            {searchQuery && (
+              <div className="flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-1.5">
+                <span className="text-xs font-bold text-emerald-700">검색: {searchQuery}</span>
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setPage(1);
+                  }}
+                  className="text-emerald-600 transition-colors hover:text-emerald-800"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+            <button
+              onClick={() => {
+                setOwnerFilter('all');
+                setClientFilter('all');
+                setStatusFilter('all');
+                setSearchQuery('');
+                setPage(1);
+              }}
+              className="ml-auto rounded-xl border border-red-100 bg-red-50 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-red-600 transition-all hover:bg-red-100"
+            >
+              전체 초기화
+            </button>
+          </div>
+        )}
+
         {/* 제안서 테이블 카드 */}
-        {filteredProposals && filteredProposals.length > 0 ? (
+        {paginatedProposals && paginatedProposals.length > 0 ? (
           <div className="overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/40">
             <div className="overflow-x-auto">
               <table className="w-full table-fixed text-left">
@@ -160,7 +346,7 @@ export default function AdminProposalsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
-                  {filteredProposals.map((item: ProposalWithUser) => (
+                  {paginatedProposals.map((item: ProposalWithUser) => (
                     <tr key={item.proposal.id} className="group transition-all hover:bg-blue-50/20">
                       <td className="py-6 pl-6">
                         <div>
@@ -223,7 +409,21 @@ export default function AdminProposalsPage() {
         ) : (
           <EmptyState searchQuery={searchQuery} defaultMessage="제안서가 없습니다." />
         )}
-      </div>
+      </main>
+
+      {/* 필터 사이드바 */}
+      <aside className="w-72 flex-shrink-0">
+        <div className="sticky top-0">
+          <FilterDropdown
+            ownerOptions={ownerOptions}
+            clientOptions={clientOptions}
+            selectedOwner={ownerFilter}
+            selectedClient={clientFilter}
+            selectedStatus={statusFilter}
+            onApply={handleFilterApply}
+          />
+        </div>
+      </aside>
     </div>
   );
 }
