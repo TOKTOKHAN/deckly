@@ -14,7 +14,6 @@ import {
   Zap,
 } from 'lucide-react';
 import PageHeader from '@/components/admin/PageHeader';
-import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
 import StatCard from '@/components/admin/StatCard';
 import DashboardPageSkeleton from '@/components/skeletons/DashboardPageSkeleton';
@@ -97,7 +96,7 @@ export default function AdminDashboard() {
           <div className="ml-2 flex items-center gap-3">
             <Activity size={18} className="text-blue-600" />
             <h3 className="text-sm font-black uppercase tracking-tight text-slate-800">
-              Primary Metrics
+              핵심 지표
             </h3>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -108,6 +107,7 @@ export default function AdminDashboard() {
               icon={<FileText size={24} />}
               colorClass="bg-blue-600"
               subText="누적 제안서 생성량"
+              href="/admin/proposals"
             />
             <StatCard
               variant="dashboard"
@@ -116,6 +116,7 @@ export default function AdminDashboard() {
               icon={<Users size={24} />}
               colorClass="bg-indigo-600"
               subText="플랫폼 가입 사용자"
+              href="/admin/users"
             />
             <StatCard
               variant="dashboard"
@@ -125,6 +126,7 @@ export default function AdminDashboard() {
               colorClass="bg-emerald-500"
               trend={`${successRate}%`}
               subText="제안서 최종 생성 완료"
+              href="/admin/proposals"
             />
           </div>
         </section>
@@ -136,7 +138,7 @@ export default function AdminDashboard() {
             <div className="ml-2 flex items-center gap-3">
               <Clock size={18} className="text-amber-500" />
               <h3 className="text-sm font-black uppercase tracking-tight text-slate-800">
-                Status Overview
+                상태별 현황 요약
               </h3>
             </div>
             <div className="grid h-full grid-cols-1 gap-6 sm:grid-cols-2">
@@ -199,7 +201,7 @@ export default function AdminDashboard() {
             <div className="ml-2 flex items-center gap-3">
               <TrendingUp size={18} className="text-blue-600" />
               <h3 className="text-sm font-black uppercase tracking-tight text-slate-800">
-                Growth Trends
+                기간별 통계
               </h3>
             </div>
             <div className="flex h-full flex-col rounded-[3rem] border border-slate-100 bg-white p-10 shadow-xl shadow-slate-200/40">
@@ -259,10 +261,10 @@ export default function AdminDashboard() {
               </div>
               <div className="mt-12 flex items-center justify-between border-t border-slate-50 pt-8">
                 <p className="text-[10px] font-bold uppercase italic text-slate-400">
-                  Latest update: {formattedTime}
+                  마지막 갱신: {formattedTime}
                 </p>
                 <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-blue-600 transition-transform hover:translate-x-1">
-                  View full report <ChevronRight size={12} strokeWidth={4} />
+                  상세 보기 <ChevronRight size={12} strokeWidth={4} />
                 </button>
               </div>
             </div>

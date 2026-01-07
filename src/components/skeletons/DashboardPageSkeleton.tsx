@@ -28,9 +28,7 @@ export default function DashboardPageSkeleton() {
       <section className="space-y-6">
         <div className="ml-2 flex items-center gap-3">
           <Activity size={18} className="text-blue-600" />
-          <h3 className="text-sm font-black uppercase tracking-tight text-slate-800">
-            Primary Metrics
-          </h3>
+          <h3 className="text-sm font-black uppercase tracking-tight text-slate-800">핵심 지표</h3>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <StatCardSkeleton />
@@ -46,7 +44,7 @@ export default function DashboardPageSkeleton() {
           <div className="ml-2 flex items-center gap-3">
             <Clock size={18} className="text-amber-500" />
             <h3 className="text-sm font-black uppercase tracking-tight text-slate-800">
-              Status Overview
+              상태별 현황 요약
             </h3>
           </div>
           <div className="grid h-full grid-cols-1 gap-6 sm:grid-cols-2">
@@ -88,7 +86,7 @@ export default function DashboardPageSkeleton() {
           <div className="ml-2 flex items-center gap-3">
             <TrendingUp size={18} className="text-blue-600" />
             <h3 className="text-sm font-black uppercase tracking-tight text-slate-800">
-              Growth Trends
+              기간별 통계
             </h3>
           </div>
           <div className="flex h-full flex-col rounded-[3rem] border border-slate-100 bg-white p-10 shadow-xl shadow-slate-200/40">

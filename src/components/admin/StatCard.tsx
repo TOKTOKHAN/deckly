@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 
 interface StatCardProps {
@@ -10,6 +11,7 @@ interface StatCardProps {
   trend?: string;
   subText?: string;
   variant?: 'default' | 'dashboard';
+  href?: string;
 }
 
 export default function StatCard({
@@ -20,6 +22,7 @@ export default function StatCard({
   trend,
   subText,
   variant = 'default',
+  href,
 }: StatCardProps) {
   const roundedClass = variant === 'dashboard' ? 'rounded-[2.5rem]' : 'rounded-[2rem]';
   const durationClass = variant === 'dashboard' ? 'duration-500' : 'duration-300';
@@ -30,9 +33,13 @@ export default function StatCard({
   const titleMarginClass = variant === 'dashboard' ? 'mb-1.5' : 'mb-1';
   const subTextOpacityClass = variant === 'dashboard' ? 'opacity-70' : '';
 
-  return (
+  const cardContent = (
     <div
-      className={`group ${roundedClass} border border-slate-100 bg-white p-8 ${shadowClass} transition-all ${durationClass} hover:border-blue-200 hover:shadow-2xl`}
+      className={`group ${roundedClass} border border-slate-100 bg-white p-8 ${shadowClass} transition-all ${durationClass} ${
+        href
+          ? 'cursor-pointer hover:border-blue-200 hover:shadow-2xl'
+          : 'hover:border-blue-200 hover:shadow-2xl'
+      }`}
     >
       <div className="mb-6 flex items-start justify-between">
         <div
@@ -63,4 +70,10 @@ export default function StatCard({
       </div>
     </div>
   );
+
+  if (href) {
+    return <Link href={href}>{cardContent}</Link>;
+  }
+
+  return cardContent;
 }
