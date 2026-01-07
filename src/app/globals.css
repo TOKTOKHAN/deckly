@@ -26,6 +26,15 @@ body {
   }
 }
 
+/* 모달이 열릴 때 사이드바 블러 처리 */
+body.modal-open .admin-sidebar {
+  filter: blur(4px);
+  opacity: 0.5;
+  transition:
+    filter 0.3s ease,
+    opacity 0.3s ease;
+}
+
 /* Admin 사이드바 스크롤바 커스텀 */
 .admin-sidebar::-webkit-scrollbar {
   width: 4px;
