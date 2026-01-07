@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   Activity,
   CheckCircle2,
-  MoreVertical,
   UserPlus,
 } from 'lucide-react';
 import type { UserWithStats } from '@/lib/supabase/admin/users';
@@ -21,6 +20,9 @@ import Pagination from '@/components/admin/Pagination';
 import EmptyState from '@/components/admin/EmptyState';
 import UsersPageSkeleton from '@/components/skeletons/UsersPageSkeleton';
 import CreateUserModal from '@/components/admin/CreateUserModal';
+import EditUserModal from '@/components/admin/EditUserModal';
+import DeleteUserConfirmModal from '@/components/admin/DeleteUserConfirmModal';
+import UserActionsDropdown from '@/components/admin/UserActionsDropdown';
 import Button from '@/components/ui/Button';
 
 const ITEMS_PER_PAGE = 10;
@@ -38,6 +40,9 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserWithStats | null>(null);
 
   const {
     data: users,
@@ -240,9 +245,17 @@ export default function AdminUsersPage() {
                         </div>
                       </td>
                       <td className="px-12 py-6 text-right">
-                        <button className="rounded-xl p-2.5 text-slate-300 transition-all hover:bg-blue-50 hover:text-blue-600">
-                          <MoreVertical size={20} />
-                        </button>
+                        <UserActionsDropdown
+                          user={user}
+                          onEdit={user => {
+                            setSelectedUser(user);
+                            setIsEditModalOpen(true);
+                          }}
+                          onDelete={user => {
+                            setSelectedUser(user);
+                            setIsDeleteModalOpen(true);
+                          }}
+                        />
                       </td>
                     </tr>
                   ))
@@ -276,6 +289,30 @@ export default function AdminUsersPage() {
       <CreateUserModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={() => {
+          refetch();
+        }}
+      />
+
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        user={selectedUser}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedUser(null);
+        }}
+        onSuccess={() => {
+          refetch();
+        }}
+      />
+
+      <DeleteUserConfirmModal
+        isOpen={isDeleteModalOpen}
+        user={selectedUser}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setSelectedUser(null);
+        }}
         onSuccess={() => {
           refetch();
         }}
