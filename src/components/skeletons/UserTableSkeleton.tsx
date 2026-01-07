@@ -11,13 +11,21 @@ export default function UserTableSkeleton({ rows = 5 }: { rows?: number }) {
         </div>
         <div className="relative w-full sm:w-72">
           <div className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 animate-pulse rounded bg-slate-200"></div>
-          <div className="h-[38px] w-full animate-pulse rounded-2xl border border-slate-200 bg-slate-100 pl-12"></div>
+          <div className="h-11 w-full animate-pulse rounded-2xl border border-slate-200 bg-slate-100 pl-12"></div>
         </div>
       </div>
 
       {/* 테이블 */}
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left">
+        <table className="w-full table-fixed border-collapse text-left">
+          <colgroup>
+            <col className="w-[30%]" />
+            <col className="w-[15%]" />
+            <col className="w-[15%]" />
+            <col className="w-[15%]" />
+            <col className="w-[10%]" />
+            <col className="w-[15%]" />
+          </colgroup>
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
               <th className="px-12 py-3">User Account</th>
@@ -30,30 +38,39 @@ export default function UserTableSkeleton({ rows = 5 }: { rows?: number }) {
           </thead>
           <tbody className="divide-y divide-slate-50">
             {Array.from({ length: rows }).map((_, i) => (
-              <tr key={i}>
+              <tr key={i} className="h-[96px]">
                 <td className="px-12 py-6">
                   <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 animate-pulse rounded-full bg-slate-200"></div>
-                    <div className="space-y-1">
-                      <div className="h-3.5 w-52 animate-pulse rounded bg-slate-200"></div>
-                      <div className="h-2.5 w-40 animate-pulse rounded bg-slate-100"></div>
+                    <div className="h-12 w-12 flex-shrink-0 animate-pulse rounded-full border-2 border-white bg-slate-200 shadow-sm"></div>
+                    <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                      <div className="h-[14px] w-52 animate-pulse rounded bg-slate-200"></div>
+                      <div className="h-[10px] w-40 animate-pulse rounded bg-slate-100"></div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-6 text-center">
-                  <div className="mx-auto h-5 w-20 animate-pulse rounded-full bg-slate-200"></div>
+                  <div className="mx-auto flex h-[26px] w-[68px] animate-pulse items-center justify-center rounded-full border border-slate-200 bg-slate-100"></div>
                 </td>
                 <td className="px-6 py-6">
-                  <div className="h-3 w-28 animate-pulse rounded bg-slate-200"></div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-[14px] w-[14px] flex-shrink-0 animate-pulse rounded bg-slate-200"></div>
+                    <div className="h-3 w-20 animate-pulse rounded bg-slate-200"></div>
+                  </div>
                 </td>
                 <td className="px-6 py-6">
-                  <div className="h-3 w-28 animate-pulse rounded bg-slate-200"></div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-slate-200"></div>
+                    <div className="h-3 w-20 animate-pulse rounded bg-slate-200"></div>
+                  </div>
                 </td>
                 <td className="px-6 py-6">
-                  <div className="mx-auto h-7 w-16 animate-pulse rounded-2xl bg-slate-200"></div>
+                  <div className="mx-auto flex h-8 w-14 animate-pulse items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-slate-100 px-3">
+                    <div className="h-3 w-3 flex-shrink-0 rounded bg-slate-200"></div>
+                    <div className="h-3 w-3 flex-shrink-0 rounded bg-slate-200"></div>
+                  </div>
                 </td>
                 <td className="px-12 py-6 text-right">
-                  <div className="ml-auto h-9 w-9 animate-pulse rounded-xl bg-slate-200"></div>
+                  <div className="ml-auto h-5 w-5 flex-shrink-0 animate-pulse rounded-xl bg-slate-200"></div>
                 </td>
               </tr>
             ))}

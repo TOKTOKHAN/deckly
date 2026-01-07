@@ -177,7 +177,15 @@ export default function AdminUsersPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left">
+            <table className="w-full table-fixed border-collapse text-left">
+              <colgroup>
+                <col className="w-[30%]" />
+                <col className="w-[15%]" />
+                <col className="w-[15%]" />
+                <col className="w-[15%]" />
+                <col className="w-[10%]" />
+                <col className="w-[15%]" />
+              </colgroup>
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                   <th className="px-12 py-3">User Account</th>
@@ -191,7 +199,7 @@ export default function AdminUsersPage() {
               <tbody className="divide-y divide-slate-50">
                 {paginatedUsers && paginatedUsers.length > 0 ? (
                   paginatedUsers.map((user: UserWithStats) => (
-                    <tr key={user.id} className="group transition-all hover:bg-blue-50/20">
+                    <tr key={user.id} className="group h-[96px] transition-all hover:bg-blue-50/20">
                       <td className="px-12 py-6">
                         <div className="flex items-center gap-4">
                           <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-slate-100 text-sm font-black text-slate-400 shadow-sm transition-transform group-hover:scale-110">
