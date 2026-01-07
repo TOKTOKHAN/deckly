@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { MoreVertical, Eye, Zap, X } from 'lucide-react';
+import { MoreVertical, Eye, Zap } from 'lucide-react';
 import { ProposalWithUser } from '@/lib/supabase/admin/proposals';
 import PageHeader from '@/components/admin/PageHeader';
 import ErrorState from '@/components/admin/ErrorState';
@@ -11,7 +11,8 @@ import SearchBar from '@/components/admin/SearchBar';
 import Pagination from '@/components/admin/Pagination';
 import EmptyState from '@/components/admin/EmptyState';
 import ProposalsPageSkeleton from '@/components/skeletons/ProposalsPageSkeleton';
-import FilterDropdown from '@/components/admin/FilterDropdown';
+import ProposalsTableSkeleton from '@/components/skeletons/ProposalsTableSkeleton';
+import DetailFilter from '@/components/admin/DetailFilter';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -83,6 +84,7 @@ export default function AdminProposalsPage() {
   const {
     data: proposals,
     isLoading,
+    isFetching,
     error: proposalsError,
     refetch: refetchProposals,
   } = useQuery({
@@ -90,6 +92,7 @@ export default function AdminProposalsPage() {
     queryFn: () => fetchProposals(page, statusFilter, ownerFilter, clientFilter),
     retry: 2,
     retryDelay: 1000,
+    placeholderData: previousData => previousData,
   });
 
   const {
@@ -101,6 +104,7 @@ export default function AdminProposalsPage() {
     queryFn: () => fetchProposalsCount(statusFilter, ownerFilter, clientFilter),
     retry: 2,
     retryDelay: 1000,
+    placeholderData: previousData => previousData,
   });
 
   // 필터 옵션 추출 (전체 데이터에서 고유한 값 추출)
@@ -198,7 +202,8 @@ export default function AdminProposalsPage() {
     setPage(1);
   };
 
-  if (isLoading) {
+  // 초기 로딩 시에만 전체 스켈레톤 표시
+  if (isLoading && !proposals) {
     return <ProposalsPageSkeleton />;
   }
 
@@ -236,94 +241,11 @@ export default function AdminProposalsPage() {
           />
         )}
 
-        {/* 활성 필터 표시 영역 */}
-        {(ownerFilter !== 'all' ||
-          clientFilter !== 'all' ||
-          statusFilter !== 'all' ||
-          searchQuery) && (
-          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-100 bg-white px-5 py-4 shadow-lg shadow-slate-200/20">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
-              적용된 필터:
-            </span>
-            {ownerFilter !== 'all' && (
-              <div className="flex items-center gap-1.5 rounded-xl border border-blue-100 bg-blue-50 px-3 py-1.5">
-                <span className="text-xs font-bold text-blue-700">
-                  소유자: {ownerOptions.find(o => o.value === ownerFilter)?.label || ownerFilter}
-                </span>
-                <button
-                  onClick={() => {
-                    setOwnerFilter('all');
-                    setPage(1);
-                  }}
-                  className="text-blue-600 transition-colors hover:text-blue-800"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            )}
-            {clientFilter !== 'all' && (
-              <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5">
-                <span className="text-xs font-bold text-slate-700">
-                  고객사: {clientOptions.find(c => c.value === clientFilter)?.label || clientFilter}
-                </span>
-                <button
-                  onClick={() => {
-                    setClientFilter('all');
-                    setPage(1);
-                  }}
-                  className="text-slate-600 transition-colors hover:text-slate-800"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            )}
-            {statusFilter !== 'all' && (
-              <div className="flex items-center gap-1.5 rounded-xl border border-indigo-100 bg-indigo-50 px-3 py-1.5">
-                <span className="text-xs font-bold text-indigo-700">
-                  상태: {statusFilter === 'completed' ? '완료' : '에러'}
-                </span>
-                <button
-                  onClick={() => {
-                    setStatusFilter('all');
-                    setPage(1);
-                  }}
-                  className="text-indigo-600 transition-colors hover:text-indigo-800"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            )}
-            {searchQuery && (
-              <div className="flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-1.5">
-                <span className="text-xs font-bold text-emerald-700">검색: {searchQuery}</span>
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setPage(1);
-                  }}
-                  className="text-emerald-600 transition-colors hover:text-emerald-800"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            )}
-            <button
-              onClick={() => {
-                setOwnerFilter('all');
-                setClientFilter('all');
-                setStatusFilter('all');
-                setSearchQuery('');
-                setPage(1);
-              }}
-              className="ml-auto rounded-xl border border-red-100 bg-red-50 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-red-600 transition-all hover:bg-red-100"
-            >
-              전체 초기화
-            </button>
-          </div>
-        )}
-
         {/* 제안서 테이블 카드 */}
-        {paginatedProposals && paginatedProposals.length > 0 ? (
+        {isFetching && proposals ? (
+          // 필터 변경 시 테이블만 스켈레톤으로 표시
+          <ProposalsTableSkeleton rows={5} />
+        ) : paginatedProposals && paginatedProposals.length > 0 ? (
           <div className="overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/40">
             <div className="overflow-x-auto">
               <table className="w-full table-fixed text-left">
@@ -413,8 +335,8 @@ export default function AdminProposalsPage() {
 
       {/* 필터 사이드바 */}
       <aside className="w-72 flex-shrink-0">
-        <div className="sticky top-0">
-          <FilterDropdown
+        <div className="sticky top-10">
+          <DetailFilter
             ownerOptions={ownerOptions}
             clientOptions={clientOptions}
             selectedOwner={ownerFilter}

@@ -8,7 +8,7 @@ interface FilterOption {
   label: string;
 }
 
-interface FilterDropdownProps {
+interface DetailFilterProps {
   ownerOptions: FilterOption[];
   clientOptions: FilterOption[];
   selectedOwner: string;
@@ -17,14 +17,14 @@ interface FilterDropdownProps {
   onApply: (owner: string, client: string, status: 'all' | 'completed' | 'error') => void;
 }
 
-export default function FilterDropdown({
+export default function DetailFilter({
   ownerOptions,
   clientOptions,
   selectedOwner,
   selectedClient,
   selectedStatus,
   onApply,
-}: FilterDropdownProps) {
+}: DetailFilterProps) {
   const [tempOwner, setTempOwner] = useState(selectedOwner);
   const [tempClient, setTempClient] = useState(selectedClient);
   const [tempStatus, setTempStatus] = useState<'all' | 'completed' | 'error'>(selectedStatus);
@@ -57,7 +57,7 @@ export default function FilterDropdown({
   };
 
   return (
-    <div className="max-h-[calc(100vh-12rem)] w-full overflow-y-auto rounded-[2.5rem] border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/20">
+    <div className="mt-20 max-h-[calc(100vh-12rem)] w-full overflow-y-auto rounded-[2.5rem] border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/20">
       {/* 헤더 */}
       <div className="mb-5 flex items-center justify-between border-b border-slate-50 pb-8">
         <h3 className="text-sm font-black tracking-tight text-slate-900">상세 필터</h3>
@@ -72,13 +72,13 @@ export default function FilterDropdown({
       </div>
 
       {/* 세로 레이아웃: 필터 섹션들을 세로로 배치 */}
-      <div className="mb-5 space-y-6">
+      <div className="mb-7 space-y-6">
         {/* 소유자 필터 */}
         <div>
           <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Ownership
+            OWNER
           </p>
-          <div className="space-y-1">
+          <div className="space-y-2">
             <button
               onClick={() => setTempOwner('all')}
               className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold ${
@@ -87,7 +87,7 @@ export default function FilterDropdown({
                   : 'text-slate-500 hover:bg-slate-50'
               }`}
             >
-              전체 소유자 {tempOwner === 'all' && <Check size={12} strokeWidth={4} />}
+              전체 {tempOwner === 'all' && <Check size={12} strokeWidth={4} />}
             </button>
             {ownerOptions.map(option => (
               <button
@@ -109,18 +109,18 @@ export default function FilterDropdown({
         {/* 고객사 필터 */}
         <div>
           <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Client Focus
+            CLIENT
           </p>
-          <div className="space-y-1.5">
+          <div className="flex gap-1 space-y-1.5">
             <button
               onClick={() => setTempClient('all')}
-              className={`truncate rounded-xl border px-2.5 py-2 text-[10px] font-black ${
+              className={`mt-1.5 truncate rounded-xl border px-2.5 py-2 text-[10px] font-black ${
                 tempClient === 'all'
                   ? 'border-slate-900 bg-slate-900 text-white'
                   : 'border-slate-100 bg-white text-slate-400 hover:border-slate-300'
               }`}
             >
-              전체 고객사
+              전체
             </button>
             {clientOptions.map(option => (
               <button
@@ -141,7 +141,7 @@ export default function FilterDropdown({
         {/* 상태 필터 */}
         <div>
           <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Status Range
+            STATUS
           </p>
           <div className="flex flex-col gap-1.5">
             {statusOptions.map(option => (

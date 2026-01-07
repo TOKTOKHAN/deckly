@@ -2,7 +2,7 @@
 
 import PageHeader from '@/components/admin/PageHeader';
 import ProposalsTableSkeleton from '@/components/skeletons/ProposalsTableSkeleton';
-import FilterDropdownSkeleton from '@/components/skeletons/FilterDropdownSkeleton';
+import DetailFilterSkeleton from '@/components/skeletons/DetailFilterSkeleton';
 import SearchBar from '@/components/admin/SearchBar';
 import { Zap } from 'lucide-react';
 
@@ -35,7 +35,7 @@ export default function ProposalsPageSkeleton() {
       {/* 필터 사이드바 스켈레톤 */}
       <aside className="w-72 flex-shrink-0">
         <div className="sticky top-0">
-          <FilterDropdownSkeleton />
+          <DetailFilterSkeleton />
         </div>
       </aside>
     </div>
