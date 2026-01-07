@@ -1,6 +1,4 @@
-/**
- * 사용자 폼 검증 유틸리티
- */
+/* 사용자 폼 검증 유틸리티 */
 
 export interface UserValidationErrors {
   name?: string;

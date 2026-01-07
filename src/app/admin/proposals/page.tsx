@@ -209,7 +209,6 @@ export default function AdminProposalsPage() {
 
   return (
     <div className="-mx-8 flex items-start gap-8 md:-mx-12">
-      {/* 메인 콘텐츠 영역 */}
       <main className="flex-1 space-y-8">
         <PageHeader
           badge={{
@@ -241,7 +240,6 @@ export default function AdminProposalsPage() {
           />
         )}
 
-        {/* 제안서 테이블 카드 */}
         {isFetching && proposals ? (
           // 필터 변경 시 테이블만 스켈레톤으로 표시
           <ProposalsTableSkeleton rows={5} />
@@ -333,7 +331,6 @@ export default function AdminProposalsPage() {
         )}
       </main>
 
-      {/* 필터 사이드바 */}
       <aside className="w-72 flex-shrink-0">
         <div className="sticky top-10">
           <DetailFilter
