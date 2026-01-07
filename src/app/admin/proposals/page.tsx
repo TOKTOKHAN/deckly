@@ -6,7 +6,6 @@ import { ProposalStatus } from '@/types/proposal';
 import { MoreVertical, Eye, Zap } from 'lucide-react';
 import { ProposalWithUser } from '@/lib/supabase/admin/proposals';
 import PageHeader from '@/components/admin/PageHeader';
-import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
 import StatusBadge from '@/components/admin/StatusBadge';
 import SearchBar from '@/components/admin/SearchBar';
@@ -119,6 +118,9 @@ export default function AdminProposalsPage() {
         <SearchBar
           value={searchQuery}
           onChange={handleSearchChange}
+          onSearchClick={() => {
+            // 검색 실행 (현재는 실시간 검색이므로 필터링만 확인)
+          }}
           placeholder="제안서 제목, 고객사 또는 담당자 검색..."
           showFilter={true}
         />
@@ -138,21 +140,29 @@ export default function AdminProposalsPage() {
         {filteredProposals && filteredProposals.length > 0 ? (
           <div className="overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/40">
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="w-full table-fixed text-left">
+                <colgroup>
+                  <col className="w-[30%]" />
+                  <col className="w-[15%]" />
+                  <col className="w-[10%]" />
+                  <col className="w-[20%]" />
+                  <col className="w-[15%]" />
+                  <col className="w-[10%]" />
+                </colgroup>
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                    <th className="px-10 py-6">Project Name</th>
+                    <th className="py-6 pl-10">Project Name</th>
                     <th className="px-6 py-6">Client</th>
                     <th className="px-6 py-6 text-center">Status</th>
-                    <th className="px-6 py-6">Owner</th>
-                    <th className="px-6 py-6">Created At</th>
-                    <th className="px-10 py-6 text-right">Actions</th>
+                    <th className="px-6 py-6 text-center">Owner</th>
+                    <th className="px-3 py-6">Created At</th>
+                    <th className="px-3 py-6 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
                   {filteredProposals.map((item: ProposalWithUser) => (
                     <tr key={item.proposal.id} className="group transition-all hover:bg-blue-50/20">
-                      <td className="px-10 py-6">
+                      <td className="py-6 pl-6">
                         <div>
                           <div className="mb-1 text-sm font-black text-slate-900 transition-colors group-hover:text-blue-600">
                             {item.proposal.projectName}
@@ -165,7 +175,7 @@ export default function AdminProposalsPage() {
                       <td className="px-6 py-6 text-sm font-bold text-slate-600">
                         {item.proposal.clientCompanyName}
                       </td>
-                      <td className="px-6 py-6 text-center">
+                      <td className="px-3 py-6 text-center">
                         <StatusBadge status={item.proposal.status} />
                       </td>
                       <td className="px-6 py-6">
@@ -178,13 +188,13 @@ export default function AdminProposalsPage() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-6 text-xs font-bold text-slate-400">
+                      <td className="py-6 pl-2 text-xs font-bold text-slate-400">
                         {item.proposal.createdAt
                           ? new Date(item.proposal.createdAt).toLocaleDateString('ko-KR')
                           : '-'}
                       </td>
-                      <td className="px-10 py-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                      <td className="px-2 py-6 text-right">
+                        <div className="flex items-center justify-center gap-2">
                           <button className="rounded-xl p-2 text-slate-300 transition-all hover:bg-blue-50 hover:text-blue-600">
                             <Eye size={18} />
                           </button>

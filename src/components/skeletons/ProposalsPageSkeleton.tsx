@@ -23,8 +23,8 @@ export default function ProposalsPageSkeleton() {
           <div className="h-11 w-full animate-pulse rounded-2xl border border-slate-200 bg-slate-50 pl-12"></div>
         </div>
         <div className="flex w-full gap-3 md:w-auto">
-          <div className="h-10 flex-1 animate-pulse rounded-2xl bg-slate-200 md:w-24"></div>
-          <div className="h-10 flex-1 animate-pulse rounded-2xl bg-slate-200 md:w-32"></div>
+          <div className="h-[50px] flex-1 animate-pulse rounded-2xl bg-slate-200 md:w-[98.23px]"></div>
+          <div className="h-[50px] flex-1 animate-pulse rounded-2xl bg-slate-200 md:w-[98.23px]"></div>
         </div>
       </div>
 
