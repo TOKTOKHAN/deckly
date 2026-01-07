@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, UserPlus, Mail, Lock, Phone, Shield, User } from 'lucide-react';
+import { X, UserPlus, Mail, Lock, Phone, Shield, User, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import Input from '@/components/form/Input';
 import Button from '@/components/ui/Button';
@@ -25,6 +25,7 @@ export default function CreateUserModal({ isOpen, onClose, onSuccess }: CreateUs
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [grantAdmin, setGrantAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -354,7 +355,7 @@ export default function CreateUserModal({ isOpen, onClose, onSuccess }: CreateUs
 
           <div className="space-y-2">
             <Input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               label="Password"
               required
               value={password}
@@ -365,6 +366,17 @@ export default function CreateUserModal({ isOpen, onClose, onSuccess }: CreateUs
               disabled={isLoading}
               error={validationErrors.password}
               icon={<Lock size={18} />}
+              rightIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(prev => !prev)}
+                  className="flex items-center justify-center"
+                  aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              }
               className="rounded-[1.5rem] border-2 border-transparent bg-slate-50 py-4 pl-14 pr-6 text-sm font-bold placeholder:text-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 disabled:bg-slate-50 disabled:opacity-50 [&>div>div]:left-5 [&>label]:ml-1 [&>label]:text-[10px] [&>label]:font-black [&>label]:uppercase [&>label]:tracking-[0.2em] [&>label]:text-slate-400"
             />
           </div>
