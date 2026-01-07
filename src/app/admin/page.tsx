@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   FileText,
@@ -263,9 +264,12 @@ export default function AdminDashboard() {
                 <p className="text-[10px] font-bold uppercase italic text-slate-400">
                   마지막 갱신: {formattedTime}
                 </p>
-                <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-blue-600 transition-transform hover:translate-x-1">
+                <Link
+                  href="/admin/analytics"
+                  className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-blue-600 transition-transform hover:translate-x-1"
+                >
                   상세 보기 <ChevronRight size={12} strokeWidth={4} />
-                </button>
+                </Link>
               </div>
             </div>
           </section>
