@@ -11,6 +11,7 @@ import {
   Activity,
   CheckCircle2,
   MoreVertical,
+  UserPlus,
 } from 'lucide-react';
 import type { UserWithStats } from '@/lib/supabase/admin/users';
 import PageHeader from '@/components/admin/PageHeader';
@@ -19,6 +20,7 @@ import StatCard from '@/components/admin/StatCard';
 import Pagination from '@/components/admin/Pagination';
 import EmptyState from '@/components/admin/EmptyState';
 import UsersPageSkeleton from '@/components/skeletons/UsersPageSkeleton';
+import CreateUserModal from '@/components/admin/CreateUserModal';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -34,6 +36,7 @@ async function fetchUsers(): Promise<UserWithStats[]> {
 export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const {
     data: users,
@@ -140,18 +143,27 @@ export default function AdminUsersPage() {
                 <h3 className="text-xl font-black tracking-tight text-slate-800">유저 정보</h3>
               </div>
             </div>
-            <div className="relative w-full sm:w-72">
-              <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
-                size={16}
-              />
-              <input
-                type="text"
-                placeholder="사용자 검색..."
-                value={searchQuery}
-                onChange={e => handleSearchChange(e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm transition-all placeholder:text-slate-300 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
-              />
+            <div className="flex w-full items-center gap-3 sm:w-auto">
+              <div className="relative flex-1 sm:w-72">
+                <Search
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
+                  size={16}
+                />
+                <input
+                  type="text"
+                  placeholder="사용자 검색..."
+                  value={searchQuery}
+                  onChange={e => handleSearchChange(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm transition-all placeholder:text-slate-300 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
+                />
+              </div>
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="flex items-center gap-2 rounded-2xl border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-lg shadow-blue-100 transition-all hover:bg-blue-700"
+              >
+                <UserPlus size={16} />
+                <span className="hidden sm:inline">사용자 추가</span>
+              </button>
             </div>
           </div>
 
@@ -257,6 +269,15 @@ export default function AdminUsersPage() {
           )}
         </div>
       </div>
+
+      {/* 사용자 생성 모달 */}
+      <CreateUserModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={() => {
+          refetch();
+        }}
+      />
     </div>
   );
 }

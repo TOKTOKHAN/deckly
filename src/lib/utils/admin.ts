@@ -27,10 +27,16 @@ export function isAdmin(user: User | null | undefined): boolean {
     return false;
   }
 
+  // 1순위: 환경 변수 체크 (슈퍼 어드민)
   const adminEmails = getAdminEmails();
   const userEmail = user.email.toLowerCase();
 
-  return adminEmails.includes(userEmail);
+  if (adminEmails.includes(userEmail)) {
+    return true;
+  }
+
+  // 2순위: user_metadata 체크 (일반 어드민)
+  return user.user_metadata?.isAdmin === true;
 }
 
 /**
