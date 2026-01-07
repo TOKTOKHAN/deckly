@@ -14,7 +14,7 @@ export default function ProposalsPageSkeleton() {
         <PageHeader
           badge={{
             icon: <Zap size={12} />,
-            text: 'Asset Management',
+            text: 'Proposal Management',
           }}
           title="제안서 관리"
           description="플랫폼에서 생성된 모든 비즈니스 제안서의 현황을 확인합니다."
