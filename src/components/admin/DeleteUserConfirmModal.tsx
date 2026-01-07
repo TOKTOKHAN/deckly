@@ -157,7 +157,7 @@ export default function DeleteUserConfirmModal({
 
           <div className="rounded-xl border border-red-200 bg-red-50 p-4">
             <p className="text-sm font-bold text-red-700">
-              정말로 이 사용자를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+              정말로 이 사용자를 삭제하시겠습니까? <br />이 작업은 되돌릴 수 없습니다.
             </p>
           </div>
         </div>

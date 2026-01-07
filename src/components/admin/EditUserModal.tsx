@@ -7,19 +7,17 @@ import Input from '@/components/form/Input';
 import Button from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 import type { UserWithStats } from '@/lib/supabase/admin/users';
+import {
+  validateUserForm,
+  validateField,
+  type UserValidationErrors,
+} from '@/lib/validations/userValidation';
 
 interface EditUserModalProps {
   isOpen: boolean;
   user: UserWithStats | null;
   onClose: () => void;
   onSuccess: () => void;
-}
-
-interface ValidationErrors {
-  name?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
 }
 
 export default function EditUserModal({ isOpen, user, onClose, onSuccess }: EditUserModalProps) {
@@ -31,7 +29,7 @@ export default function EditUserModal({ isOpen, user, onClose, onSuccess }: Edit
   const [grantAdmin, setGrantAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const [validationErrors, setValidationErrors] = useState<UserValidationErrors>({});
 
   // 사용자 데이터로 폼 초기화
   useEffect(() => {
@@ -49,98 +47,9 @@ export default function EditUserModal({ isOpen, user, onClose, onSuccess }: Edit
 
   // 유효성 검증 함수 (비밀번호는 선택사항)
   const validateForm = (): boolean => {
-    const errors: ValidationErrors = {};
-
-    // 이름 검증
-    const trimmedName = name.trim();
-    if (!trimmedName) {
-      errors.name = '이름을 입력해주세요.';
-    } else if (trimmedName.length < 2) {
-      errors.name = '이름은 최소 2자 이상이어야 합니다.';
-    }
-
-    // 이메일 검증
-    const trimmedEmail = email.trim();
-    if (!trimmedEmail) {
-      errors.email = '이메일을 입력해주세요.';
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(trimmedEmail)) {
-        errors.email = '유효한 이메일 주소를 입력해주세요.';
-      }
-    }
-
-    // 비밀번호 검증 (입력된 경우에만)
-    const trimmedPassword = password.trim();
-    if (trimmedPassword && trimmedPassword.length < 6) {
-      errors.password = '비밀번호는 최소 6자 이상이어야 합니다.';
-    }
-
-    // 전화번호 검증 (선택사항이지만 입력된 경우 형식 검증)
-    const trimmedPhone = phone.trim();
-    if (trimmedPhone) {
-      const phoneRegex = /^[0-9-]+$/;
-      if (!phoneRegex.test(trimmedPhone)) {
-        errors.phone = '유효한 전화번호 형식을 입력해주세요. (예: 010-1234-5678)';
-      } else if (trimmedPhone.replace(/-/g, '').length < 10) {
-        errors.phone = '전화번호는 최소 10자리 이상이어야 합니다.';
-      }
-    }
-
+    const errors = validateUserForm({ name, email, password, phone }, { passwordRequired: false });
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  // 개별 필드 검증 함수
-  const validateField = (
-    fieldName: 'name' | 'email' | 'password' | 'phone',
-    value: string,
-  ): string | undefined => {
-    switch (fieldName) {
-      case 'name': {
-        const trimmed = value.trim();
-        if (!trimmed) {
-          return '이름을 입력해주세요.';
-        }
-        if (trimmed.length < 2) {
-          return '이름은 최소 2자 이상이어야 합니다.';
-        }
-        return undefined;
-      }
-      case 'email': {
-        const trimmed = value.trim();
-        if (!trimmed) {
-          return '이메일을 입력해주세요.';
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(trimmed)) {
-          return '유효한 이메일 주소를 입력해주세요.';
-        }
-        return undefined;
-      }
-      case 'password': {
-        const trimmed = value.trim();
-        if (trimmed && trimmed.length < 6) {
-          return '비밀번호는 최소 6자 이상이어야 합니다.';
-        }
-        return undefined;
-      }
-      case 'phone': {
-        const trimmed = value.trim();
-        if (trimmed) {
-          const phoneRegex = /^[0-9-]+$/;
-          if (!phoneRegex.test(trimmed)) {
-            return '유효한 전화번호 형식을 입력해주세요. (예: 010-1234-5678)';
-          }
-          if (trimmed.replace(/-/g, '').length < 10) {
-            return '전화번호는 최소 10자리 이상이어야 합니다.';
-          }
-        }
-        return undefined;
-      }
-      default:
-        return undefined;
-    }
+    return Object.values(errors).every(error => error === undefined);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -274,13 +183,13 @@ export default function EditUserModal({ isOpen, user, onClose, onSuccess }: Edit
     const value = e.target.value;
     setPassword(value);
     if (validationErrors.password) {
-      const error = validateField('password', value);
+      const error = validateField('password', value, { passwordRequired: false });
       setValidationErrors(prev => ({ ...prev, password: error }));
     }
   };
 
   const handlePasswordBlur = () => {
-    const error = validateField('password', password);
+    const error = validateField('password', password, { passwordRequired: false });
     setValidationErrors(prev => ({ ...prev, password: error }));
   };
 
