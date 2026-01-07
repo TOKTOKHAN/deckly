@@ -4,6 +4,7 @@ import ConditionalNavbar from '@/components/layout/ConditionalNavbar';
 import AuthProvider from '@/components/providers/AuthProvider';
 import QueryProvider from '@/components/providers/QueryProvider';
 import { NotFoundProvider } from '@/contexts/NotFoundContext';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: {
@@ -102,6 +103,33 @@ export default function RootLayout({
             <AuthProvider>
               <ConditionalNavbar />
               {children}
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 3000,
+                  style: {
+                    background: '#fff',
+                    color: '#1e293b',
+                    borderRadius: '1rem',
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                  },
+                  success: {
+                    iconTheme: {
+                      primary: '#10b981',
+                      secondary: '#fff',
+                    },
+                  },
+                  error: {
+                    iconTheme: {
+                      primary: '#ef4444',
+                      secondary: '#fff',
+                    },
+                  },
+                }}
+              />
             </AuthProvider>
           </QueryProvider>
         </NotFoundProvider>

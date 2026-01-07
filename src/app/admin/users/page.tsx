@@ -21,6 +21,7 @@ import Pagination from '@/components/admin/Pagination';
 import EmptyState from '@/components/admin/EmptyState';
 import UsersPageSkeleton from '@/components/skeletons/UsersPageSkeleton';
 import CreateUserModal from '@/components/admin/CreateUserModal';
+import Button from '@/components/ui/Button';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -96,7 +97,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
-      <div className="animate-in fade-in mx-auto max-w-7xl space-y-12 duration-700">
+      <div className="animate-in fade-in mx-auto max-w-7xl space-y-8 duration-700">
         <PageHeader
           badge={{
             icon: <ShieldCheck size={12} />,
@@ -107,7 +108,6 @@ export default function AdminUsersPage() {
           className="border-b border-slate-200 pb-2"
         />
 
-        {/* 통계 그리드 */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <StatCard
             title="Total Users"
@@ -132,7 +132,18 @@ export default function AdminUsersPage() {
           />
         </div>
 
-        {/* 사용자 목록 테이블 카드 */}
+        <div className="flex justify-end">
+          <Button
+            onClick={() => setIsCreateModalOpen(true)}
+            variant="primary"
+            size="lg"
+            icon={<UserPlus size={18} />}
+            className="rounded-2xl border border-blue-200 bg-blue-600 px-6 py-4 text-base font-black text-white shadow-lg shadow-blue-100 hover:bg-blue-700"
+          >
+            <span className="hidden sm:inline">사용자 추가</span>
+          </Button>
+        </div>
+
         <div className="shadow-3xl overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-slate-200/50">
           <div className="flex flex-col items-center justify-between gap-4 border-b border-slate-50 bg-slate-50/40 px-10 pt-6 sm:flex-row">
             <div className="flex items-center gap-4">
@@ -157,13 +168,6 @@ export default function AdminUsersPage() {
                   className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm transition-all placeholder:text-slate-300 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
                 />
               </div>
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center gap-2 rounded-2xl border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-lg shadow-blue-100 transition-all hover:bg-blue-700"
-              >
-                <UserPlus size={16} />
-                <span className="hidden sm:inline">사용자 추가</span>
-              </button>
             </div>
           </div>
 
@@ -253,7 +257,6 @@ export default function AdminUsersPage() {
             </table>
           </div>
 
-          {/* 하단 페이지네이션 섹션 */}
           {filteredUsers && filteredUsers.length > 0 && (
             <Pagination
               currentPage={currentPage}
@@ -270,7 +273,6 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      {/* 사용자 생성 모달 */}
       <CreateUserModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}

@@ -5,6 +5,7 @@ import { X, UserPlus, Mail, Lock, Phone, Shield, User } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import Input from '@/components/form/Input';
 import Button from '@/components/ui/Button';
+import toast from 'react-hot-toast';
 
 interface CreateUserModalProps {
   isOpen: boolean;
@@ -192,10 +193,23 @@ export default function CreateUserModal({ isOpen, onClose, onSuccess }: CreateUs
       setGrantAdmin(false);
       setValidationErrors({});
       setError(null);
+
+      // 성공 토스트 알림
+      toast.success('사용자 계정이 성공적으로 생성되었습니다.', {
+        duration: 3000,
+      });
+
       onSuccess();
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : '사용자 생성 중 오류가 발생했습니다.');
+      const errorMessage =
+        err instanceof Error ? err.message : '사용자 생성 중 오류가 발생했습니다.';
+      setError(errorMessage);
+
+      // 실패 토스트 알림
+      toast.error(errorMessage, {
+        duration: 4000,
+      });
     } finally {
       setIsLoading(false);
     }
