@@ -111,10 +111,10 @@ export default function DetailFilter({
           <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
             CLIENT
           </p>
-          <div className="flex gap-1 space-y-1.5">
+          <div className="flex flex-wrap gap-1">
             <button
               onClick={() => setTempClient('all')}
-              className={`mt-1.5 truncate rounded-xl border px-2.5 py-2 text-[10px] font-black ${
+              className={`whitespace-normal rounded-xl border px-2.5 py-2 text-[10px] font-black ${
                 tempClient === 'all'
                   ? 'border-slate-900 bg-slate-900 text-white'
                   : 'border-slate-100 bg-white text-slate-400 hover:border-slate-300'
@@ -126,7 +126,7 @@ export default function DetailFilter({
               <button
                 key={option.value}
                 onClick={() => setTempClient(option.value)}
-                className={`truncate rounded-xl border px-2.5 py-2 text-[10px] font-black ${
+                className={`whitespace-normal rounded-xl border px-2.5 py-2 text-[10px] font-black ${
                   tempClient === option.value
                     ? 'border-slate-900 bg-slate-900 text-white'
                     : 'border-slate-100 bg-white text-slate-400 hover:border-slate-300'
