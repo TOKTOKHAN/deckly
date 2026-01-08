@@ -1,5 +1,6 @@
 import { supabase } from './client';
 import { Proposal, ProposalStatus } from '@/types/proposal';
+import { checkProposalTotalLimit } from '@/lib/utils/proposalLimits';
 
 // metadata 타입 정의
 interface ProposalMetadata {
@@ -216,6 +217,9 @@ export async function createProposal(proposal: Proposal): Promise<Proposal> {
     if (userError || !user) {
       throw new Error('로그인이 필요합니다.');
     }
+
+    // 제안서 생성 제한 체크
+    await checkProposalTotalLimit(user.id);
 
     // id가 있으면 포함, 없으면 제외 (Supabase가 자동 생성)
     const insertData = proposal.id
