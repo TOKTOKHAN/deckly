@@ -59,7 +59,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .select('id', { count: 'exact', head: true })
       .eq('status', 'generating');
 
-    // 날짜별 통계
+    // 날짜별 통계 (완료된 제안서만 카운트)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const todayISO = today.toISOString();
@@ -67,6 +67,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     const { count: todayProposals } = await adminSupabase
       .from('proposals')
       .select('id', { count: 'exact', head: true })
+      .eq('status', 'completed')
       .gte('created_at', todayISO);
 
     const weekAgo = new Date();
@@ -76,6 +77,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     const { count: thisWeekProposals } = await adminSupabase
       .from('proposals')
       .select('id', { count: 'exact', head: true })
+      .eq('status', 'completed')
       .gte('created_at', weekAgoISO);
 
     const monthAgo = new Date();
@@ -85,6 +87,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     const { count: thisMonthProposals } = await adminSupabase
       .from('proposals')
       .select('id', { count: 'exact', head: true })
+      .eq('status', 'completed')
       .gte('created_at', monthAgoISO);
 
     return {
