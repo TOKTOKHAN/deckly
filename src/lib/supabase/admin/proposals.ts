@@ -32,12 +32,12 @@ interface ProposalRow {
   id: string;
   title: string;
   client: string;
-  client_contact: string | null;
-  meeting_date: string | null;
-  proposal_date: string | null;
-  our_contact: string | null;
-  content: string | null;
-  meeting_notes: string;
+  client_contact?: string | null;
+  meeting_date?: string | null;
+  proposal_date?: string | null;
+  our_contact?: string | null;
+  content?: string | null; // 목록 조회 시 제외될 수 있음
+  meeting_notes?: string; // 목록 조회 시 제외될 수 있음
   metadata: ProposalMetadata;
   status: ProposalStatus;
   progress: number | null;
@@ -55,7 +55,7 @@ function rowToProposal(row: ProposalRow): Proposal {
     id: row.id,
     projectName: row.title,
     clientCompanyName: row.client,
-    transcriptText: row.meeting_notes,
+    transcriptText: row.meeting_notes || '',
     content: row.content || undefined,
     status: row.status,
     progress: row.progress || undefined,
@@ -117,7 +117,9 @@ export async function getAllProposals(options?: {
   }
 
   try {
-    let query = client.from('proposals').select('*');
+    let query = client
+      .from('proposals')
+      .select('id,title,client,status,progress,error,user_id,created_at,updated_at,metadata');
 
     // 필터 적용
     if (options?.status) {
@@ -248,9 +250,10 @@ export async function getErrorProposals(): Promise<ProposalWithUser[]> {
   }
 
   try {
+    // 목록 조회 시 성능 최적화: 대용량 필드(content, meeting_notes) 제외
     const { data, error } = await client
       .from('proposals')
-      .select('*')
+      .select('id,title,client,status,progress,error,user_id,created_at,updated_at,metadata')
       .not('error', 'is', null)
       .order('created_at', { ascending: false });
 

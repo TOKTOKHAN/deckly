@@ -298,20 +298,6 @@ export async function getProposalStatsByDate(
       })
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    // 디버깅: 방문자 수가 없는 경우 로그 출력
-    if (interval === 'day') {
-      // eslint-disable-next-line no-console
-      console.log('[Analytics] 방문자 수 조회 결과:', {
-        interval,
-        startDate,
-        endDate,
-        visitorStatsSize: visitorStats.size,
-        visitorStatsEntries: Array.from(visitorStats.entries()),
-        proposalDateKeys: Array.from(statsMap.keys()),
-        resultDates: result.map(r => ({ date: r.date, visitors: r.visitors })),
-      });
-    }
-
     return result;
   } catch (err) {
     console.error('날짜별 통계 조회 실패:', err);
