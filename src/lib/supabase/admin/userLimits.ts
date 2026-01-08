@@ -210,6 +210,7 @@ export async function getAllUserLimits(): Promise<
     limit: number | null;
     currentCount: number;
     remaining: number | null; // NULL이면 무제한
+    effectiveLimit: number | null; // 유효한 제한 (개별 또는 기본값)
   }>
 > {
   if (!isAdminClientAvailable() || !adminSupabase) {
@@ -217,6 +218,12 @@ export async function getAllUserLimits(): Promise<
   }
 
   try {
+    // 모든 사용자 조회
+    const { data: usersData, error: usersError } = await adminSupabase.auth.admin.listUsers();
+    if (usersError) {
+      throw usersError;
+    }
+
     // 모든 사용자 제한 조회
     const { data: limits, error: limitsError } = await adminSupabase
       .from('user_limits')
@@ -226,16 +233,28 @@ export async function getAllUserLimits(): Promise<
       throw limitsError;
     }
 
-    // 각 사용자별로 제안서 개수 조회
+    // 기본값 조회
+    const defaultLimit = await getDefaultLimit();
+
+    // user_id를 키로 하는 맵 생성
+    const limitsMap = new Map<string, number | null>();
+    (limits || []).forEach(item => {
+      limitsMap.set(item.user_id, item.proposal_total_limit);
+    });
+
+    // 각 사용자별로 제안서 개수 조회 및 제한 정보 계산
     const result = await Promise.all(
-      (limits || []).map(async item => {
-        const currentCount = await getUserProposalCount(item.user_id);
-        const limit = item.proposal_total_limit;
-        const remaining = limit === null ? null : Math.max(0, limit - currentCount);
+      usersData.users.map(async user => {
+        const userId = user.id;
+        const userLimit = limitsMap.get(userId) ?? null; // 개별 제한
+        const effectiveLimit = userLimit ?? defaultLimit; // 유효한 제한 (개별 > 기본값)
+        const currentCount = await getUserProposalCount(userId);
+        const remaining = effectiveLimit === null ? null : Math.max(0, effectiveLimit - currentCount);
 
         return {
-          userId: item.user_id,
-          limit,
+          userId,
+          limit: userLimit, // 개별 설정값
+          effectiveLimit, // 유효한 제한
           currentCount,
           remaining,
         };
