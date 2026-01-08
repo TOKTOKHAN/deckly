@@ -4,6 +4,7 @@ import ConditionalNavbar from '@/components/layout/ConditionalNavbar';
 import AuthProvider from '@/components/providers/AuthProvider';
 import QueryProvider from '@/components/providers/QueryProvider';
 import { NotFoundProvider } from '@/contexts/NotFoundContext';
+import VisitTracker from '@/components/tracking/VisitTracker';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
@@ -101,6 +102,7 @@ export default function RootLayout({
         <NotFoundProvider>
           <QueryProvider>
             <AuthProvider>
+              <VisitTracker />
               <ConditionalNavbar />
               {children}
               <Toaster
