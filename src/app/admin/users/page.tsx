@@ -101,8 +101,7 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="-m-8 min-h-screen bg-[#F8FAFC] p-8 font-sans text-slate-900 md:p-12">
-      <div className="animate-in fade-in mx-auto max-w-7xl space-y-8 duration-700">
+    <div className="animate-in fade-in space-y-8 duration-700">
         <PageHeader
           badge={{
             icon: <ShieldCheck size={12} />,
@@ -292,7 +291,6 @@ export default function AdminUsersPage() {
             />
           )}
         </div>
-      </div>
 
       <CreateUserModal
         isOpen={isCreateModalOpen}

@@ -208,7 +208,7 @@ export default function AdminProposalsPage() {
   }
 
   return (
-    <div className="-mx-8 flex items-start gap-8 md:-mx-12">
+    <div className="flex items-start gap-8">
       <main className="flex-1 space-y-8">
         <PageHeader
           badge={{
