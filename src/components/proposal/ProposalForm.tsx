@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
@@ -187,11 +188,23 @@ export default function ProposalForm() {
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('제안서 생성 오류:', err);
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류';
+
+      // 제한 초과 에러인지 확인
+      if (errorMessage.includes('제한')) {
+        toast.error(errorMessage, {
+          duration: 5000,
+          icon: '⚠️',
+        });
+        setIsGenerating(false);
+        return; // 제안서 생성 중단
+      }
+
       const errorProposal: Proposal = {
         id: proposalId,
         ...data,
         status: 'error',
-        error: err instanceof Error ? err.message : '알 수 없는 오류',
+        error: errorMessage,
         createdAt: new Date().toISOString(),
       };
       try {
@@ -201,7 +214,9 @@ export default function ProposalForm() {
         console.error('에러 상태 저장 오류:', updateErr);
       }
       setIsGenerating(false);
-      alert('제안서 생성 중 오류가 발생했습니다.');
+      toast.error('제안서 생성 중 오류가 발생했습니다.', {
+        duration: 5000,
+      });
     }
   };
 
@@ -223,11 +238,27 @@ export default function ProposalForm() {
 
     try {
       // Supabase에 저장 (id는 자동 생성됨)
+      // 여기서 제한 체크가 수행됨
       createdProposal = await createMutation.mutateAsync(newProposal);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('제안서 생성 오류:', err);
-      throw err; // 에러를 상위로 전달
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류';
+
+      // 제한 초과 에러인지 확인
+      if (errorMessage.includes('제한')) {
+        toast.error(errorMessage, {
+          duration: 5000,
+          icon: '⚠️',
+        });
+        return; // 제안서 생성 중단
+      }
+
+      // 기타 에러 처리
+      toast.error('제안서 생성 중 오류가 발생했습니다.', {
+        duration: 5000,
+      });
+      return;
     }
 
     // 제안서 생성 시작
