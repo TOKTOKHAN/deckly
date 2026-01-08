@@ -126,8 +126,8 @@ async function getVisitorStatsByDate(
     const endDateStr = endDate.includes('T') ? endDate.split('T')[0] : endDate;
 
     const { data, error } = await adminSupabase
-      .from('visitor_stats')
-      .select('date, visitor_count')
+      .from('visitor_logs')
+      .select('date, user_id, visitor_id')
       .gte('date', startDateStr)
       .lte('date', endDateStr)
       .order('date', { ascending: true });
@@ -138,52 +138,57 @@ async function getVisitorStatsByDate(
       return new Map<string, number>();
     }
 
-    const visitorMap = new Map<string, number>();
+    const visitorMap = new Map<string, Set<string>>(); // 날짜별 고유 방문자 Set
 
     if (!data || data.length === 0) {
-      return visitorMap;
+      return new Map<string, number>();
     }
 
-    // interval에 따라 날짜 키 생성 및 집계
+    // 각 방문 기록을 처리하여 고유 방문자 수 계산
     data.forEach(row => {
-      // row.date는 DATE 타입이므로 문자열로 바로 사용 가능
       const dateStr =
         typeof row.date === 'string' ? row.date : row.date.toISOString().split('T')[0];
 
-      // 타임존 문제 방지를 위해 직접 날짜 문자열 생성
-      // dateStr이 이미 YYYY-MM-DD 형식이므로 그대로 사용
+      // 고유 방문자 식별자 생성 (user_id가 있으면 user_id 사용, 없으면 visitor_id 사용)
+      const uniqueVisitorId = row.user_id ? `user_${row.user_id}` : `visitor_${row.visitor_id}`;
+
+      // interval에 따라 날짜 키 생성
       let dateKey: string;
 
       if (interval === 'day') {
-        // YYYY-MM-DD 형식 그대로 사용 (타임존 변환 없이)
         dateKey = dateStr;
       } else if (interval === 'week') {
-        // DATE 타입은 로컬 시간으로 처리되어야 하므로 Date 객체 생성 시 주의
         const date = new Date(dateStr + 'T00:00:00');
         const dayOfWeek = date.getDay();
         const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
         const weekStart = new Date(date);
         weekStart.setDate(date.getDate() - daysToMonday);
-        // 타임존 문제 방지를 위해 직접 날짜 문자열 생성
         const year = weekStart.getFullYear();
         const month = String(weekStart.getMonth() + 1).padStart(2, '0');
         const day = String(weekStart.getDate()).padStart(2, '0');
         dateKey = `${year}-${month}-${day}`;
       } else if (interval === 'month') {
         const date = new Date(dateStr + 'T00:00:00');
-        dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
+        dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       } else {
-        // year
         const date = new Date(dateStr + 'T00:00:00');
-        dateKey = `${date.getFullYear()}`; // YYYY
+        dateKey = `${date.getFullYear()}`;
       }
 
-      // 같은 dateKey가 있으면 합산
-      const currentCount = visitorMap.get(dateKey) || 0;
-      visitorMap.set(dateKey, currentCount + (row.visitor_count || 0));
+      // 해당 날짜 키의 고유 방문자 Set에 추가
+      if (!visitorMap.has(dateKey)) {
+        visitorMap.set(dateKey, new Set<string>());
+      }
+      visitorMap.get(dateKey)!.add(uniqueVisitorId);
     });
 
-    return visitorMap;
+    // Set의 크기를 숫자로 변환하여 반환
+    const resultMap = new Map<string, number>();
+    visitorMap.forEach((visitorSet, dateKey) => {
+      resultMap.set(dateKey, visitorSet.size);
+    });
+
+    return resultMap;
   } catch (err) {
     console.error('방문자 수 조회 실패:', err);
     return new Map<string, number>();
