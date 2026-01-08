@@ -11,12 +11,10 @@ export default function VisitTracker() {
   const trackedRef = useRef<boolean>(false); // 같은 세션에서 이미 추적했는지 여부
 
   useEffect(() => {
-    // 인증 상태가 로딩 중이면 대기
     if (isLoading) {
       return;
     }
 
-    // 이미 추적했으면 스킵
     if (trackedRef.current) {
       return;
     }
