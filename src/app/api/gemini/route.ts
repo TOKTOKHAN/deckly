@@ -4,6 +4,9 @@ import { createProposalPrompt } from '@/lib/gemini/prompts';
 import { generateProposalWithChains } from '@/lib/gemini/chains';
 import { ProposalRequest } from '@/types/gemini';
 
+// 동적 렌더링 강제 (POST 요청 및 request.json() 사용)
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // API 키 확인

@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { adminSupabase, isAdminClientAvailable } from '@/lib/supabase/admin/client';
 import { createClient } from '@supabase/supabase-js';
 
+// 동적 렌더링 강제 (동적 라우트 [id] 사용)
+export const dynamic = 'force-dynamic';
+
 // 공통 인증 및 권한 확인 함수
 async function verifyAdmin(request: Request) {
   const authHeader = request.headers.get('authorization');
