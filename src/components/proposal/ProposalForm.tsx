@@ -10,6 +10,7 @@ import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
 import { getProposals, createProposal, updateProposal } from '@/lib/supabase/proposals';
 import { proposalFormSchema } from '@/lib/validations/proposalSchema';
+import { useAuthStore } from '@/stores/authStore';
 import FormView from './FormView';
 import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
@@ -54,16 +55,18 @@ const initialFormData: ProposalFormData = {
 
 export default function ProposalForm() {
   const queryClient = useQueryClient();
+  const { user, isLoading: isAuthLoading } = useAuthStore();
   const [view, setView] = useState<'dashboard' | 'form' | 'result'>('dashboard');
   const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null);
   const [step, setStep] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStatus, setGenStatus] = useState<GenerationStatus>({ progress: 0, message: '' });
 
-  // React Query로 제안서 목록 조회
+  // React Query로 제안서 목록 조회 (인증 상태가 준비된 후에만 실행)
   const { data: proposals = [] } = useQuery({
     queryKey: ['proposals'],
     queryFn: getProposals,
+    enabled: !!user && !isAuthLoading, // 인증 상태가 준비된 후에만 실행
   });
 
   // react-hook-form 설정

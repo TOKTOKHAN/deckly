@@ -16,8 +16,8 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await logout();
+    // 로그아웃 성공 시 login 페이지로 이동
     router.push('/login');
-    router.refresh();
   };
 
   if (isLoading) {

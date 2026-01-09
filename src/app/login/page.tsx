@@ -19,9 +19,11 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
 import { loginSchema, type LoginFormData } from '@/lib/validations/authSchema';
 import { supabase } from '@/lib/supabase/client';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { initialize } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -93,8 +95,11 @@ export default function LoginPage() {
 
       // 로그인 성공
       if (authData.user) {
-        router.push('/');
-        router.refresh();
+        // 인증 상태 업데이트 대기
+        await initialize();
+
+        // 상태 업데이트 완료 후 대시보드로 이동
+        router.push('/dashboard');
       }
     } catch (error) {
       // 네트워크 에러나 기타 예외 처리
