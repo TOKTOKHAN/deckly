@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { Menu } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const { user, isAdmin, isLoading } = useAuthStore();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [shouldShowNotFound, setShouldShowNotFound] = useState(false);
@@ -15,11 +17,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // 로딩 중이면 대기
     if (isLoading) return;
 
-    // 로그인하지 않았거나 관리자가 아니면 404 표시
-    if (!user || !isAdmin) {
+    // 로그인하지 않았으면 로그인 페이지로 리다이렉트
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    // 관리자가 아니면 404 표시 (일반 사용자가 어드민 페이지 접근 시)
+    if (!isAdmin) {
       setShouldShowNotFound(true);
     }
-  }, [user, isAdmin, isLoading]);
+  }, [user, isAdmin, isLoading, router]);
 
   // 조건이 만족되면 404 페이지 표시
   if (shouldShowNotFound) {

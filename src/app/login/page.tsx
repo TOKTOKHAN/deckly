@@ -20,10 +20,13 @@ import Input from '@/components/form/Input';
 import { loginSchema, type LoginFormData } from '@/lib/validations/authSchema';
 import { supabase } from '@/lib/supabase/client';
 import { useAuthStore } from '@/stores/authStore';
+import { useRequireGuest } from '@/hooks/useRequireGuest';
 
 export default function LoginPage() {
   const router = useRouter();
   const { initialize } = useAuthStore();
+  // 로그인한 사용자는 대시보드로 리다이렉트
+  useRequireGuest();
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
