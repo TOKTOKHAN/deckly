@@ -8,7 +8,7 @@ import { Zap } from 'lucide-react';
 
 export default function ProposalsPageSkeleton() {
   return (
-    <div className="-mx-8 flex items-start gap-8 md:-mx-12">
+    <div className="flex items-start gap-8">
       {/* 메인 콘텐츠 영역 */}
       <main className="flex-1 space-y-8">
         <PageHeader
@@ -34,7 +34,7 @@ export default function ProposalsPageSkeleton() {
 
       {/* 필터 사이드바 스켈레톤 */}
       <aside className="w-72 flex-shrink-0">
-        <div className="sticky top-0">
+        <div className="sticky top-10">
           <DetailFilterSkeleton />
         </div>
       </aside>

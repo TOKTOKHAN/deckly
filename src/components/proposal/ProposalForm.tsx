@@ -282,7 +282,7 @@ export default function ProposalForm() {
         {view === 'dashboard' && (
           <>
             {isProposalsLoading ? (
-              <ProposalDashboardSkeleton />
+              <ProposalDashboardSkeleton includeWrapper={false} />
             ) : (
               <DashboardView
                 proposals={proposals}

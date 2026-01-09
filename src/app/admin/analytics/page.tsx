@@ -17,9 +17,9 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { formatChartDate } from '@/lib/utils/dateFormatter';
 import PageHeader from '@/components/admin/PageHeader';
 import StatCard from '@/components/admin/StatCard';
-import LoadingState from '@/components/admin/LoadingState';
 import ErrorState from '@/components/admin/ErrorState';
 import EmptyState from '@/components/admin/EmptyState';
+import AnalyticsPageSkeleton from '@/components/skeletons/AnalyticsPageSkeleton';
 
 export default function AdminAnalyticsPage() {
   const [interval, setInterval] = useState<'week' | 'month' | 'year'>('week');
@@ -71,33 +71,38 @@ export default function AdminAnalyticsPage() {
       )}
 
       {isLoading ? (
-        <LoadingState message="통계를 불러오는 중..." />
+        <AnalyticsPageSkeleton />
       ) : stats && stats.length > 0 ? (
         <>
+          {/* 통계 카드 그리드 */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="총 방문자 수"
               value={totalVisitors}
               icon={<MousePointer2 size={18} />}
               colorClass="bg-indigo-600"
+              subText="계정 당 1회로 카운트"
             />
             <StatCard
               title="제안서 생성 총계"
               value={totalCreated}
               icon={<BarChart3 size={18} />}
               colorClass="bg-blue-600"
+              subText="모든 계정의 제안서 생성 횟수"
             />
             <StatCard
               title="최종 완료율"
               value={`${successRate}%`}
               icon={<CheckCircle2 size={18} />}
               colorClass="bg-emerald-600"
+              subText="제안서 생성 성공률 분석"
             />
             <StatCard
               title="평균 오류 발생"
               value={`${errorRate}%`}
               icon={<AlertCircle size={18} />}
               colorClass="bg-red-600"
+              subText="제안서 생성 실패율 분석"
             />
           </div>
 
