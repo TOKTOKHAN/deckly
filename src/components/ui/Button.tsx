@@ -48,7 +48,7 @@ export default function Button({
       {...props}
     >
       {iconPosition === 'left' && iconElement}
-      {isLoading ? '로딩 중...' : children}
+      {children}
       {iconPosition === 'right' && iconElement}
     </button>
   );

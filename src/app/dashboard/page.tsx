@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
 import ProposalForm from '@/components/proposal/ProposalForm';
-
-export const metadata: Metadata = {
-  title: '대시보드',
-  description: '제안서를 생성하고 관리하세요.',
-};
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import ProposalDashboardSkeleton from '@/components/skeletons/ProposalDashboardSkeleton';
 
 export default function DashboardPage() {
-  return <ProposalForm />;
+  return (
+    <ProtectedRoute loadingFallback={<ProposalDashboardSkeleton />}>
+      <ProposalForm />
+    </ProtectedRoute>
+  );
 }

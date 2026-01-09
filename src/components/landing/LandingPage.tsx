@@ -19,6 +19,7 @@ import {
   Layout,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import DecklyLogo from '@/components/ui/DecklyLogo';
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,10 +55,7 @@ export default function LandingPage() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="rounded-lg bg-indigo-600 p-2">
-              <Layout className="text-white" size={20} />
-            </div>
-            <span className="text-xl font-black tracking-tighter text-slate-800">Deckly</span>
+            <DecklyLogo className="h-8 w-auto text-indigo-600" />
           </Link>
 
           {/* Desktop Menu */}
@@ -97,12 +95,7 @@ export default function LandingPage() {
       {isMenuOpen && (
         <div className="animate-in slide-in-from-top fixed inset-0 z-40 flex flex-col gap-6 bg-white p-6 duration-300 md:hidden">
           <div className="mb-10 mt-16 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="rounded-lg bg-indigo-600 p-2">
-                <Layout className="text-white" size={20} />
-              </div>
-              <span className="text-xl font-black tracking-tighter text-slate-800">Deckly</span>
-            </div>
+            <DecklyLogo className="h-8 w-auto text-indigo-600" />
             <button onClick={() => setIsMenuOpen(false)} className="text-slate-400">
               <X size={24} />
             </button>

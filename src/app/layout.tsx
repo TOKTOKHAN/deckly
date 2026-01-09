@@ -4,6 +4,8 @@ import ConditionalNavbar from '@/components/layout/ConditionalNavbar';
 import AuthProvider from '@/components/providers/AuthProvider';
 import QueryProvider from '@/components/providers/QueryProvider';
 import { NotFoundProvider } from '@/contexts/NotFoundContext';
+import VisitTracker from '@/components/tracking/VisitTracker';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: {
@@ -70,11 +72,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // icons: {
-  //   icon: '/icons/favicon.ico',
-  //   shortcut: '/icons/favicon-16x16.png',
-  //   apple: '/icons/apple-touch-icon.png',
-  // },
+  icons: {
+    icon: '/images/deckly-logo.svg',
+    shortcut: '/images/deckly-logo.svg',
+    apple: '/images/deckly-logo.svg',
+  },
   // manifest: '/manifest.json',
   category: 'business',
 };
@@ -100,8 +102,36 @@ export default function RootLayout({
         <NotFoundProvider>
           <QueryProvider>
             <AuthProvider>
+              <VisitTracker />
               <ConditionalNavbar />
               {children}
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 3000,
+                  style: {
+                    background: '#fff',
+                    color: '#1e293b',
+                    borderRadius: '1rem',
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                  },
+                  success: {
+                    iconTheme: {
+                      primary: '#10b981',
+                      secondary: '#fff',
+                    },
+                  },
+                  error: {
+                    iconTheme: {
+                      primary: '#ef4444',
+                      secondary: '#fff',
+                    },
+                  },
+                }}
+              />
             </AuthProvider>
           </QueryProvider>
         </NotFoundProvider>

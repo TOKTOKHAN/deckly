@@ -7,12 +7,14 @@ interface DashboardViewProps {
   proposals: Proposal[];
   onCreateNew: () => void;
   onSelectProposal: (proposal: Proposal) => void;
+  onDeleteProposal?: (proposal: Proposal) => void;
 }
 
 export default function DashboardView({
   proposals,
   onCreateNew,
   onSelectProposal,
+  onDeleteProposal,
 }: DashboardViewProps) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -45,6 +47,13 @@ export default function DashboardView({
                   onSelectProposal(proposal);
                 }
               }}
+              onDelete={
+                onDeleteProposal
+                  ? () => {
+                      onDeleteProposal(proposal);
+                    }
+                  : undefined
+              }
             />
           ))}
         </div>

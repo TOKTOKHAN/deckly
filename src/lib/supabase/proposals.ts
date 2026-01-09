@@ -1,5 +1,6 @@
 import { supabase } from './client';
 import { Proposal, ProposalStatus } from '@/types/proposal';
+import { checkProposalTotalLimit } from '@/lib/utils/proposalLimits';
 
 // metadata 타입 정의
 interface ProposalMetadata {
@@ -217,6 +218,9 @@ export async function createProposal(proposal: Proposal): Promise<Proposal> {
       throw new Error('로그인이 필요합니다.');
     }
 
+    // 제안서 생성 제한 체크
+    await checkProposalTotalLimit(user.id);
+
     // id가 있으면 포함, 없으면 제외 (Supabase가 자동 생성)
     const insertData = proposal.id
       ? { id: proposal.id, ...proposalToRow(proposal, user.id) }
@@ -320,7 +324,33 @@ export async function deleteProposal(id: string): Promise<void> {
   }
 
   try {
-    const { error } = await supabase.from('proposals').delete().eq('id', id);
+    // 현재 로그인한 사용자 확인
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error('로그인이 필요합니다.');
+    }
+
+    // 먼저 제안서가 존재하고 본인 것인지 확인
+    const { data: existingProposal, error: fetchError } = await supabase
+      .from('proposals')
+      .select('user_id')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !existingProposal) {
+      throw new Error('제안서를 찾을 수 없습니다.');
+    }
+
+    if (existingProposal.user_id !== user.id) {
+      throw new Error('본인의 제안서만 삭제할 수 있습니다.');
+    }
+
+    // 본인의 제안서만 삭제
+    const { error } = await supabase.from('proposals').delete().eq('id', id).eq('user_id', user.id); // 추가 보안: 본인 것만 삭제
 
     if (error) {
       console.error('제안서 삭제 오류:', error);

@@ -41,7 +41,7 @@ export const proposalFormSchema = z
     priorityFeatures: z.string(),
     projectPhase: z.string(),
     priorityFactor: z.string(),
-    transcriptText: z.string().min(50, '최소 50자 이상 입력해주세요'),
+    transcriptText: z.string().min(300, '최소 300자 이상 입력해주세요'),
     volume: z.string(),
     designStyle: z.string(),
     figureStyle: z.string(),

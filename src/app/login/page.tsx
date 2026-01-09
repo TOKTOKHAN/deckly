@@ -5,23 +5,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  Mail,
-  Lock,
-  ArrowRight,
-  ChevronLeft,
-  Layout,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-} from 'lucide-react';
+import { Mail, Lock, ArrowRight, ChevronLeft, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
+import DecklyLogo from '@/components/ui/DecklyLogo';
 import { loginSchema, type LoginFormData } from '@/lib/validations/authSchema';
 import { supabase } from '@/lib/supabase/client';
+import { useAuthStore } from '@/stores/authStore';
+import { useRequireGuest } from '@/hooks/useRequireGuest';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { initialize } = useAuthStore();
+  // 로그인한 사용자는 대시보드로 리다이렉트
+  useRequireGuest();
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -93,8 +90,11 @@ export default function LoginPage() {
 
       // 로그인 성공
       if (authData.user) {
-        router.push('/');
-        router.refresh();
+        // 인증 상태 업데이트 대기
+        await initialize();
+
+        // 상태 업데이트 완료 후 대시보드로 이동
+        router.push('/dashboard');
       }
     } catch (error) {
       // 네트워크 에러나 기타 예외 처리
@@ -117,10 +117,7 @@ export default function LoginPage() {
 
           <div className="relative z-10">
             <div className="group mb-8 flex cursor-pointer items-center gap-2">
-              <div className="rounded-xl bg-white p-2">
-                <Layout className="text-indigo-600" size={24} />
-              </div>
-              <span className="text-2xl font-black tracking-tighter">Deckly</span>
+              <DecklyLogo className="text-white" width={120} height={30} />
             </div>
 
             <h1 className="mb-6 text-4xl font-bold leading-tight">

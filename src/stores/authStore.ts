@@ -1,31 +1,66 @@
 import { create } from 'zustand';
-import { User, Session } from '@supabase/supabase-js';
+import { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
+import { isAdmin } from '@/lib/utils/admin';
 
 interface AuthState {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
+  isAdmin: boolean;
   setUser: (user: User | null) => void;
   setSession: (session: Session | null) => void;
   setLoading: (isLoading: boolean) => void;
   logout: () => Promise<void>;
   initialize: () => Promise<void>;
+  checkAdmin: () => void;
+  checkSessionExpiry: (session: Session | null) => boolean;
 }
 
 export const useAuthStore = create<AuthState>(set => ({
   user: null,
   session: null,
   isLoading: true,
+  isAdmin: false,
 
-  setUser: user => set({ user }),
+  setUser: user => {
+    set({ user, isAdmin: isAdmin(user) });
+  },
   setSession: session => set({ session }),
   setLoading: isLoading => set({ isLoading }),
 
+  checkAdmin: () => {
+    const state = useAuthStore.getState();
+    set({ isAdmin: isAdmin(state.user) });
+  },
+
+  checkSessionExpiry: (session: Session | null): boolean => {
+    // 세션이 없으면 만료된 것으로 간주
+    if (!session) {
+      return true;
+    }
+
+    // 만료 시간 정보가 없으면 만료된 것으로 간주
+    if (!session.expires_at) {
+      return true;
+    }
+
+    // expires_at은 Unix timestamp (초 단위)
+    const now = Math.floor(Date.now() / 1000); // 현재 시간을 초 단위로 변환
+    return session.expires_at < now; // 만료 시간이 현재보다 이전이면 만료됨
+  },
+
   logout: async () => {
+    set({ user: null, session: null, isAdmin: false });
+
     if (!supabase) return;
-    await supabase.auth.signOut();
-    set({ user: null, session: null });
+
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('로그아웃 오류:', error);
+    }
   },
 
   initialize: async () => {
@@ -48,18 +83,83 @@ export const useAuthStore = create<AuthState>(set => ({
         return;
       }
 
+      // 세션 만료 체크
+      const state = useAuthStore.getState();
+      if (state.checkSessionExpiry(session)) {
+        // 만료된 세션이면 자동 로그아웃
+        await state.logout();
+        set({ isLoading: false });
+        return;
+      }
+
+      const user = session?.user ?? null;
       set({
-        user: session?.user ?? null,
+        user,
         session: session,
         isLoading: false,
+        isAdmin: isAdmin(user),
       });
 
       // 인증 상태 변경 감지
-      supabase.auth.onAuthStateChange((_event, session) => {
-        set({
-          user: session?.user ?? null,
-          session: session,
-        });
+      supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session) => {
+        const currentState = useAuthStore.getState();
+
+        // 세션 만료 체크
+        if (currentState.checkSessionExpiry(session)) {
+          // 만료된 세션이면 자동 로그아웃
+          await currentState.logout();
+          return;
+        }
+
+        switch (event) {
+          case 'SIGNED_OUT':
+            // 로그아웃 또는 세션 만료
+            // 상태가 이미 null이면 중복 업데이트 방지
+            if (currentState.user !== null || currentState.session !== null) {
+              set({ user: null, session: null, isAdmin: false });
+            }
+            break;
+
+          case 'TOKEN_REFRESHED':
+            // 토큰이 성공적으로 갱신됨
+            if (session) {
+              const updatedUser = session.user ?? null;
+              set({
+                user: updatedUser,
+                session: session,
+                isAdmin: isAdmin(updatedUser),
+              });
+            }
+            break;
+
+          case 'SIGNED_IN':
+          case 'USER_UPDATED':
+            if (session) {
+              const updatedUser = session.user ?? null;
+              set({
+                user: updatedUser,
+                session: session,
+                isAdmin: isAdmin(updatedUser),
+              });
+            }
+            break;
+
+          default:
+            // 기타 이벤트는 기본 처리
+            if (session) {
+              const updatedUser = session.user ?? null;
+              set({
+                user: updatedUser,
+                session: session,
+                isAdmin: isAdmin(updatedUser),
+              });
+            } else {
+              if (currentState.user !== null || currentState.session !== null) {
+                set({ user: null, session: null, isAdmin: false });
+              }
+            }
+            break;
+        }
       });
     } catch (error) {
       // eslint-disable-next-line no-console

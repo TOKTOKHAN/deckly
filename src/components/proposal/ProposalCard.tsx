@@ -1,17 +1,33 @@
 import { Proposal } from '@/types/proposal';
 import { FileText, ChevronRight } from '@/components/icons';
+import { Trash2 } from 'lucide-react';
 
 interface ProposalCardProps {
   proposal: Proposal;
   onClick: () => void;
+  onDelete?: (e: React.MouseEvent) => void;
 }
 
-export default function ProposalCard({ proposal, onClick }: ProposalCardProps) {
+export default function ProposalCard({ proposal, onClick, onDelete }: ProposalCardProps) {
   return (
     <div
       onClick={onClick}
-      className="group cursor-pointer rounded-3xl border border-gray-100 bg-white p-6 shadow-sm transition hover:border-indigo-500 hover:shadow-xl"
+      className="group relative cursor-pointer rounded-3xl border border-gray-100 bg-white p-6 shadow-sm transition hover:border-indigo-500 hover:shadow-xl"
     >
+      {/* 삭제 버튼 - 우측 상단 모서리에 걸쳐서 */}
+      {onDelete && (
+        <button
+          onClick={e => {
+            e.stopPropagation(); // 카드 클릭 이벤트 방지
+            onDelete(e);
+          }}
+          className="absolute -right-2 -top-2 z-10 rounded-full bg-white p-2 text-gray-400 opacity-0 shadow-md ring-1 ring-gray-200 transition-all hover:bg-red-50 hover:text-red-600 hover:ring-red-200 group-hover:opacity-100"
+          aria-label="제안서 삭제"
+        >
+          <Trash2 size={18} />
+        </button>
+      )}
+
       <div className="mb-4 flex items-start justify-between">
         <div className="rounded-xl bg-gray-50 p-2.5 transition group-hover:bg-indigo-50">
           <FileText className="text-gray-400 group-hover:text-indigo-600" size={24} />
