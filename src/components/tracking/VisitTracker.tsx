@@ -7,6 +7,7 @@ import { getOrCreateVisitorId } from '@/lib/utils/cookies';
 /* 방문자 수 추적 컴포넌트 페이지 로드 시 한 번만 방문자 수를 기록합니다. */
 export default function VisitTracker() {
   const user = useAuthStore(state => state.user);
+  const session = useAuthStore(state => state.session);
   const isLoading = useAuthStore(state => state.isLoading);
   const trackedRef = useRef<boolean>(false); // 같은 세션에서 이미 추적했는지 여부
 
@@ -16,6 +17,13 @@ export default function VisitTracker() {
     }
 
     if (trackedRef.current) {
+      return;
+    }
+
+    // 로그인 사용자인 경우 세션이 완전히 준비될 때까지 대기
+    // (로그인 직후 세션 토큰이 아직 동기화되지 않을 수 있음)
+    // session이 설정되면 useEffect가 다시 실행되므로 재시도됨
+    if (user && !session) {
       return;
     }
 
@@ -68,17 +76,20 @@ export default function VisitTracker() {
           localStorage.removeItem(yesterdayKey);
         } else {
           const error = await response.json();
+          // eslint-disable-next-line no-console
           console.error('방문자 수 기록 실패:', error);
         }
       } catch (error) {
         // 방문자 수 기록 실패해도 페이지는 정상 작동
+        // eslint-disable-next-line no-console
         console.error('방문자 수 기록 오류:', error);
       }
     };
 
     // 인증 상태가 로드된 후 실행
     trackVisit();
-  }, [user?.id, isLoading]); // user?.id 또는 isLoading이 변경될 때 실행
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, session, isLoading]); // user?.id, session 또는 isLoading이 변경될 때 실행
 
   return null;
 }

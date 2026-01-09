@@ -348,7 +348,7 @@ export default function AdminSettingsPage() {
               <div className="flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-orange-50 text-orange-600">
                 <Users size={28} />
               </div>
-              <div>
+    <div>
                 <h2 className="text-2xl font-black tracking-tight text-slate-900">
                   기존 사용자 일괄 적용
                 </h2>
@@ -453,7 +453,7 @@ export default function AdminSettingsPage() {
                     ? '적용 중...'
                     : '일괄 업데이트 실행'}
                 </Button>
-              </div>
+      </div>
 
               {batchTarget === 'all' && (
                 <div className="flex items-start gap-5 rounded-[2rem] border border-red-100 bg-red-50 p-8">

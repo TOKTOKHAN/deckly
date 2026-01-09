@@ -289,10 +289,10 @@ export async function getProposalStatsByDate(
         const stats = statsMap.get(date) || { count: 0, completed: 0, error: 0 };
         const visitorCount = visitorStats.get(date) || 0;
         return {
-          date,
-          count: stats.count,
-          completed: stats.completed,
-          error: stats.error,
+        date,
+        count: stats.count,
+        completed: stats.completed,
+        error: stats.error,
           visitors: visitorCount,
         };
       })

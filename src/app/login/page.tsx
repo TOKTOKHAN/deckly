@@ -5,18 +5,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  Mail,
-  Lock,
-  ArrowRight,
-  ChevronLeft,
-  Layout,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-} from 'lucide-react';
+import { Mail, Lock, ArrowRight, ChevronLeft, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
+import DecklyLogo from '@/components/ui/DecklyLogo';
 import { loginSchema, type LoginFormData } from '@/lib/validations/authSchema';
 import { supabase } from '@/lib/supabase/client';
 import { useAuthStore } from '@/stores/authStore';
@@ -125,10 +117,7 @@ export default function LoginPage() {
 
           <div className="relative z-10">
             <div className="group mb-8 flex cursor-pointer items-center gap-2">
-              <div className="rounded-xl bg-white p-2">
-                <Layout className="text-indigo-600" size={24} />
-              </div>
-              <span className="text-2xl font-black tracking-tighter">Deckly</span>
+              <DecklyLogo className="text-white" width={120} height={30} />
             </div>
 
             <h1 className="mb-6 text-4xl font-bold leading-tight">

@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Layout } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import NavbarSkeleton from '@/components/skeletons/NavbarSkeleton';
+import DecklyLogo from '@/components/ui/DecklyLogo';
 
 export default function Navbar() {
   const router = useRouter();
@@ -30,11 +31,8 @@ export default function Navbar() {
   return (
     <nav className="border-b border-gray-200 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="rounded-lg bg-indigo-600 p-2">
-            <Layout className="text-white" size={20} />
-          </div>
-          <span className="text-xl font-black tracking-tighter text-slate-800">Deckly</span>
+        <Link href="/" className="flex items-center gap-3">
+          <DecklyLogo className="h-8 w-auto text-indigo-600" />
         </Link>
 
         <div className="flex items-center gap-4">

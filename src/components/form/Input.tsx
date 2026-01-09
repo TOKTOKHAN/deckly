@@ -59,7 +59,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                 : className.includes('border-') && !className.includes('focus:border-')
                   ? ''
-                  : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
+                : 'border-gray-300 focus:border-transparent focus:ring-indigo-500'
             } ${
               error ? '!border-red-500 focus:!border-red-500 focus:!ring-red-500' : ''
             } ${!className.includes('rounded-') ? 'rounded-xl' : ''} ${
