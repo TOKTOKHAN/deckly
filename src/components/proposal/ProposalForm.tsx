@@ -15,6 +15,7 @@ import FormView from './FormView';
 import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
 import ResultView from './ResultView';
+import ProposalDashboardSkeleton from '@/components/skeletons/ProposalDashboardSkeleton';
 
 const initialFormData: ProposalFormData = {
   // 기본 정보
@@ -63,7 +64,7 @@ export default function ProposalForm() {
   const [genStatus, setGenStatus] = useState<GenerationStatus>({ progress: 0, message: '' });
 
   // React Query로 제안서 목록 조회 (인증 상태가 준비된 후에만 실행)
-  const { data: proposals = [] } = useQuery({
+  const { data: proposals = [], isLoading: isProposalsLoading } = useQuery({
     queryKey: ['proposals'],
     queryFn: getProposals,
     enabled: !!user && !isAuthLoading, // 인증 상태가 준비된 후에만 실행
@@ -279,18 +280,24 @@ export default function ProposalForm() {
     <div className="min-h-screen bg-gray-50">
       <main className="pb-20">
         {view === 'dashboard' && (
-          <DashboardView
-            proposals={proposals}
-            onCreateNew={() => {
-              reset(initialFormData);
-              setStep(1);
-              setView('form');
-            }}
-            onSelectProposal={proposal => {
-              setCurrentProposal(proposal);
-              setView('result');
-            }}
-          />
+          <>
+            {isProposalsLoading ? (
+              <ProposalDashboardSkeleton />
+            ) : (
+              <DashboardView
+                proposals={proposals}
+                onCreateNew={() => {
+                  reset(initialFormData);
+                  setStep(1);
+                  setView('form');
+                }}
+                onSelectProposal={proposal => {
+                  setCurrentProposal(proposal);
+                  setView('result');
+                }}
+              />
+            )}
+          </>
         )}
         {view === 'form' && (
           <FormView

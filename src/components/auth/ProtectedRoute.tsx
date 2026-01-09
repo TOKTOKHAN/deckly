@@ -7,6 +7,7 @@ interface ProtectedRouteProps {
   children: ReactNode;
   redirectTo?: string;
   fallback?: ReactNode;
+  loadingFallback?: ReactNode;
 }
 
 /**
@@ -23,11 +24,17 @@ export default function ProtectedRoute({
   children,
   redirectTo = '/login',
   fallback = null,
+  loadingFallback,
 }: ProtectedRouteProps) {
   const { isLoading, isAuthenticated } = useRequireAuth(redirectTo);
 
-  // 로딩 중이거나 인증되지 않았으면 fallback 렌더링
-  if (isLoading || !isAuthenticated) {
+  // 로딩 중이면 로딩 fallback 표시
+  if (isLoading) {
+    return <>{loadingFallback || <div className="min-h-screen bg-gray-50" />}</>;
+  }
+
+  // 인증되지 않았으면 fallback 렌더링
+  if (!isAuthenticated) {
     return <>{fallback}</>;
   }
 
