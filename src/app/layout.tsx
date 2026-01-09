@@ -72,11 +72,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // icons: {
-  //   icon: '/icons/favicon.ico',
-  //   shortcut: '/icons/favicon-16x16.png',
-  //   apple: '/icons/apple-touch-icon.png',
-  // },
+  icons: {
+    icon: '/images/deckly-logo.svg',
+    shortcut: '/images/deckly-logo.svg',
+    apple: '/images/deckly-logo.svg',
+  },
   // manifest: '/manifest.json',
   category: 'business',
 };
