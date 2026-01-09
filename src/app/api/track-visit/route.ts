@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminSupabase, isAdminClientAvailable } from '@/lib/supabase/admin/client';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+// 동적 렌더링 강제 (POST 요청 및 request.json() 사용)
+export const dynamic = 'force-dynamic';
+
 /* 방문자 수 기록 API 페이지 방문 시 호출하여 일일 방문자 수를 기록합니다.
  * 쿠키 기반 visitor_id와 로그인 사용자 user_id를 사용하여 중복을 방지합니다.
  */

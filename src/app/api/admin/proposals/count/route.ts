@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getProposalsCount } from '@/lib/supabase/admin/proposals';
 import { ProposalStatus } from '@/types/proposal';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
