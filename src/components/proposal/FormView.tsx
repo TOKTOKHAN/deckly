@@ -426,11 +426,11 @@ export default function FormView({
               id="transcriptText"
               {...register('transcriptText')}
               error={errors.transcriptText?.message}
-              className="h-48"
+              className="h-48 text-black"
               placeholder="여기에 회의록 내용을 붙여넣어주세요."
             />
             <div className="flex justify-between px-1 text-[10px] text-gray-400">
-              <span>AI가 정확한 제안을 하려면 최소 50자 이상의 구체적인 내용이 필요합니다.</span>
+              <span>AI가 정확한 제안을 하려면 최소 300자 이상의 구체적인 내용이 필요합니다.</span>
               <span>{formData.transcriptText?.length || 0} 자</span>
             </div>
           </div>
