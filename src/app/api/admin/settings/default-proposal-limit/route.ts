@@ -4,6 +4,8 @@ import { isAdmin } from '@/lib/utils/admin';
 import { getDefaultLimit, setDefaultLimit } from '@/lib/supabase/admin/userLimits';
 import { isAdminClientAvailable } from '@/lib/supabase/admin/client';
 
+export const dynamic = 'force-dynamic';
+
 /* 기본 제안서 생성 제한값 조회 GET /api/admin/settings/default-proposal-limit */
 export async function GET(request: NextRequest) {
   try {
