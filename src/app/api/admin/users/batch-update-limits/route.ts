@@ -4,6 +4,8 @@ import { isAdmin } from '@/lib/utils/admin';
 import { adminSupabase, isAdminClientAvailable } from '@/lib/supabase/admin/client';
 import { setUserLimit } from '@/lib/supabase/admin/userLimits';
 
+export const dynamic = 'force-dynamic';
+
 /* 여러 사용자에게 일괄적으로 제한 적용 POST /api/admin/users/batch-update-limits */
 export async function POST(request: NextRequest) {
   try {

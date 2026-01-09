@@ -4,6 +4,8 @@ import { isAdmin } from '@/lib/utils/admin';
 import { getAllUserLimits } from '@/lib/supabase/admin/userLimits';
 import { isAdminClientAvailable } from '@/lib/supabase/admin/client';
 
+export const dynamic = 'force-dynamic';
+
 /* 모든 사용자의 제한 정보 조회 (어드민용) GET /api/admin/users/limits */
 export async function GET(request: NextRequest) {
   try {
