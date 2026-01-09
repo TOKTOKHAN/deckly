@@ -8,7 +8,12 @@ import toast from 'react-hot-toast';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
-import { getProposals, createProposal, updateProposal } from '@/lib/supabase/proposals';
+import {
+  getProposals,
+  createProposal,
+  updateProposal,
+  deleteProposal,
+} from '@/lib/supabase/proposals';
 import { proposalFormSchema } from '@/lib/validations/proposalSchema';
 import { useAuthStore } from '@/stores/authStore';
 import FormView from './FormView';
@@ -16,6 +21,7 @@ import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
 import ResultView from './ResultView';
 import ProposalDashboardSkeleton from '@/components/skeletons/ProposalDashboardSkeleton';
+import Modal from '@/components/ui/Modal';
 
 const initialFormData: ProposalFormData = {
   // 기본 정보
@@ -62,6 +68,7 @@ export default function ProposalForm() {
   const [step, setStep] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStatus, setGenStatus] = useState<GenerationStatus>({ progress: 0, message: '' });
+  const [proposalToDelete, setProposalToDelete] = useState<Proposal | null>(null);
 
   // React Query로 제안서 목록 조회 (인증 상태가 준비된 후에만 실행)
   const { data: proposals = [], isLoading: isProposalsLoading } = useQuery({
@@ -103,6 +110,21 @@ export default function ProposalForm() {
     onSuccess: () => {
       // 제안서 목록 자동 리프레시
       queryClient.invalidateQueries({ queryKey: ['proposals'] });
+    },
+  });
+
+  // 제안서 삭제 Mutation
+  const deleteMutation = useMutation({
+    mutationFn: deleteProposal,
+    onSuccess: () => {
+      // 제안서 목록 자동 리프레시
+      queryClient.invalidateQueries({ queryKey: ['proposals'] });
+      toast.success('제안서가 삭제되었습니다.');
+      setProposalToDelete(null);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || '제안서 삭제 중 오류가 발생했습니다.');
+      setProposalToDelete(null);
     },
   });
 
@@ -295,6 +317,9 @@ export default function ProposalForm() {
                   setCurrentProposal(proposal);
                   setView('result');
                 }}
+                onDeleteProposal={proposal => {
+                  setProposalToDelete(proposal);
+                }}
               />
             )}
           </>
@@ -325,6 +350,27 @@ export default function ProposalForm() {
         )}
       </main>
       <GeneratingOverlay isGenerating={isGenerating} genStatus={genStatus} />
+
+      {/* 제안서 삭제 확인 모달 */}
+      <Modal
+        isOpen={!!proposalToDelete}
+        onClose={() => setProposalToDelete(null)}
+        title="제안서 삭제"
+        message={
+          proposalToDelete
+            ? `"${proposalToDelete.projectName || '무제 프로젝트'}" 제안서를 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`
+            : ''
+        }
+        confirmText="삭제"
+        cancelText="취소"
+        variant="danger"
+        onConfirm={() => {
+          if (proposalToDelete) {
+            deleteMutation.mutate(proposalToDelete.id);
+          }
+        }}
+        onCancel={() => setProposalToDelete(null)}
+      />
     </div>
   );
 }
