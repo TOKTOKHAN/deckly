@@ -1,25 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { Menu } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const { user, isAdmin, isLoading } = useAuthStore();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [shouldShowNotFound, setShouldShowNotFound] = useState(false);
 
   useEffect(() => {
     // 로딩 중이면 대기
     if (isLoading) return;
 
-    // 로그인하지 않았거나 관리자가 아니면 리다이렉트
+    // 로그인하지 않았거나 관리자가 아니면 404 표시
     if (!user || !isAdmin) {
-      router.push('/dashboard');
+      setShouldShowNotFound(true);
     }
-  }, [user, isAdmin, isLoading, router]);
+  }, [user, isAdmin, isLoading]);
+
+  // 조건이 만족되면 404 페이지 표시
+  if (shouldShowNotFound) {
+    notFound();
+  }
 
   return (
     <div className="flex min-h-[calc(100vh-64px)] bg-[#F8FAFC] font-sans text-slate-900 selection:bg-blue-100">

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import {
   Mail,
@@ -20,12 +21,30 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
 import { signupSchema, type SignupFormData } from '@/lib/validations/authSchema';
 import { supabase } from '@/lib/supabase/client';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function SignupPage() {
   const router = useRouter();
+  const { user, isAdmin, isLoading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [shouldShowNotFound, setShouldShowNotFound] = useState(false);
+
+  useEffect(() => {
+    // 로딩 중이면 대기
+    if (isLoading) return;
+
+    // 로그인된 일반 사용자(어드민이 아닌 사용자)면 404 표시
+    if (user && !isAdmin) {
+      setShouldShowNotFound(true);
+    }
+  }, [user, isAdmin, isLoading]);
+
+  // 조건이 만족되면 404 페이지 표시
+  if (shouldShowNotFound) {
+    notFound();
+  }
 
   const {
     register,
