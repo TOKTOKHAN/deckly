@@ -51,11 +51,10 @@ export const useAuthStore = create<AuthState>(set => ({
   },
 
   logout: async () => {
-    // 상태를 먼저 즉시 업데이트 (UI가 바로 반영됨)
     set({ user: null, session: null, isAdmin: false });
 
-    // 그 다음 Supabase 로그아웃 처리
     if (!supabase) return;
+
     try {
       await supabase.auth.signOut();
     } catch (error) {
@@ -112,7 +111,6 @@ export const useAuthStore = create<AuthState>(set => ({
           return;
         }
 
-        // 이벤트 타입별 처리
         switch (event) {
           case 'SIGNED_OUT':
             // 로그아웃 또는 세션 만료
@@ -136,7 +134,6 @@ export const useAuthStore = create<AuthState>(set => ({
 
           case 'SIGNED_IN':
           case 'USER_UPDATED':
-            // 로그인 또는 사용자 정보 업데이트
             if (session) {
               const updatedUser = session.user ?? null;
               set({
@@ -157,8 +154,6 @@ export const useAuthStore = create<AuthState>(set => ({
                 isAdmin: isAdmin(updatedUser),
               });
             } else {
-              // 세션이 null이면 로그아웃 처리
-              // 상태가 이미 null이면 중복 업데이트 방지
               if (currentState.user !== null || currentState.session !== null) {
                 set({ user: null, session: null, isAdmin: false });
               }

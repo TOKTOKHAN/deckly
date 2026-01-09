@@ -1,11 +1,26 @@
-import type { Metadata } from 'next';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/authStore';
 import ProposalForm from '@/components/proposal/ProposalForm';
 
-export const metadata: Metadata = {
-  title: '대시보드',
-  description: '제안서를 생성하고 관리하세요.',
-};
-
 export default function DashboardPage() {
+  const router = useRouter();
+  const { user, isLoading } = useAuthStore();
+
+  useEffect(() => {
+    // 로딩 중이면 대기
+    if (isLoading) return;
+
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, isLoading, router]);
+
+  if (isLoading || !user) {
+    return null;
+  }
+
   return <ProposalForm />;
 }
