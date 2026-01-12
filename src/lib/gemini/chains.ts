@@ -239,7 +239,7 @@ export async function generateProposalWithChains(
       tertiaryColor,
     );
 
-    // 본문 조합
+    // 본문 조합 (section1 안에 company-introduction과 strengths 페이지가 포함됨)
     const bodyContent = section1HTML + section2HTML + section3HTML + section4HTML + section5HTML;
     console.log('본문 HTML 생성 완료, 총 길이:', bodyContent.length);
 

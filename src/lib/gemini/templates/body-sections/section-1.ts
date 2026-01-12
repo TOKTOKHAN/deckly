@@ -9,6 +9,8 @@ import {
   generateSectionHeader,
   generatePageFooter,
 } from '../constants';
+import { generateCompanyIntroductionTemplate } from './company-introduction-template';
+import { generateStrengthsTemplate } from './strengths-template';
 
 export function generateBodySection1Template(
   data: BodySection1Data,
@@ -49,6 +51,8 @@ export function generateBodySection1Template(
   const scopeCardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
 
   return `
+    ${generateCompanyIntroductionTemplate(primaryColor, secondaryColor, tertiaryColor, textColors)}
+    ${generateStrengthsTemplate(primaryColor, secondaryColor, tertiaryColor, textColors)}
     <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
       ${generateSectionHeader(
         'I',
@@ -60,28 +64,6 @@ export function generateBodySection1Template(
       )}
 
       <div class="flex-1 space-y-6" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
-        
-        <!-- 1.1 제안사 소개 -->
-        <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
-          <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
-              <span style="font-size: 1.25rem !important;">🏢</span>
-            </div>
-            <div>
-              <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
-                1.1 제안사 소개
-              </h2>
-              <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Company Introduction</p>
-            </div>
-          </div>
-          
-          <div class="bg-zinc-900/30 border border-white/5 p-6 rounded-2xl" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; padding: 1.5rem !important; border-radius: 1rem !important; width: 100% !important;">
-            <p class="text-sm text-zinc-300 leading-relaxed" style="font-size: 0.875rem !important; color: ${largeCardTextColors.secondary} !important; line-height: 1.5 !important;">
-              본 제안서를 작성한 제안사는 고객의 비즈니스 성공을 위해 최선을 다하는 전문 기업입니다. 
-              풍부한 경험과 전문성을 바탕으로 고객의 요구사항을 정확히 이해하고, 최적의 솔루션을 제공합니다.
-            </p>
-          </div>
-        </section>
 
         <!-- 1.2 제안 배경 및 목적 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
