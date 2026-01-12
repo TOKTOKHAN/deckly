@@ -35,11 +35,12 @@ export default function AnalyticsPageSkeleton() {
         {/* 차트 영역 스켈레톤 */}
         <div className="mb-10 h-[400px] w-full animate-pulse rounded-lg bg-slate-50">
           <div className="flex h-full items-end justify-center gap-4 p-8">
-            {[1, 2, 3, 4, 5, 6, 7].map(i => (
+            {/* 고정된 높이 값 사용하여 hydration mismatch 방지 */}
+            {[45, 60, 35, 70, 50, 55, 40].map((height, i) => (
               <div key={i} className="flex flex-1 flex-col items-center gap-2">
                 <div
                   className="w-full animate-pulse rounded-t bg-slate-200"
-                  style={{ height: `${30 + Math.random() * 60}%` }}
+                  style={{ height: `${height}%` }}
                 ></div>
                 <div className="h-3 w-12 animate-pulse rounded bg-slate-200"></div>
               </div>
