@@ -41,8 +41,11 @@ export default function VisitTracker() {
         // 로그인 사용자 ID (인증 상태가 로드된 후 정확한 값 사용)
         const userId = user?.id || null;
 
-        // localStorage에서 오늘 이미 기록했는지 확인
-        const today = new Date().toISOString().split('T')[0];
+        // localStorage에서 오늘 이미 기록했는지 확인 (UTC 기준)
+        const now = new Date();
+        const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+          .toISOString()
+          .split('T')[0];
         const trackKey = userId || visitorId;
         const storageKey = `track_${today}_${trackKey}`;
         const alreadyTracked = localStorage.getItem(storageKey);
