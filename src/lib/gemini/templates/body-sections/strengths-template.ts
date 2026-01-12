@@ -1,11 +1,5 @@
 /* 제안사의 특징 및 장점 템플릿 (고정 템플릿) */
-import {
-  hexToRgba,
-  getA4PageContainerStyle,
-  getBrandColors,
-  getContrastTextColorWithGray,
-  generatePageFooter,
-} from '../constants';
+import { hexToRgba, getA4PageContainerStyle } from '../constants';
 
 interface TextColors {
   primary: string;
