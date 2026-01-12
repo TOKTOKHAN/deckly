@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { UseFormRegister, FieldErrors, UseFormSetValue } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ProposalFormData } from '@/types/proposal';
+import { proposalFormSchema } from '@/lib/validations/proposalSchema';
 import Input from '@/components/form/Input';
 import Textarea from '@/components/form/Textarea';
 import ColorInput from '@/components/form/ColorInput';
@@ -49,31 +51,67 @@ const X = ({ size }: { size?: number }) => (
   </svg>
 );
 
+const initialFormData: ProposalFormData = {
+  // 기본 정보
+  clientCompanyName: '',
+  projectName: '',
+  slogan: '',
+  brandColor1: '#4f46e5', // indigo-600 (기본 브랜드 컬러)
+  brandColor2: '#1f2937', // gray-800 (기본 브랜드 컬러)
+  brandColor3: '#ffffff', // white (기본 브랜드 컬러)
+  clientLogo: undefined,
+  ourLogo: undefined,
+  clientWebsite: undefined,
+  font: 'Pretendard',
+
+  // 프로젝트 정보
+  teamSize: '',
+  startDate: new Date().toISOString().substring(0, 10),
+  endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().substring(0, 10),
+  reviewPeriod: '',
+  maintenancePeriod: '',
+  openDate: undefined,
+
+  // 예산
+  budgetMin: '',
+
+  // 기타
+  target: ['실무자'],
+  includeSummary: '',
+  excludeScope: '',
+  priorityFeatures: '',
+  projectPhase: '',
+  priorityFactor: '',
+  transcriptText: '',
+  volume: '표준',
+  designStyle: '기업형',
+  figureStyle: '범위',
+};
+
 interface FormViewProps {
   step: number;
-  formData: ProposalFormData;
-  errors: FieldErrors<ProposalFormData>;
-  register: UseFormRegister<ProposalFormData>;
-  setValue: UseFormSetValue<ProposalFormData>;
-  onInputChange: (
-    field: keyof ProposalFormData,
-  ) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   onStepChange: (step: number) => void;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (data: ProposalFormData) => void;
 }
 
-export default function FormView({
-  step,
-  formData,
-  errors,
-  register,
-  setValue,
-  onInputChange: _onInputChange,
-  onStepChange,
-  onClose,
-  onSubmit,
-}: FormViewProps) {
+export default function FormView({ step, onStepChange, onClose, onSubmit }: FormViewProps) {
+  // react-hook-form 설정
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<ProposalFormData>({
+    resolver: zodResolver(proposalFormSchema),
+    defaultValues: initialFormData,
+    mode: 'all',
+    reValidateMode: 'onChange',
+  });
+
+  // formData는 watch로 실시간 추적
+  const formData = watch() as ProposalFormData;
   // 파일 input ref
   const clientLogoRef = useRef<HTMLInputElement>(null);
   const ourLogoRef = useRef<HTMLInputElement>(null);
@@ -85,15 +123,51 @@ export default function FormView({
   ) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const result = reader.result as string;
-          // base64 데이터 URL을 저장
-          setValue(field, result, { shouldValidate: true });
-        };
-        reader.readAsDataURL(file);
+      if (!file) return;
+
+      // 파일 크기 제한 (5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        alert('파일 크기는 5MB 이하여야 합니다.');
+        if (_ref.current) {
+          _ref.current.value = '';
+        }
+        return;
       }
+
+      // 이미지 파일만 허용
+      if (!file.type.startsWith('image/')) {
+        alert('이미지 파일만 업로드할 수 있습니다.');
+        if (_ref.current) {
+          _ref.current.value = '';
+        }
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        try {
+          const result = reader.result as string;
+          if (result) {
+            // base64 데이터 URL을 저장
+            setValue(field, result, { shouldValidate: true });
+          }
+        } catch (error) {
+          console.error('파일 읽기 오류:', error);
+          alert('파일을 읽는 중 오류가 발생했습니다.');
+          if (_ref.current) {
+            _ref.current.value = '';
+          }
+        }
+      };
+      reader.onerror = () => {
+        console.error('파일 읽기 오류');
+        alert('파일을 읽는 중 오류가 발생했습니다.');
+        if (_ref.current) {
+          _ref.current.value = '';
+        }
+      };
+      reader.readAsDataURL(file);
     };
   };
 
@@ -482,7 +556,7 @@ export default function FormView({
             <Button
               variant="primary"
               size="lg"
-              onClick={onSubmit}
+              onClick={handleSubmit(onSubmit)}
               disabled={formData.transcriptText.length < 50}
             >
               AI 제안서 생성하기

@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState, lazy, Suspense } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import apiClient from '@/lib/axios/client';
@@ -14,51 +12,16 @@ import {
   updateProposal,
   deleteProposal,
 } from '@/lib/supabase/proposals';
-import { proposalFormSchema } from '@/lib/validations/proposalSchema';
 import { useAuthStore } from '@/stores/authStore';
-import FormView from './FormView';
 import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
-import ResultView from './ResultView';
 import ProposalDashboardSkeleton from '@/components/skeletons/ProposalDashboardSkeleton';
 import Modal from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
 
-const initialFormData: ProposalFormData = {
-  // 기본 정보
-  clientCompanyName: '',
-  projectName: '',
-  slogan: '',
-  brandColor1: '#4f46e5', // indigo-600 (기본 브랜드 컬러)
-  brandColor2: '#1f2937', // gray-800 (기본 브랜드 컬러)
-  brandColor3: '#ffffff', // white (기본 브랜드 컬러)
-  clientLogo: undefined,
-  ourLogo: undefined,
-  clientWebsite: undefined,
-  font: 'Pretendard',
-
-  // 프로젝트 정보
-  teamSize: '',
-  startDate: new Date().toISOString().substring(0, 10),
-  endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().substring(0, 10),
-  reviewPeriod: '',
-  maintenancePeriod: '',
-  openDate: undefined,
-
-  // 예산
-  budgetMin: '',
-
-  // 기타
-  target: ['실무자'],
-  includeSummary: '',
-  excludeScope: '',
-  priorityFeatures: '',
-  projectPhase: '',
-  priorityFactor: '',
-  transcriptText: '',
-  volume: '표준',
-  designStyle: '기업형',
-  figureStyle: '범위',
-};
+// 동적 import로 코드 스플리팅 적용
+const FormView = lazy(() => import('./FormView'));
+const ResultView = lazy(() => import('./ResultView'));
 
 export default function ProposalForm() {
   const queryClient = useQueryClient();
@@ -69,6 +32,8 @@ export default function ProposalForm() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStatus, setGenStatus] = useState<GenerationStatus>({ progress: 0, message: '' });
   const [proposalToDelete, setProposalToDelete] = useState<Proposal | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [resultError, setResultError] = useState<string | null>(null);
 
   // React Query로 제안서 목록 조회 (인증 상태가 준비된 후에만 실행)
   const { data: proposals = [], isLoading: isProposalsLoading } = useQuery({
@@ -77,30 +42,16 @@ export default function ProposalForm() {
     enabled: !!user && !isAuthLoading, // 인증 상태가 준비된 후에만 실행
   });
 
-  // react-hook-form 설정
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-    reset,
-  } = useForm<ProposalFormData>({
-    resolver: zodResolver(proposalFormSchema),
-    defaultValues: initialFormData,
-    mode: 'all',
-    reValidateMode: 'onChange',
-  });
-
-  // formData는 watch로 실시간 추적
-  const formData = watch() as ProposalFormData;
-
   // 제안서 생성 Mutation
   const createMutation = useMutation({
     mutationFn: createProposal,
     onSuccess: () => {
       // 제안서 목록 자동 리프레시
       queryClient.invalidateQueries({ queryKey: ['proposals'] });
+    },
+    onError: (error: Error) => {
+      console.error('제안서 생성 Mutation 오류:', error);
+      toast.error(error.message || '제안서 생성 중 오류가 발생했습니다.');
     },
   });
 
@@ -110,6 +61,10 @@ export default function ProposalForm() {
     onSuccess: () => {
       // 제안서 목록 자동 리프레시
       queryClient.invalidateQueries({ queryKey: ['proposals'] });
+    },
+    onError: (error: Error) => {
+      console.error('제안서 업데이트 Mutation 오류:', error);
+      toast.error(error.message || '제안서 업데이트 중 오류가 발생했습니다.');
     },
   });
 
@@ -182,7 +137,16 @@ export default function ProposalForm() {
 
       updateProgress(60, 'AI가 상세 내용을 작성하는 중...');
 
-      const { data: response } = await apiClient.post<ProposalResponse>('/gemini', requestData);
+      let response;
+      try {
+        const result = await apiClient.post<ProposalResponse>('/gemini', requestData);
+        response = result.data;
+      } catch (apiError) {
+        // API 호출 자체가 실패한 경우 (네트워크 오류 등)
+        const apiErrorMessage =
+          apiError instanceof Error ? apiError.message : 'AI 서버와의 통신 중 오류가 발생했습니다.';
+        throw new Error(apiErrorMessage);
+      }
 
       if (!response.success || !response.content) {
         throw new Error(response.error || '제안서 생성에 실패했습니다.');
@@ -206,6 +170,9 @@ export default function ProposalForm() {
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error('제안서 저장 오류:', err);
+        const saveError =
+          err instanceof Error ? err.message : '제안서 저장 중 오류가 발생했습니다.';
+        toast.error(saveError, { duration: 5000 });
       }
 
       setIsGenerating(false);
@@ -238,6 +205,7 @@ export default function ProposalForm() {
       } catch (updateErr) {
         // eslint-disable-next-line no-console
         console.error('에러 상태 저장 오류:', updateErr);
+        // 에러 상태 저장 실패는 사용자에게 알리지 않음 (이미 제안서 생성 실패는 알림됨)
       }
       setIsGenerating(false);
       toast.error('제안서 생성 중 오류가 발생했습니다.', {
@@ -246,9 +214,9 @@ export default function ProposalForm() {
     }
   };
 
-  const handleCreate = handleSubmit(async data => {
-    // Zod 검증 통과 시 실행됨 (모든 필드가 자동으로 기본값으로 채워짐)
-    const validatedData = data as ProposalFormData;
+  const handleCreate = async (data: ProposalFormData) => {
+    // Zod 검증 통과 시 실행됨 (FormView에서 이미 검증됨)
+    const validatedData = data;
 
     // 새 제안서 생성 (Supabase)
     // id는 명시하지 않음 - Supabase가 자동으로 UUID 생성
@@ -289,13 +257,6 @@ export default function ProposalForm() {
 
     // 제안서 생성 시작
     generateProposal(createdProposal.id, validatedData);
-  });
-
-  // react-hook-form의 setValue를 사용하도록 변경
-  const handleInputChange = (field: keyof ProposalFormData) => {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      setValue(field, e.target.value as never, { shouldValidate: true });
-    };
   };
 
   return (
@@ -309,7 +270,6 @@ export default function ProposalForm() {
               <DashboardView
                 proposals={proposals}
                 onCreateNew={() => {
-                  reset(initialFormData);
                   setStep(1);
                   setView('form');
                 }}
@@ -325,28 +285,99 @@ export default function ProposalForm() {
           </>
         )}
         {view === 'form' && (
-          <FormView
-            step={step}
-            formData={formData}
-            errors={errors}
-            register={register}
-            setValue={setValue}
-            onInputChange={handleInputChange}
-            onStepChange={setStep}
-            onClose={() => setView('dashboard')}
-            onSubmit={handleCreate}
-          />
+          <>
+            {formError ? (
+              <div className="mx-auto max-w-3xl px-4 py-12">
+                <div className="rounded-[2.5rem] border border-red-200 bg-red-50 p-8 text-center">
+                  <h2 className="mb-2 text-xl font-bold text-red-600">오류가 발생했습니다</h2>
+                  <p className="mb-4 text-gray-600">{formError}</p>
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      setFormError(null);
+                      setView('dashboard');
+                    }}
+                  >
+                    대시보드로 돌아가기
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Suspense fallback={<ProposalDashboardSkeleton includeWrapper={false} />}>
+                <FormView
+                  step={step}
+                  onStepChange={setStep}
+                  onClose={() => {
+                    setFormError(null);
+                    setView('dashboard');
+                  }}
+                  onSubmit={async data => {
+                    try {
+                      await handleCreate(data);
+                      setFormError(null);
+                    } catch (error) {
+                      // eslint-disable-next-line no-console
+                      console.error('FormView 제출 오류:', error);
+                      setFormError('제안서 생성 중 오류가 발생했습니다.');
+                    }
+                  }}
+                />
+              </Suspense>
+            )}
+          </>
         )}
         {view === 'result' && currentProposal && (
-          <ResultView
-            proposal={currentProposal}
-            onBack={() => setView('dashboard')}
-            onRegenerate={generateProposal}
-            onUpdate={async updatedProposal => {
-              setCurrentProposal(updatedProposal);
-              await updateMutation.mutateAsync(updatedProposal);
-            }}
-          />
+          <>
+            {resultError ? (
+              <div className="mx-auto max-w-5xl px-4 py-8">
+                <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
+                  <h2 className="mb-2 text-xl font-bold text-red-600">오류가 발생했습니다</h2>
+                  <p className="mb-4 text-gray-600">{resultError}</p>
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      setResultError(null);
+                      setView('dashboard');
+                    }}
+                  >
+                    대시보드로 돌아가기
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Suspense fallback={<ProposalDashboardSkeleton includeWrapper={false} />}>
+                <ResultView
+                  proposal={currentProposal}
+                  onBack={() => {
+                    setResultError(null);
+                    setView('dashboard');
+                  }}
+                  onRegenerate={async (proposalId, data) => {
+                    try {
+                      await generateProposal(proposalId, data);
+                      setResultError(null);
+                    } catch (error) {
+                      // eslint-disable-next-line no-console
+                      console.error('제안서 재생성 오류:', error);
+                      setResultError('제안서 재생성 중 오류가 발생했습니다.');
+                    }
+                  }}
+                  onUpdate={async updatedProposal => {
+                    try {
+                      const saved = await updateMutation.mutateAsync(updatedProposal);
+                      setCurrentProposal(saved);
+                      setResultError(null);
+                    } catch (error) {
+                      // 에러는 이미 Mutation의 onError에서 처리됨
+                      // eslint-disable-next-line no-console
+                      console.error('제안서 업데이트 오류:', error);
+                      setResultError('제안서 업데이트 중 오류가 발생했습니다.');
+                    }
+                  }}
+                />
+              </Suspense>
+            )}
+          </>
         )}
       </main>
       <GeneratingOverlay isGenerating={isGenerating} genStatus={genStatus} />
