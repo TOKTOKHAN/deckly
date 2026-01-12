@@ -21,7 +21,7 @@ export default function DashboardView({
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">제안서 관리</h1>
-          <p className="mt-1 text-gray-500">AI로 생성된 제안서 목록입니다.</p>
+          <p className="mt-1 text-gray-500">여기서 생성된 제안서를 확인해보세요.</p>
         </div>
         <Button variant="primary" size="md" icon={<Plus size={20} />} onClick={onCreateNew}>
           새 제안서 만들기

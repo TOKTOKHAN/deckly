@@ -9,7 +9,6 @@ import {
   Calendar,
   ShieldCheck,
   Activity,
-  CheckCircle2,
   UserPlus,
   AlertTriangle,
 } from 'lucide-react';
@@ -189,15 +188,15 @@ export default function AdminUsersPage() {
 
   return (
     <div className="animate-in fade-in space-y-8 duration-700">
-        <PageHeader
-          badge={{
-            icon: <ShieldCheck size={12} />,
-            text: 'Deckly Admin System',
-          }}
-          title="사용자 관리"
-          description="플랫폼 내 모든 사용자의 활동과 지표를 실시간으로 모니터링합니다."
-          className="border-b border-slate-200 pb-2"
-        />
+      <PageHeader
+        badge={{
+          icon: <ShieldCheck size={12} />,
+          text: 'Deckly Admin System',
+        }}
+        title="사용자 관리"
+        description="플랫폼 내 모든 사용자의 활동과 지표를 실시간으로 모니터링합니다."
+        className="border-b border-slate-200 pb-2"
+      />
 
       {/* 제한 정보 조회 실패 시 경고 메시지 (사용자 목록은 계속 표시) */}
       {limitsError && (
@@ -220,139 +219,154 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <StatCard
-            title="Total Users"
-            value={totalUsers.toLocaleString()}
-            icon={<Users size={26} />}
-            colorClass="bg-blue-600"
-            subText="전체 등록된 사용자 수"
-          />
-          <StatCard
-            title="Active Accounts"
-            value={activeUsers.toLocaleString()}
-            icon={<Activity size={26} />}
-            colorClass="bg-indigo-600"
-            subText="최근 30일 내 활동 사용자"
-          />
-          <StatCard
-            title="Total Decks"
-            value={totalProposals.toLocaleString()}
-            icon={<FileText size={26} />}
-            colorClass="bg-slate-900"
-            subText="AI 제안서 생성 가속화"
-          />
-        </div>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <StatCard
+          title="Total Users"
+          value={totalUsers.toLocaleString()}
+          icon={<Users size={26} />}
+          colorClass="bg-blue-600"
+          subText="전체 등록된 사용자 수"
+        />
+        <StatCard
+          title="Active Accounts"
+          value={activeUsers.toLocaleString()}
+          icon={<Activity size={26} />}
+          colorClass="bg-indigo-600"
+          subText="최근 30일 내 활동 사용자"
+        />
+        <StatCard
+          title="Total Proposals"
+          value={totalProposals.toLocaleString()}
+          icon={<FileText size={26} />}
+          colorClass="bg-slate-900"
+          subText="생성된 제안서 총 갯수"
+        />
+      </div>
 
-        <div className="flex justify-end">
-          <Button
-            onClick={() => setIsCreateModalOpen(true)}
-            variant="primary"
-            size="lg"
-            icon={<UserPlus size={18} />}
-            className="rounded-2xl border border-blue-200 bg-blue-600 px-6 py-4 text-base font-black text-white shadow-lg shadow-blue-100 hover:bg-blue-700"
-          >
-            <span className="hidden sm:inline">사용자 추가</span>
-          </Button>
-        </div>
+      <div className="flex justify-end">
+        <Button
+          onClick={() => setIsCreateModalOpen(true)}
+          variant="primary"
+          size="lg"
+          icon={<UserPlus size={18} />}
+          className="rounded-2xl border border-blue-200 bg-blue-600 px-6 py-4 text-base font-black text-white shadow-lg shadow-blue-100 hover:bg-blue-700"
+        >
+          <span className="hidden sm:inline">사용자 추가</span>
+        </Button>
+      </div>
 
-        <div className="shadow-3xl overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-slate-200/50">
-          <div className="flex flex-col items-center justify-between gap-4 border-b border-slate-50 bg-slate-50/40 px-10 pt-6 sm:flex-row">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm">
-                <Users size={22} className="text-blue-600" />
-              </div>
-              <div>
-                <h3 className="text-xl font-black tracking-tight text-slate-800">유저 정보</h3>
-              </div>
+      <div className="shadow-3xl overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-slate-200/50">
+        <div className="flex flex-col items-center justify-between gap-4 border-b border-slate-50 bg-slate-50/40 px-10 pt-6 sm:flex-row">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm">
+              <Users size={22} className="text-blue-600" />
             </div>
-            <div className="flex w-full items-center gap-3 sm:w-auto">
-              <div className="relative flex-1 sm:w-72">
-                <Search
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
-                  size={16}
-                />
-                <input
-                  type="text"
-                  placeholder="사용자 검색..."
-                  value={searchQuery}
-                  onChange={e => handleSearchChange(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm transition-all placeholder:text-slate-300 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
-                />
-              </div>
+            <div>
+              <h3 className="text-xl font-black tracking-tight text-slate-800">유저 정보</h3>
             </div>
           </div>
+          <div className="flex w-full items-center gap-3 sm:w-auto">
+            <div className="relative flex-1 sm:w-72">
+              <Search
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
+                size={16}
+              />
+              <input
+                type="text"
+                placeholder="사용자 검색..."
+                value={searchQuery}
+                onChange={e => handleSearchChange(e.target.value)}
+                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm transition-all placeholder:text-slate-300 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
+              />
+            </div>
+          </div>
+        </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full table-fixed border-collapse text-left">
-              <colgroup>
-                <col className="w-[30%]" />
-                <col className="w-[15%]" />
-                <col className="w-[15%]" />
-                <col className="w-[15%]" />
-                <col className="w-[10%]" />
-                <col className="w-[15%]" />
-              </colgroup>
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                  <th className="px-12 py-3">User Account</th>
-                  <th className="px-6 py-3 text-center">Verification</th>
-                  <th className="px-6 py-3">Member Since</th>
-                  <th className="px-6 py-3">Last Activity</th>
-                  <th className="px-6 py-3 text-center">Proposals</th>
-                  <th className="px-12 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {paginatedUsers && paginatedUsers.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="w-full table-fixed border-collapse text-left">
+            <colgroup>
+              <col className="w-[30%]" />
+              <col className="w-[15%]" />
+              <col className="w-[15%]" />
+              <col className="w-[15%]" />
+              <col className="w-[10%]" />
+              <col className="w-[15%]" />
+            </colgroup>
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <th className="px-12 py-3">User Account</th>
+                <th className="px-6 py-3 text-center">Verification</th>
+                <th className="px-6 py-3">Member Since</th>
+                <th className="px-6 py-3">Last Activity</th>
+                <th className="px-6 py-3 text-center">Proposals</th>
+                <th className="px-12 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              {paginatedUsers && paginatedUsers.length > 0 ? (
                 paginatedUsers.map((user: UserWithLimits) => (
-                    <tr key={user.id} className="group h-[96px] transition-all hover:bg-blue-50/20">
-                      <td className="px-12 py-6">
-                        <div className="flex items-center gap-4">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-slate-100 text-sm font-black text-slate-400 shadow-sm transition-transform group-hover:scale-110">
-                            {user.email?.substring(0, 2).toUpperCase() || 'U'}
+                  <tr key={user.id} className="group h-[96px] transition-all hover:bg-blue-50/20">
+                    <td className="px-12 py-6">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-slate-100 text-sm font-black text-slate-400 shadow-sm transition-transform group-hover:scale-110">
+                          {user.email?.substring(0, 2).toUpperCase() || 'U'}
+                        </div>
+                        <div>
+                          <div className="text-sm font-black text-slate-900 transition-colors group-hover:text-blue-600">
+                            {user.email || '-'}
                           </div>
-                          <div>
-                            <div className="text-sm font-black text-slate-900 transition-colors group-hover:text-blue-600">
-                              {user.email || '-'}
-                            </div>
-                            <div className="mt-1 text-[10px] font-bold tracking-wider text-slate-400">
-                              {user.phone || 'PHONE NOT REGISTERED'}
-                            </div>
+                          <div className="mt-1 text-[10px] font-bold tracking-wider text-slate-400">
+                            {user.phone || 'PHONE NOT REGISTERED'}
                           </div>
                         </div>
-                      </td>
-                      <td className="px-6 py-6 text-center">
-                        {user.emailConfirmed ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-green-100 bg-green-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-green-600">
-                            <CheckCircle2 size={10} /> Verified
-                          </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-6 text-center">
+                      {(() => {
+                        // 어드민 여부 확인
+                        // userMetadata에서 isAdmin 체크 또는 환경 변수에서 이메일 체크
+                        const isAdminUser =
+                          (user.userMetadata as { isAdmin?: boolean } | null)?.isAdmin === true ||
+                          (user.email &&
+                            process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')
+                              .map(e => e.trim().toLowerCase())
+                              .includes(user.email.toLowerCase()));
+
+                        if (isAdminUser) {
+                          return (
+                            <span className="inline-flex min-w-[80px] items-center justify-center gap-1.5 rounded-full border border-green-100 bg-green-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-green-600">
+                              <ShieldCheck size={10} className="shrink-0" /> Admin
+                            </span>
+                          );
+                        } else {
+                          return (
+                            <span className="inline-flex min-w-[80px] items-center justify-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-blue-600">
+                              <Users size={10} className="shrink-0" /> Users
+                            </span>
+                          );
+                        }
+                      })()}
+                    </td>
+                    <td className="px-6 py-6">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
+                        <Calendar size={14} className="text-slate-300" />
+                        {new Date(user.createdAt).toLocaleDateString('ko-KR')}
+                      </div>
+                    </td>
+                    <td className="px-6 py-6">
+                      <div className="text-xs font-bold text-slate-500">
+                        {user.lastSignInAt ? (
+                          <div className="flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500"></div>
+                            {new Date(user.lastSignInAt).toLocaleDateString('ko-KR')}
+                          </div>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            Pending
-                          </span>
+                          <span className="font-medium italic text-slate-300">Never</span>
                         )}
-                      </td>
-                      <td className="px-6 py-6">
-                        <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
-                          <Calendar size={14} className="text-slate-300" />
-                          {new Date(user.createdAt).toLocaleDateString('ko-KR')}
-                        </div>
-                      </td>
-                      <td className="px-6 py-6">
-                        <div className="text-xs font-bold text-slate-500">
-                          {user.lastSignInAt ? (
-                            <div className="flex items-center gap-2">
-                              <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500"></div>
-                              {new Date(user.lastSignInAt).toLocaleDateString('ko-KR')}
-                            </div>
-                          ) : (
-                            <span className="font-medium italic text-slate-300">Never</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-6">
-                        <div className="flex justify-center">
+                      </div>
+                    </td>
+                    <td className="px-6 py-6">
+                      <div className="flex justify-center">
                         {limitsError ? (
                           <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-black text-slate-400">
                             <FileText size={12} />
@@ -383,51 +397,51 @@ export default function AdminUsersPage() {
                             {user.proposalCount} / 무제한
                           </span>
                         )}
-                        </div>
-                      </td>
-                      <td className="px-12 py-6 text-right">
-                        <UserActionsDropdown
-                          user={user}
+                      </div>
+                    </td>
+                    <td className="px-12 py-6 text-right">
+                      <UserActionsDropdown
+                        user={user}
                         onEdit={(user: UserWithStats) => {
                           // usersWithLimits에서 해당 사용자 찾기
                           const userWithLimits = usersWithLimits.find(u => u.id === user.id);
                           setSelectedUser(userWithLimits || null);
-                            setIsEditModalOpen(true);
-                          }}
+                          setIsEditModalOpen(true);
+                        }}
                         onDelete={(user: UserWithStats) => {
                           // usersWithLimits에서 해당 사용자 찾기
                           const userWithLimits = usersWithLimits.find(u => u.id === user.id);
                           setSelectedUser(userWithLimits || null);
-                            setIsDeleteModalOpen(true);
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="px-12 py-12 text-center">
-                      <EmptyState searchQuery={searchQuery} defaultMessage="사용자가 없습니다." />
+                          setIsDeleteModalOpen(true);
+                        }}
+                      />
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="px-12 py-12 text-center">
+                    <EmptyState searchQuery={searchQuery} defaultMessage="사용자가 없습니다." />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-          {filteredUsers && filteredUsers.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredUsers.length}
-              itemsPerPage={ITEMS_PER_PAGE}
-              onPageChange={setCurrentPage}
-              itemLabel="entries"
-              showPageNumbers={true}
-              prevLabel="이전"
-              nextLabel="다음"
-            />
-          )}
+        {filteredUsers && filteredUsers.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredUsers.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={setCurrentPage}
+            itemLabel="entries"
+            showPageNumbers={true}
+            prevLabel="이전"
+            nextLabel="다음"
+          />
+        )}
       </div>
 
       <CreateUserModal

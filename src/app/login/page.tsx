@@ -127,7 +127,7 @@ export default function LoginPage() {
 
             <div className="space-y-4">
               {[
-                'AI 기반 맞춤형 제안서 초안 생성',
+                'AI 기반 맞춤형 제안서 생성',
                 '데이터 시각화로 완성하는 압도적 설득력',
                 '성공 사례 분석 기반의 전략적 문구 추천',
               ].map((text, i) => (
@@ -225,12 +225,14 @@ export default function LoginPage() {
             <div className="mt-8 text-center">
               <p className="text-sm text-slate-500">
                 아직 계정이 없으신가요?
-                <Link
-                  href="/signup"
+                <a
+                  href="https://www.pluuug.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="ml-2 font-bold text-indigo-600 underline underline-offset-4 hover:text-indigo-700"
                 >
-                  회원가입
-                </Link>
+                  지금 문의하세요!
+                </a>
               </p>
             </div>
 

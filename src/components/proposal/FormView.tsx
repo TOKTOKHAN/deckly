@@ -463,7 +463,7 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
 
             {/* 투입 인력 */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800">투입 인력</h3>
+              <h3 className="text-lg font-semibold text-gray-800">프로젝트 비용</h3>
               <Input
                 label="투입 인력"
                 id="teamSize"
@@ -476,7 +476,6 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
 
             {/* 예산 */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800">예산</h3>
               <Input
                 label="예산"
                 id="budgetMin"
@@ -503,8 +502,10 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
               className="h-48 text-black"
               placeholder="여기에 회의록 내용을 붙여넣어주세요."
             />
-            <div className="flex justify-between px-1 text-[10px] text-gray-400">
-              <span>AI가 정확한 제안을 하려면 최소 300자 이상의 구체적인 내용이 필요합니다.</span>
+            <div className="flex justify-between px-1 text-[12px] text-gray-400">
+              <span>
+                AI가 정확한 제안서를 생성하려면 최소 300자 이상의 구체적인 내용이 필요합니다.
+              </span>
               <span>{formData.transcriptText?.length || 0} 자</span>
             </div>
           </div>
@@ -524,7 +525,10 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
             </span>
             <h1 className="mt-1 text-2xl font-black text-gray-400">제안서 정보 입력</h1>
           </div>
-          <button onClick={onClose} className="rounded-full p-2 transition hover:bg-gray-100">
+          <button
+            onClick={onClose}
+            className="rounded-full p-2 text-gray-400 transition hover:bg-gray-300"
+          >
             <X size={24} />
           </button>
         </div>
