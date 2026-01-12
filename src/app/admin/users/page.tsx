@@ -235,11 +235,11 @@ export default function AdminUsersPage() {
           subText="최근 30일 내 활동 사용자"
         />
         <StatCard
-          title="Total Decks"
+          title="Total Proposals"
           value={totalProposals.toLocaleString()}
           icon={<FileText size={26} />}
           colorClass="bg-slate-900"
-          subText="AI 제안서 생성 가속화"
+          subText="생성된 제안서 총 갯수"
         />
       </div>
 
