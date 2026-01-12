@@ -16,7 +16,6 @@ import {
   Clock,
   Layers,
   Search,
-  Layout,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import DecklyLogo from '@/components/ui/DecklyLogo';
@@ -205,7 +204,7 @@ export default function LandingPage() {
               DECKLY SOLUTION
             </div>
             <div className="mb-8 flex h-24 w-24 items-center justify-center opacity-20">
-              <Layout className="text-slate-900" size={64} />
+              <DecklyLogo className="text-slate-900" width={100} height={64} />
             </div>
             <p className="mb-6 text-2xl font-black italic text-slate-900">
               &ldquo;이 모든 비효율을 Deckly가 <br /> 단 한 번에 해결합니다.&rdquo;
