@@ -19,8 +19,10 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import DecklyLogo from '@/components/ui/DecklyLogo';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function LandingPage() {
+  const { user } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -72,14 +74,14 @@ export default function LandingPage() {
                 {item.label}
               </button>
             ))}
-            <Link href="/login">
+            <Link href={user ? '/dashboard' : '/login'}>
               <Button
                 type="button"
                 variant="primary"
                 size="sm"
                 className="rounded-full px-6 py-2.5 text-sm font-black shadow-lg shadow-blue-100"
               >
-                로그인
+                {user ? '대시보드로 이동' : '로그인'}
               </Button>
             </Link>
           </div>
