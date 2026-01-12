@@ -72,15 +72,16 @@ export default function LandingPage() {
                 {item.label}
               </button>
             ))}
-            <Button
-              type="button"
-              variant="primary"
-              size="sm"
-              onClick={handleInquiryClick}
-              className="rounded-full px-6 py-2.5 text-sm font-black shadow-lg shadow-blue-100"
-            >
-              무료 상담받기
-            </Button>
+            <Link href="/login">
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                className="rounded-full px-6 py-2.5 text-sm font-black shadow-lg shadow-blue-100"
+              >
+                로그인
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
