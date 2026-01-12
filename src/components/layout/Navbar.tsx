@@ -47,7 +47,7 @@ export default function Navbar() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="text-slate-600 hover:text-slate-900"
+                    className="text-purple-600 hover:text-purple-700"
                   >
                     관리자
                   </Button>
@@ -76,11 +76,11 @@ export default function Navbar() {
                   로그인
                 </Button>
               </Link>
-              <Link href="/signup">
+              <a href="https://www.pluuug.com/" target="_blank" rel="noopener noreferrer">
                 <Button type="button" variant="primary" size="sm">
-                  회원가입
+                  상담받기
                 </Button>
-              </Link>
+              </a>
             </div>
           )}
         </div>
