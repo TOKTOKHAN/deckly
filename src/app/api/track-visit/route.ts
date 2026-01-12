@@ -21,8 +21,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'visitor_id가 필요합니다.' }, { status: 400 });
     }
 
-    const today = new Date();
-    const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+    // UTC 기준으로 오늘 날짜 계산
+    const now = new Date();
+    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const todayString = todayUTC.toISOString().split('T')[0]; // YYYY-MM-DD (UTC 기준)
 
     // 중복 체크: 로그인 사용자는 user_id로, 비로그인 사용자는 visitor_id로 체크
     let existingLog = null;

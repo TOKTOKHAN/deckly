@@ -25,8 +25,10 @@ export function fillWeekDays(rawStats: ProposalStatsByDate[] | undefined): Propo
   const thisMonday = getThisWeekMonday();
 
   for (let i = 0; i < 7; i++) {
-    const currentDate = new Date(thisMonday);
-    currentDate.setDate(thisMonday.getDate() + i);
+    // UTC 기준으로 날짜 계산
+    const currentDate = new Date(
+      Date.UTC(thisMonday.getUTCFullYear(), thisMonday.getUTCMonth(), thisMonday.getUTCDate() + i),
+    );
     const dateKey = formatDateToYYYYMMDD(currentDate);
 
     // 데이터가 있으면 사용, 없으면 빈 데이터 생성
