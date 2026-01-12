@@ -8,15 +8,35 @@ export function formatChartDate(value: string, interval: DateInterval): string {
     return value.substring(0, 7);
   } else if (interval === 'week') {
     // 주간일 때: MM/DD 형식으로 표시
-    if (value.length > 10) {
-      const date = new Date(value);
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${month}/${day}`;
+    // YYYY-MM-DD 형식(10자리) 또는 ISO string 형식 모두 처리
+    let date: Date;
+    if (value.length === 10) {
+      // YYYY-MM-DD 형식
+      const [year, month, day] = value.split('-').map(Number);
+      date = new Date(year, month - 1, day);
+    } else {
+      // ISO string 형식
+      date = new Date(value);
     }
-    return value.substring(5, 10);
+
+    // 유효한 날짜인지 확인
+    if (isNaN(date.getTime())) {
+      return value.substring(5, 10); // fallback
+    }
+
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${month}/${day}`;
   } else {
-    return value.length > 10 ? value.substring(5, 10) : value;
+    // 월간/기타: MM/DD 형식
+    if (value.length === 10) {
+      // YYYY-MM-DD 형식
+      return value.substring(5, 10).replace('-', '/');
+    } else if (value.length > 10) {
+      // ISO string 형식
+      return value.substring(5, 10).replace('-', '/');
+    }
+    return value;
   }
 }
 

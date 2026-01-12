@@ -23,8 +23,18 @@ export interface UseAnalyticsResult {
 
 /* Analytics 데이터를 가져오고 처리하는 커스텀 훅 */
 export function useAnalytics(interval: DateInterval): UseAnalyticsResult {
+  // 오늘 날짜를 YYYY-MM-DD 형식으로 가져와서 날짜가 바뀔 때마다 새로 fetch
+  const getTodayString = () => {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  };
+
   // interval에 따라 날짜 범위 계산
-  const { start, end } = useMemo(() => getDateRangeByInterval(interval), [interval]);
+  const dateRange = getDateRangeByInterval(interval);
+  const { start, end } = dateRange;
+
+  // 오늘 날짜를 queryKey에 포함 (날짜가 바뀌면 자동으로 새로 fetch)
+  const today = getTodayString();
 
   // 데이터 fetching
   const {
@@ -33,10 +43,12 @@ export function useAnalytics(interval: DateInterval): UseAnalyticsResult {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['admin', 'analytics', start, end, interval],
+    queryKey: ['admin', 'analytics', start, end, interval, today],
     queryFn: () => fetchAnalyticsStats(start, end, interval),
     retry: 2,
     retryDelay: 1000,
+    staleTime: 0, // 항상 최신 데이터를 가져오도록
+    refetchInterval: 60000, // 1분마다 자동 refetch (날짜가 바뀌면 자동으로 감지)
   });
 
   // 주간 필터일 때 월요일부터 일요일까지 7일 모두 채우기

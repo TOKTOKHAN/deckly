@@ -29,7 +29,11 @@ export function setCookie(name: string, value: string, days: number = COOKIE_EXP
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
   const expires = `expires=${date.toUTCString()}`;
 
-  document.cookie = `${name}=${value}; ${expires}; path=/; SameSite=Lax`;
+  // HTTPS 환경에서는 Secure 플래그 추가
+  const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
+  const secureFlag = isSecure ? '; Secure' : '';
+
+  document.cookie = `${name}=${value}; ${expires}; path=/; SameSite=Lax${secureFlag}`;
 }
 
 /* UUID v4 생성 */
