@@ -190,16 +190,8 @@ export default function AdminAnalyticsPage() {
             <div className="mt-10 flex items-center justify-between border-t border-slate-50 pt-8">
               <div className="flex items-center gap-6">
                 <p className="text-[10px] font-bold italic text-slate-400">
-                  Generated at {new Date().toLocaleString('ko-KR')}
+                  최근 업데이트 : {new Date().toLocaleString('ko-KR')}
                 </p>
-                <div className="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
-                    <span className="text-[9px] font-black text-slate-600">
-                      완료율: {successRate}%
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
