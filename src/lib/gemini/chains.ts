@@ -9,6 +9,7 @@ import {
   generateBodySection3Template,
   generateBodySection4Template,
   generateBodySection5Template,
+  generateStrengthsTemplate,
   TemplateData,
   BodySection1Data,
   BodySection2Data,
@@ -16,6 +17,7 @@ import {
   BodySection4Data,
   BodySection5Data,
 } from './templates';
+import { getContrastTextColorWithGray } from './templates/constants';
 import { BODY_PROMPT_TEMPLATE, KEYWORD_EXTRACTION_PROMPT } from './prompts';
 
 // Gemini 모델 초기화
@@ -239,17 +241,27 @@ export async function generateProposalWithChains(
       tertiaryColor,
     );
 
-    // 본문 조합 (section1 안에 company-introduction과 strengths 페이지가 포함됨)
+    // 본문 조합
     const bodyContent = section1HTML + section2HTML + section3HTML + section4HTML + section5HTML;
     console.log('본문 HTML 생성 완료, 총 길이:', bodyContent.length);
+
+    // 3.5. Strengths 템플릿 생성 (conclusion 전에 위치)
+    const textColors = getContrastTextColorWithGray(tertiaryColor);
+    const strengthsHTML = generateStrengthsTemplate(
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
+      textColors,
+    );
+    console.log('Strengths 템플릿 생성 완료, 길이:', strengthsHTML.length);
 
     // 4. 끝마무리 생성 (템플릿)
     const conclusion = generateConclusionTemplate(data);
     console.log('끝마무리 생성 완료, 길이:', conclusion.length);
     console.log('끝마무리 미리보기:', conclusion.substring(0, 200));
 
-    // 5. 조합 (표지 + 목차 + 본문 + 끝마무리)
-    const combinedContent = cover + tableOfContents + bodyContent + conclusion;
+    // 5. 조합 (표지 + 목차 + 본문 + strengths + 끝마무리)
+    const combinedContent = cover + tableOfContents + bodyContent + strengthsHTML + conclusion;
     console.log('전체 조합 완료, 총 길이:', combinedContent.length);
     console.log('조합된 내용의 첫 500자:', combinedContent.substring(0, 500));
     console.log(

@@ -520,9 +520,17 @@ export default function PreviewPage() {
             sampleData.brandColor2,
             sampleData.brandColor3,
           );
+          const textColorsAll = getContrastTextColorWithGray(
+            sampleData.brandColor3 || '#0a0c10',
+          );
+          const strengthsAll = generateStrengthsTemplate(
+            sampleData.brandColor1 || '#4f46e5',
+            sampleData.brandColor2 || '#1f2937',
+            sampleData.brandColor3 || '#0a0c10',
+            textColorsAll,
+          );
           const conclusion = generateConclusionTemplate(sampleData);
-          // body1 안에 이미 company-introduction과 strengths가 포함되어 있음
-          content = cover + toc + body1 + body2 + body3 + body4 + body5 + conclusion;
+          content = cover + toc + body1 + body2 + body3 + body4 + body5 + strengthsAll + conclusion;
           break;
         default:
           content = '';

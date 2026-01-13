@@ -55,40 +55,40 @@ export function generateStrengthsTemplate(
   return `
     <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}; page-break-after: always !important;">
       <!-- Main Title Section -->
-      <div class="mb-6" style="margin-bottom: 1.5rem !important;">
-        <div class="flex items-center gap-3 mb-4" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 1rem !important;">
+      <div class="mb-4" style="margin-bottom: 1rem !important;">
+        <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
           <div style="height: 2px !important; width: 3rem !important; background-color: ${primaryColor} !important;"></div>
           <span style="font-size: 0.6875rem !important; font-weight: 900 !important; letter-spacing: 0.4em !important; color: ${primaryColor} !important; text-transform: uppercase !important;">Our Core Strengths</span>
         </div>
-        <h2 style="font-size: 2.25rem !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.02em !important; margin-bottom: 1rem !important; color: ${textColors.primary} !important;">
+        <h2 style="font-size: 2rem !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.02em !important; margin-bottom: 0.75rem !important; color: ${textColors.primary} !important;">
           왜 <span style="color: ${primaryColor} !important; font-style: italic !important;">똑똑한개발자</span>를 <br />
           선택할 수밖에 없는가?
         </h2>
-        <p style="color: ${textColors.tertiary} !important; font-weight: 500 !important; font-size: 0.8125rem !important; max-width: 32rem !important; word-break: keep-all !important;">
+        <p style="color: ${textColors.tertiary} !important; font-weight: 500 !important; font-size: 0.75rem !important; max-width: 32rem !important; word-break: keep-all !important; margin-bottom: 0 !important;">
           단순히 코드를 짜는 에이전시를 넘어, 비즈니스의 시작부터 성장, 그리고 조직 구성까지 
           함께 고민하는 비즈니스 파트너로서의 4가지 확실한 경쟁력을 제안합니다.
         </p>
       </div>
 
       <!-- Strengths Grid -->
-      <div class="grid grid-cols-2 gap-4 flex-1 mb-6" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1rem !important; flex: 1 !important; margin-bottom: 1.5rem !important;">
+      <div class="grid grid-cols-2 gap-3 flex-1 mb-4" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.75rem !important; flex: 1 !important; margin-bottom: 1rem !important;">
         ${strengths
           .map(
             s => `
-        <div style="padding: 1.5rem !important; background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border-radius: 2rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; flex-direction: column !important; height: 100% !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important;">
-          <div class="flex justify-between items-start mb-4" style="display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 1rem !important;">
-            <div style="width: 2.5rem !important; height: 2.5rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 1.25rem !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important;">
-              <span style="font-size: 1.25rem !important;">${s.icon}</span>
+        <div style="padding: 1.25rem !important; background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border-radius: 1.5rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; flex-direction: column !important; height: 100% !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important;">
+          <div class="flex justify-between items-start mb-3" style="display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 0.75rem !important;">
+            <div style="width: 2.25rem !important; height: 2.25rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 1.125rem !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important;">
+              <span style="font-size: 1.125rem !important;">${s.icon}</span>
             </div>
-            <span style="font-size: 1.875rem !important; font-weight: 900 !important; color: ${hexToRgba(primaryColor, 0.2)} !important; font-style: italic !important;">${s.id}</span>
+            <span style="font-size: 1.625rem !important; font-weight: 900 !important; color: ${hexToRgba(primaryColor, 0.2)} !important; font-style: italic !important;">${s.id}</span>
           </div>
-          <h4 style="font-size: 1rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; margin-bottom: 0.75rem !important; letter-spacing: -0.01em !important; word-break: keep-all !important; line-height: 1.25 !important;">${s.title}</h4>
-          <p style="font-size: 0.6875rem !important; color: ${textColors.tertiary} !important; line-height: 1.4 !important; font-weight: 500 !important; margin-bottom: 1rem !important; word-break: keep-all !important;">${s.desc}</p>
-          <div class="mt-auto flex flex-wrap gap-2" style="margin-top: auto !important; display: flex !important; flex-wrap: wrap !important; gap: 0.5rem !important;">
+          <h4 style="font-size: 0.9375rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important; letter-spacing: -0.01em !important; word-break: keep-all !important; line-height: 1.2 !important;">${s.title}</h4>
+          <p style="font-size: 0.625rem !important; color: ${textColors.tertiary} !important; line-height: 1.35 !important; font-weight: 500 !important; margin-bottom: 0.75rem !important; word-break: keep-all !important;">${s.desc}</p>
+          <div class="mt-auto flex flex-wrap gap-2" style="margin-top: auto !important; display: flex !important; flex-wrap: wrap !important; gap: 0.375rem !important;">
             ${s.tags
               .map(
                 tag => `
-            <span style="padding: 0.25rem 0.625rem !important; background-color: ${hexToRgba(tertiaryColor, 0.2)} !important; color: ${textColors.secondary} !important; font-size: 0.5625rem !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; border-radius: 0.5rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.15)} !important;">${tag}</span>
+            <span style="padding: 0.1875rem 0.5rem !important; background-color: ${hexToRgba(tertiaryColor, 0.2)} !important; color: ${textColors.secondary} !important; font-size: 0.5rem !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; border-radius: 0.375rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.15)} !important;">${tag}</span>
             `,
               )
               .join('')}
@@ -100,17 +100,17 @@ export function generateStrengthsTemplate(
       </div>
 
       <!-- Bottom Partnership Summary -->
-      <div style="background-color: ${tertiaryColor} !important; border-radius: 2rem !important; padding: 1.5rem !important; color: ${textColors.primary} !important; position: relative !important; overflow: hidden !important;">
-        <div style="position: absolute !important; top: -20% !important; right: -10% !important; width: 16rem !important; height: 16rem !important; background-color: ${hexToRgba(primaryColor, 0.2)} !important; border-radius: 50% !important; filter: blur(60px) !important;"></div>
-        <div style="position: relative !important; z-index: 10 !important; display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 1.5rem !important;">
-          <div style="max-width: 28rem !important;">
-            <h3 style="font-size: 1.125rem !important; font-weight: 900 !important; margin-bottom: 0.5rem !important; letter-spacing: -0.01em !important; color: ${textColors.primary} !important;">비즈니스 전반을 아우르는 최고의 파트너</h3>
-            <p style="font-size: 0.6875rem !important; color: ${hexToRgba(textColors.tertiary, 0.7)} !important; line-height: 1.4 !important; font-weight: 500 !important;">
+      <div style="background-color: ${tertiaryColor} !important; border-radius: 1.5rem !important; padding: 1.25rem !important; color: ${textColors.primary} !important; position: relative !important; overflow: hidden !important;">
+        <div style="position: absolute !important; top: -20% !important; right: -10% !important; width: 12rem !important; height: 12rem !important; background-color: ${hexToRgba(primaryColor, 0.2)} !important; border-radius: 50% !important; filter: blur(60px) !important;"></div>
+        <div style="position: relative !important; z-index: 10 !important; display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 1.25rem !important;">
+          <div style="max-width: 28rem !important; flex: 1 !important;">
+            <h3 style="font-size: 1rem !important; font-weight: 900 !important; margin-bottom: 0.375rem !important; letter-spacing: -0.01em !important; color: ${textColors.primary} !important;">비즈니스 전반을 아우르는 최고의 파트너</h3>
+            <p style="font-size: 0.625rem !important; color: ${hexToRgba(textColors.tertiary, 0.7)} !important; line-height: 1.35 !important; font-weight: 500 !important; margin: 0 !important;">
               IT 서비스 기획 컨설팅부터 프로덕트 개발, 마케팅, 그리고 채용 연계까지 내재화된 인력으로 진행 가능해, 
               단순한 아웃소싱이 아닌 성공을 함께 만드는 비즈니스 파트너로서 함께 합니다.
             </p>
           </div>
-          <div style="display: flex !important; gap: 0.75rem !important;">
+          <div style="display: flex !important; gap: 0.625rem !important; flex-shrink: 0 !important;">
             ${[
               { label: '경영 컨설팅', icon: '📊' },
               { label: '프로덕트 개발', icon: '📈' },
@@ -118,11 +118,11 @@ export function generateStrengthsTemplate(
             ]
               .map(
                 item => `
-            <div style="display: flex !important; flex-direction: column !important; align-items: center !important; gap: 0.5rem !important;">
-              <div style="width: 2rem !important; height: 2rem !important; background-color: ${hexToRgba(textColors.primary, 0.1)} !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; color: ${primaryColor} !important;">
-                <span style="font-size: 0.75rem !important;">${item.icon}</span>
+            <div style="display: flex !important; flex-direction: column !important; align-items: center !important; gap: 0.375rem !important;">
+              <div style="width: 1.75rem !important; height: 1.75rem !important; background-color: ${hexToRgba(textColors.primary, 0.1)} !important; border-radius: 0.375rem !important; display: flex !important; align-items: center !important; justify-content: center !important; color: ${primaryColor} !important;">
+                <span style="font-size: 0.6875rem !important;">${item.icon}</span>
               </div>
-              <span style="font-size: 0.5rem !important; font-weight: bold !important; color: ${hexToRgba(textColors.primary, 0.6)} !important; white-space: nowrap !important;">${item.label}</span>
+              <span style="font-size: 0.4375rem !important; font-weight: bold !important; color: ${hexToRgba(textColors.primary, 0.6)} !important; white-space: nowrap !important;">${item.label}</span>
             </div>
             `,
               )
