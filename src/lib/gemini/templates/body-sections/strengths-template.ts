@@ -75,7 +75,7 @@ export function generateStrengthsTemplate(
         ${strengths
           .map(
             s => `
-        <div style="padding: 1.25rem !important; background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border-radius: 1.5rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; flex-direction: column !important; height: 100% !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important;">
+        <div style="padding: 1.25rem !important; background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border-radius: 1.5rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; flex-direction: column !important; height: auto !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important;">
           <div class="flex justify-between items-start mb-3" style="display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 0.75rem !important;">
             <div style="width: 2.25rem !important; height: 2.25rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 1.125rem !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important;">
               <span style="font-size: 1.125rem !important;">${s.icon}</span>
@@ -84,7 +84,7 @@ export function generateStrengthsTemplate(
           </div>
           <h4 style="font-size: 0.9375rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important; letter-spacing: -0.01em !important; word-break: keep-all !important; line-height: 1.2 !important;">${s.title}</h4>
           <p style="font-size: 0.625rem !important; color: ${textColors.tertiary} !important; line-height: 1.35 !important; font-weight: 500 !important; margin-bottom: 0.75rem !important; word-break: keep-all !important;">${s.desc}</p>
-          <div class="mt-auto flex flex-wrap gap-2" style="margin-top: auto !important; display: flex !important; flex-wrap: wrap !important; gap: 0.375rem !important;">
+          <div class="flex flex-wrap gap-2" style="display: flex !important; flex-wrap: wrap !important; gap: 0.375rem !important;">
             ${s.tags
               .map(
                 tag => `

@@ -78,7 +78,7 @@ export function generateBodySection1Template(
 
   // 1.1 제안사 소개를 별도 페이지로 분리 (제안 개요 헤더 포함)
   const companyIntroductionPage = `
-    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}; page-break-after: always !important;">
+    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}; page-break-after: always !important; position: relative !important;">
       ${generateSectionHeader(
         'I',
         '제안 개요',
@@ -88,7 +88,7 @@ export function generateBodySection1Template(
         textColors,
       )}
       <!-- 1.1 제안사 소개 -->
-      <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
+      <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important; padding-bottom: 3rem !important;">
         <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
           <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
             <span style="font-size: 1.25rem !important;">🏢</span>
@@ -153,7 +153,9 @@ export function generateBodySection1Template(
           </div>
         </div>
       </section>
-      ${generatePageFooter('03', primaryColor, textColors)}
+      <div style="position: absolute !important; bottom: 0.5rem !important; left: 0 !important; right: 0 !important; z-index: 10 !important;">
+        ${generatePageFooter('03', primaryColor, textColors)}
+      </div>
     </div>
   `;
 
