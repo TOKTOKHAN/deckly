@@ -1,4 +1,9 @@
-/* 본문 섹션 1: 제안 개요 (Part I: Introduction)*/
+/* 본문 섹션 1: 제안 개요 (Part I: Introduction)
+ *
+ * 주의: 이 섹션에는 고정 템플릿이 포함되어 있습니다.
+ * - 1.1 제안사 소개 (company-introduction-template): Gemini 생성 데이터와 무관하게 항상 포함되는 고정 템플릿
+ * - 1.2, 1.3, 1.4: Gemini가 생성한 데이터 기반으로 동적 생성
+ */
 import type { BodySection1Data } from '../types';
 import {
   getContrastTextColorWithGray,
@@ -48,7 +53,8 @@ export function generateBodySection1Template(
   const smallCardTextColors = getCardTextColor(tertiaryColor, tertiaryColor, 0.3);
   const scopeCardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
 
-  // 서비스 목록 (company-introduction-template에서 가져옴)
+  // 고정 템플릿: 제안사 소개 서비스 목록
+  // 주의: 이 데이터는 Gemini 생성 데이터와 무관하게 항상 동일하게 사용되는 고정 템플릿입니다.
   const services = [
     {
       title: 'UXUI, 브랜드 컨설팅',
@@ -76,7 +82,8 @@ export function generateBodySection1Template(
     },
   ];
 
-  // 1.1 제안사 소개를 별도 페이지로 분리 (제안 개요 헤더 포함)
+  // 고정 템플릿: 1.1 제안사 소개 페이지 생성
+  // 주의: 이 템플릿은 Gemini 생성 데이터와 무관하게 항상 포함되는 고정 템플릿입니다.
   const companyIntroductionPage = `
     <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}; page-break-after: always !important; position: relative !important;">
       ${generateSectionHeader(

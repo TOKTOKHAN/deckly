@@ -12,41 +12,42 @@ export const BODY_PROMPT_TEMPLATE = `
 미팅 전사록을 분석하여 다음 5개 섹션의 데이터를 JSON 형식으로 생성하세요:
 
 ### I. 제안 개요 (Part I: Introduction)
-다음 구조의 JSON 데이터를 생성하세요:
+**주의: 1.1 제안사 소개는 고정 템플릿으로 자동 포함되므로 생성할 필요가 없습니다.**
+다음 구조의 JSON 데이터를 생성하세요 (1.2, 1.3, 1.4 섹션용):
 \`\`\`json
 {
   "section1": {
     "background": {
-      "quote": "프로젝트의 핵심 가치나 비전을 담은 인용구 (1-2문장)",
-      "marketBackground": "시장 배경 및 필요성 설명 (2-3문장)",
-      "primaryGoal": "프로젝트의 주요 목표 (2-3문장)"
+      "quote": "프로젝트의 핵심 가치나 비전을 담은 인용구 (1-2문장) - 1.2 제안 배경 및 목적에 사용",
+      "marketBackground": "시장 배경 및 필요성 설명 (2-3문장) - 1.2 제안 배경 및 목적에 사용",
+      "primaryGoal": "프로젝트의 주요 목표 (2-3문장) - 1.2 제안 배경 및 목적에 사용"
     },
     "scope": [
       {
         "title": "프로젝트 범위 항목 1",
-        "description": "범위 항목 설명 (예: 플랫폼 개발 및 배포, 사용자 교육 및 기술 이전 등)"
+        "description": "범위 항목 설명 (예: 플랫폼 개발 및 배포, 사용자 교육 및 기술 이전 등) - 1.3 제안의 범위에 사용"
       },
       {
         "title": "프로젝트 범위 항목 2",
-        "description": "범위 항목 설명"
+        "description": "범위 항목 설명 - 1.3 제안의 범위에 사용"
       },
       {
         "title": "프로젝트 범위 항목 3",
-        "description": "범위 항목 설명"
+        "description": "범위 항목 설명 - 1.3 제안의 범위에 사용"
       }
     ],
     "strengths": [
       {
         "title": "강점 제목 1",
-        "description": "강점 설명 1"
+        "description": "강점 설명 1 - 1.4 제안사의 특징 및 장점에 사용"
       },
       {
         "title": "강점 제목 2",
-        "description": "강점 설명 2"
+        "description": "강점 설명 2 - 1.4 제안사의 특징 및 장점에 사용"
       },
       {
         "title": "강점 제목 3",
-        "description": "강점 설명 3"
+        "description": "강점 설명 3 - 1.4 제안사의 특징 및 장점에 사용"
       }
     ]
   }
@@ -254,11 +255,13 @@ export const BODY_PROMPT_TEMPLATE = `
 미팅 전사록을 분석하여 각 섹션에 맞는 내용을 생성하세요:
 
 1. **I. 제안 개요**:
-   - background.quote: 프로젝트의 핵심 가치나 비전을 담은 인용구
-   - background.marketBackground: 미팅에서 논의된 시장 상황이나 배경
-   - background.primaryGoal: 프로젝트의 주요 목표
-   - scope: 프로젝트 범위에 포함되는 주요 항목들 (각 항목은 title과 description을 포함한 객체 배열, 3개)
-   - strengths: 제안사의 차별화된 강점 (3개)
+   - **주의: 1.1 제안사 소개는 고정 템플릿으로 자동 포함되므로 생성할 필요가 없습니다.**
+   - background.quote: 프로젝트의 핵심 가치나 비전을 담은 인용구 (1.2 제안 배경 및 목적에 사용)
+   - background.marketBackground: 미팅에서 논의된 시장 상황이나 배경 (1.2 제안 배경 및 목적에 사용)
+   - background.primaryGoal: 프로젝트의 주요 목표 (1.2 제안 배경 및 목적에 사용)
+   - scope: 프로젝트 범위에 포함되는 주요 항목들 (각 항목은 title과 description을 포함한 객체 배열, 3개) - 1.3 제안의 범위에 사용
+   - strengths: 제안사의 차별화된 강점 (3개) - 1.4 제안사의 특징 및 장점에 사용
+   - **주의: 별도의 "제안사의 특징 및 장점" 고정 템플릿이 conclusion 전에 자동 포함되므로, 이 strengths는 1.4 섹션에만 사용됩니다.**
 
 2. **II. 제안 전략**:
    - marketAnalysis.trends: 미팅에서 논의된 시장 트렌드 (3개)

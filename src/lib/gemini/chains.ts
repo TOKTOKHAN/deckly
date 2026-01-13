@@ -241,11 +241,12 @@ export async function generateProposalWithChains(
       tertiaryColor,
     );
 
-    // 본문 조합
+    // 본문 조합 (Gemini가 생성한 데이터 기반)
     const bodyContent = section1HTML + section2HTML + section3HTML + section4HTML + section5HTML;
     console.log('본문 HTML 생성 완료, 총 길이:', bodyContent.length);
 
-    // 3.5. Strengths 템플릿 생성 (conclusion 전에 위치)
+    // 3.5. 고정 템플릿: Strengths 템플릿 생성 (conclusion 전에 위치)
+    // 주의: 이 템플릿은 Gemini 생성 데이터와 무관하게 항상 포함되는 고정 템플릿입니다.
     const textColors = getContrastTextColorWithGray(tertiaryColor);
     const strengthsHTML = generateStrengthsTemplate(
       primaryColor,
@@ -260,7 +261,8 @@ export async function generateProposalWithChains(
     console.log('끝마무리 생성 완료, 길이:', conclusion.length);
     console.log('끝마무리 미리보기:', conclusion.substring(0, 200));
 
-    // 5. 조합 (표지 + 목차 + 본문 + strengths + 끝마무리)
+    // 5. 조합 (표지 + 목차 + 본문 + 고정 템플릿(strengths) + 끝마무리)
+    // 주의: section1HTML 내부에 company-introduction-template이 고정 템플릿으로 포함되어 있습니다.
     const combinedContent = cover + tableOfContents + bodyContent + strengthsHTML + conclusion;
     console.log('전체 조합 완료, 총 길이:', combinedContent.length);
     console.log('조합된 내용의 첫 500자:', combinedContent.substring(0, 500));

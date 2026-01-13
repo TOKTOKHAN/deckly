@@ -1,4 +1,8 @@
-/* 제안사의 특징 및 장점 템플릿 (고정 템플릿) */
+/* 제안사의 특징 및 장점 템플릿 (고정 템플릿)
+ * 
+ * 주의: 이 템플릿은 Gemini 생성 데이터와 무관하게 항상 포함되는 고정 템플릿입니다.
+ * 제안서 생성 시 Gemini가 생성한 데이터와 관계없이 항상 동일한 내용으로 표시됩니다.
+ */
 import { hexToRgba, getA4PageContainerStyle, generatePageFooter } from '../constants';
 
 interface TextColors {
