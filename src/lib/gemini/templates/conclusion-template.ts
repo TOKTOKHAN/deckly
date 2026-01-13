@@ -11,8 +11,8 @@ export function generateConclusionTemplate(data: TemplateData): string {
   // 배경색 밝기에 따라 텍스트 색상 결정
   const textColors = getContrastTextColorWithGray(tertiaryColor);
 
-  const primaryColorRgba = hexToRgba(primaryColor, 0.05);
-  const secondaryColorRgba = hexToRgba(secondaryColor, 0.05);
+  const primaryColorRgba = hexToRgba(primaryColor, 0.05); // 배경 장식: 0.05
+  const secondaryColorRgba = hexToRgba(secondaryColor, 0.05); // 배경 장식: 0.05
 
   // Promise 데이터
   const promises = [

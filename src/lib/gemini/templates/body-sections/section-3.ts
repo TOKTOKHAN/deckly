@@ -209,7 +209,7 @@ export function generateBodySection3Template(
           <div style="display: flex !important; flex-direction: column !important; gap: 0.5rem !important; width: 100% !important;">
             <!-- 시각적 연계 다이어그램 (3.1 스타일 참고) -->
             <div style="background-color: ${hexToRgba(tertiaryColor, 0.15)} !important; border: 1px dashed ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 1rem !important; padding: 1rem !important; position: relative !important; overflow: hidden !important; display: flex !important; justify-content: center !important; width: 100% !important;">
-              <div style="position: absolute !important; inset: 0 !important; background: radial-gradient(circle at center, ${hexToRgba(primaryColor, 0.08)} 0%, transparent 70%) !important; opacity: 0.6 !important; pointer-events: none !important; z-index: 0 !important;"></div>
+              <div style="position: absolute !important; inset: 0 !important; background: radial-gradient(circle at center, ${hexToRgba(primaryColor, 0.08)}, transparent 70%) !important; opacity: 0.6 !important; pointer-events: none !important; z-index: 0 !important;"></div>
               
               <!-- 배경 링 -->
               <div style="position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: 10rem !important; height: 10rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.4)} !important; border-radius: 9999px !important; pointer-events: none !important; z-index: 0 !important;"></div>
@@ -218,13 +218,13 @@ export function generateBodySection3Template(
               <div class="flex items-center gap-3" style="display: flex !important; align-items: center !important; gap: 0.5rem !important; position: relative !important; z-index: 10 !important;">
                 <!-- 좌측: POS, ERP -->
                 <div class="flex flex-col gap-3" style="display: flex !important; flex-direction: column !important; gap: 0.5rem !important;">
-                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${secondaryColor} !important; border-radius: 0.75rem !important; border: 1px solid ${primaryColor} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                     </svg>
                   </div>
-                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${secondaryColor} !important; border-radius: 0.75rem !important; border: 1px solid ${primaryColor} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                       <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
                       <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
@@ -242,7 +242,7 @@ export function generateBodySection3Template(
                 </div>
                 <!-- 우측: CRM, API -->
                 <div class="flex flex-col gap-3" style="display: flex !important; flex-direction: column !important; gap: 0.5rem !important;">
-                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${secondaryColor} !important; border-radius: 0.75rem !important; border: 1px solid ${primaryColor} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                       <circle cx="9" cy="7" r="4"></circle>
@@ -250,7 +250,7 @@ export function generateBodySection3Template(
                       <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                   </div>
-                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                  <div class="w-16 h-16 bg-zinc-800 rounded-xl border border-white/10 flex items-center justify-center" style="width: 3.5rem !important; height: 3.5rem !important; background-color: ${secondaryColor} !important; border-radius: 0.75rem !important; border: 1px solid ${primaryColor} !important; display: flex !important; align-items: center !important; justify-content: center !important;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="2" y1="12" x2="22" y2="12"></line>

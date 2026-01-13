@@ -140,7 +140,7 @@ export function generateBodySection1Template(
               <div style="flex: 1 !important;">
                 <div style="display: flex !important; align-items: center !important; justify-content: space-between !important; margin-bottom: 0.375rem !important;">
                   <h4 style="font-size: 1rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; letter-spacing: -0.01em !important;">${s.title}</h4>
-                  <span style="font-size: 0.5625rem !important; font-weight: 900 !important; color: ${hexToRgba(textColors.tertiary, 0.6)} !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-style: italic !important;">Service 0${idx + 1}</span>
+                  <span style="font-size: 0.5625rem !important; font-weight: 900 !important; color: ${textColors.tertiary} !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-style: italic !important;">Service 0${idx + 1}</span>
                 </div>
                 <p style="font-size: 0.75rem !important; color: ${textColors.tertiary} !important; font-weight: 500 !important; line-height: 1.35 !important; margin-bottom: 0.625rem !important; word-break: keep-all !important;">${s.desc}</p>
                 <div style="display: flex !important; flex-wrap: wrap !important; gap: 0.375rem !important;">

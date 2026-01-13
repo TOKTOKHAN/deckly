@@ -16,9 +16,9 @@ export async function generateCoverTemplate(
   const textColors = getContrastTextColorWithGray(tertiaryColor);
 
   // 브랜드 컬러 기반 색상 조합
-  const cardBgColor = hexToRgba(secondaryColor, 0.4);
-  const cardBorderColor = hexToRgba(primaryColor, 0.1);
-  const subTextColor = hexToRgba(primaryColor, 0.8);
+  const cardBgColor = hexToRgba(secondaryColor, 0.4); // 카드 배경: 0.4
+  const cardBorderColor = hexToRgba(primaryColor, 0.1); // 테두리: 0.1
+  const subTextColor = hexToRgba(primaryColor, 0.8); // 서브 텍스트: 0.8
 
   // Proposal Ref 생성 함수
   const generateProposalRef = (dateString?: string): string => {

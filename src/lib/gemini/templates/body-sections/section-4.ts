@@ -455,7 +455,7 @@ export function generateBodySection4Template(
                 : ''
             }
             <div style="
-              background-color: ${primaryColor} !important;
+              background-color: ${hexToRgba(primaryColor, 0.15)} !important;
               height: 1.25rem !important;
               border-radius: ${borderRadius} !important;
               position: absolute !important;
@@ -565,7 +565,7 @@ export function generateBodySection4Template(
               ${resources
                 .map(
                   resource => `
-              <div class="p-4 bg-zinc-950 rounded-xl border border-white/5 text-center" style="padding: 0.75rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; text-align: center !important;">
+              <div class="p-4 bg-zinc-950 rounded-xl border border-white/5 text-center" style="padding: 0.75rem !important; background-color: ${tertiaryColor} !important; border-radius: 0.75rem !important; border: 1px solid ${primaryColor} !important; text-align: center !important;">
                 <p class="text-[10px] text-zinc-500 font-black uppercase mb-1" style="font-size: 10px !important; color: #71717a !important; font-weight: 900 !important; text-transform: uppercase !important; margin-bottom: 0.25rem !important;">${resource.role}</p>
                 <p class="text-xs font-bold text-white italic" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${darkCardTextColors.primary} !important; font-style: italic !important;">${resource.name}</p>
               </div>
