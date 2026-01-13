@@ -13,7 +13,7 @@ export function generateTableOfContentsTemplate(
   // 배경색 밝기에 따라 텍스트 색상 결정
   const textColors = getContrastTextColorWithGray(tertiaryColor);
 
-  const primaryColorRgba = hexToRgba(primaryColor, 0.05);
+  const primaryColorRgba = hexToRgba(primaryColor, 0.05); // 배경 장식: 0.05
 
   // 목차 섹션 데이터
   // Part 5의 border 색상은 배경색(tertiaryColor)과 겹칠 수 있으므로 보색 사용
@@ -75,7 +75,7 @@ export function generateTableOfContentsTemplate(
         <div class="relative" style="position: relative !important;">
           <h1 class="text-6xl font-black tracking-tighter uppercase italic opacity-5 absolute -top-8 -left-2" style="font-size: 3.75rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; color: ${textColors.primary} !important; text-transform: uppercase !important; font-style: italic !important; opacity: 0.05 !important; position: absolute !important; top: -2rem !important; left: -0.5rem !important;">Contents</h1>
           <h2 class="text-4xl font-black tracking-tight text-white relative z-10 flex items-baseline gap-4" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; position: relative !important; z-index: 10 !important; display: flex !important; align-items: baseline !important; gap: 1rem !important;">
-            목 차 <span class="text-sm font-light italic tracking-widest uppercase" style="font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important;">Table of Contents</span>
+            목 차 <span class="text-sm font-light italic tracking-widest uppercase" style="font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: ${textColors.tertiary} !important; text-transform: uppercase !important;">Table of Contents</span>
           </h2>
         </div>
       </div>
@@ -94,13 +94,13 @@ export function generateTableOfContentsTemplate(
             
             <div class="relative border-l-[3px] pl-5 py-1" style="border-left: 3px solid ${section.borderColor} !important; padding-left: 1.25rem !important; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; position: relative !important;">
               <div class="flex items-center gap-2 mb-1" style="display: flex !important; align-items: center !important; gap: 0.5rem !important; margin-bottom: 0.25rem !important;">
-                <span class="text-[9px] font-bold uppercase tracking-widest leading-none" style="font-size: 9px !important; font-weight: bold !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; line-height: 1 !important;">
+                <span class="text-[9px] font-bold uppercase tracking-widest leading-none" style="font-size: 9px !important; font-weight: bold !important; color: ${textColors.tertiary} !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; line-height: 1 !important;">
                   Part ${section.id}
                 </span>
               </div>
               <h3 class="text-xl font-black text-white mb-5" style="font-size: 1.25rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; margin-bottom: 1rem !important;">
                 ${section.title}
-                <span class="block text-[9px] font-medium mt-0.5 uppercase tracking-tighter" style="display: block !important; font-size: 9px !important; font-weight: 500 !important; color: #71717a !important; margin-top: 0.125rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">
+                <span class="block text-[9px] font-medium mt-0.5 uppercase tracking-tighter" style="display: block !important; font-size: 9px !important; font-weight: 500 !important; color: ${textColors.tertiary} !important; margin-top: 0.125rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">
                   ${section.enTitle}
                 </span>
               </h3>
@@ -111,14 +111,14 @@ export function generateTableOfContentsTemplate(
                     (item, idx) => `
                 <li class="flex items-center justify-between" style="display: flex !important; align-items: center !important; justify-content: space-between !important;">
                   <div class="flex items-center gap-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important;">
-                    <span class="text-[9px] font-black" style="font-size: 9px !important; font-weight: 900 !important; color: #3f3f46 !important;">
+                    <span class="text-[9px] font-black" style="font-size: 9px !important; font-weight: 900 !important; color: ${textColors.tertiary} !important;">
                       ${section.id.toLowerCase()}.${idx + 1}
                     </span>
-                    <span class="text-[14px] font-medium" style="font-size: 0.875rem !important; font-weight: 500 !important; color: #a1a1aa !important;">
+                    <span class="text-[14px] font-medium" style="font-size: 0.875rem !important; font-weight: 500 !important; color: ${textColors.secondary} !important;">
                       ${item}
                     </span>
                   </div>
-                  <span style="color: #27272a !important; font-size: 0.75rem !important;">→</span>
+                  <span style="color: ${textColors.tertiary} !important; font-size: 0.75rem !important;">→</span>
                 </li>
                 `,
                   )
@@ -135,7 +135,7 @@ export function generateTableOfContentsTemplate(
       <!-- Footer Area -->
       <div class="px-16 pb-8 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0 !important; padding-bottom: 0.125rem !important; position: relative !important; z-index: 10 !important;">
         <div class="flex justify-end items-center opacity-40" style="display: flex !important; justify-content: flex-end !important; align-items: center !important; opacity: 0.4 !important;">
-          <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important;">Page 02</span>
+          <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: ${textColors.tertiary} !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important;">Page 02</span>
         </div>
       </div>
     </div>

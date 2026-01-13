@@ -273,11 +273,6 @@ export async function updateProposal(proposal: Proposal): Promise<Proposal> {
     }
 
     const rowData = proposalToRow(proposal, user.id);
-    console.log('업데이트할 데이터:', {
-      id: proposal.id,
-      contentLength: rowData.content?.length || 0,
-      hasContent: !!rowData.content,
-    });
 
     const { data, error } = await supabase
       .from('proposals')
@@ -304,11 +299,6 @@ export async function updateProposal(proposal: Proposal): Promise<Proposal> {
     if (!data) {
       throw new Error('업데이트된 데이터를 받지 못했습니다.');
     }
-
-    console.log('업데이트 성공:', {
-      id: data.id,
-      contentLength: data.content?.length || 0,
-    });
 
     return rowToProposal(data);
   } catch (err) {

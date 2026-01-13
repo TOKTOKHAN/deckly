@@ -10,6 +10,9 @@ import {
   generateBodySection3Template,
   generateBodySection4Template,
   generateBodySection5Template,
+  generateCompanyIntroductionTemplate,
+  generateStrengthsTemplate,
+  getContrastTextColorWithGray,
   generateHTMLWrapper,
   TemplateData,
   BodySection1Data,
@@ -22,7 +25,17 @@ import clientLogo from '../../../public/images/Domino_pizza_logo.svg';
 
 export default function PreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<
-    'cover' | 'toc' | 'conclusion' | 'body1' | 'body2' | 'body3' | 'body4' | 'body5' | 'all'
+    | 'cover'
+    | 'toc'
+    | 'conclusion'
+    | 'body1'
+    | 'body2'
+    | 'body3'
+    | 'body4'
+    | 'body5'
+    | 'company-introduction'
+    | 'strengths'
+    | 'all'
   >('all');
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -279,6 +292,26 @@ export default function PreviewPage() {
             sampleData.brandColor3,
           );
           break;
+        case 'company-introduction':
+          const textColorsIntro = getContrastTextColorWithGray(sampleData.brandColor3 || '#0a0c10');
+          content = generateCompanyIntroductionTemplate(
+            sampleData.brandColor1 || '#4f46e5',
+            sampleData.brandColor2 || '#1f2937',
+            sampleData.brandColor3 || '#0a0c10',
+            textColorsIntro,
+          );
+          break;
+        case 'strengths':
+          const textColorsStrengths = getContrastTextColorWithGray(
+            sampleData.brandColor3 || '#0a0c10',
+          );
+          content = generateStrengthsTemplate(
+            sampleData.brandColor1 || '#4f46e5',
+            sampleData.brandColor2 || '#1f2937',
+            sampleData.brandColor3 || '#0a0c10',
+            textColorsStrengths,
+          );
+          break;
         case 'all':
           const cover = await generateCoverTemplate(
             sampleData,
@@ -487,8 +520,17 @@ export default function PreviewPage() {
             sampleData.brandColor2,
             sampleData.brandColor3,
           );
+          const textColorsAll = getContrastTextColorWithGray(
+            sampleData.brandColor3 || '#0a0c10',
+          );
+          const strengthsAll = generateStrengthsTemplate(
+            sampleData.brandColor1 || '#4f46e5',
+            sampleData.brandColor2 || '#1f2937',
+            sampleData.brandColor3 || '#0a0c10',
+            textColorsAll,
+          );
           const conclusion = generateConclusionTemplate(sampleData);
-          content = cover + toc + body1 + body2 + body3 + body4 + body5 + conclusion;
+          content = cover + toc + body1 + body2 + body3 + body4 + body5 + strengthsAll + conclusion;
           break;
         default:
           content = '';
@@ -731,6 +773,26 @@ export default function PreviewPage() {
               }`}
             >
               본문 섹션 5
+            </button>
+            <button
+              onClick={() => setSelectedTemplate('company-introduction')}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                selectedTemplate === 'company-introduction'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              제안사 소개
+            </button>
+            <button
+              onClick={() => setSelectedTemplate('strengths')}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                selectedTemplate === 'strengths'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              제안사 특징
             </button>
             <button
               onClick={() => setSelectedTemplate('all')}

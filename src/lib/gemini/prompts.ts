@@ -12,41 +12,42 @@ export const BODY_PROMPT_TEMPLATE = `
 미팅 전사록을 분석하여 다음 5개 섹션의 데이터를 JSON 형식으로 생성하세요:
 
 ### I. 제안 개요 (Part I: Introduction)
-다음 구조의 JSON 데이터를 생성하세요:
+**주의: 1.1 제안사 소개는 고정 템플릿으로 자동 포함되므로 생성할 필요가 없습니다.**
+다음 구조의 JSON 데이터를 생성하세요 (1.2, 1.3, 1.4 섹션용):
 \`\`\`json
 {
   "section1": {
     "background": {
-      "quote": "프로젝트의 핵심 가치나 비전을 담은 인용구 (1-2문장)",
-      "marketBackground": "시장 배경 및 필요성 설명 (2-3문장)",
-      "primaryGoal": "프로젝트의 주요 목표 (2-3문장)"
+      "quote": "프로젝트의 핵심 가치나 비전을 담은 인용구 (1-2문장) - 1.2 제안 배경 및 목적에 사용",
+      "marketBackground": "시장 배경 및 필요성 설명 (2-3문장) - 1.2 제안 배경 및 목적에 사용",
+      "primaryGoal": "프로젝트의 주요 목표 (2-3문장) - 1.2 제안 배경 및 목적에 사용"
     },
     "scope": [
       {
         "title": "프로젝트 범위 항목 1",
-        "description": "범위 항목 설명 (예: 플랫폼 개발 및 배포, 사용자 교육 및 기술 이전 등)"
+        "description": "범위 항목 설명 (예: 플랫폼 개발 및 배포, 사용자 교육 및 기술 이전 등) - 1.3 제안의 범위에 사용"
       },
       {
         "title": "프로젝트 범위 항목 2",
-        "description": "범위 항목 설명"
+        "description": "범위 항목 설명 - 1.3 제안의 범위에 사용"
       },
       {
         "title": "프로젝트 범위 항목 3",
-        "description": "범위 항목 설명"
+        "description": "범위 항목 설명 - 1.3 제안의 범위에 사용"
       }
     ],
     "strengths": [
       {
         "title": "강점 제목 1",
-        "description": "강점 설명 1"
+        "description": "강점 설명 1 - 1.4 제안사의 특징 및 장점에 사용"
       },
       {
         "title": "강점 제목 2",
-        "description": "강점 설명 2"
+        "description": "강점 설명 2 - 1.4 제안사의 특징 및 장점에 사용"
       },
       {
         "title": "강점 제목 3",
-        "description": "강점 설명 3"
+        "description": "강점 설명 3 - 1.4 제안사의 특징 및 장점에 사용"
       }
     ]
   }
@@ -254,11 +255,13 @@ export const BODY_PROMPT_TEMPLATE = `
 미팅 전사록을 분석하여 각 섹션에 맞는 내용을 생성하세요:
 
 1. **I. 제안 개요**:
-   - background.quote: 프로젝트의 핵심 가치나 비전을 담은 인용구
-   - background.marketBackground: 미팅에서 논의된 시장 상황이나 배경
-   - background.primaryGoal: 프로젝트의 주요 목표
-   - scope: 프로젝트 범위에 포함되는 주요 항목들 (각 항목은 title과 description을 포함한 객체 배열, 3개)
-   - strengths: 제안사의 차별화된 강점 (3개)
+   - **주의: 1.1 제안사 소개는 고정 템플릿으로 자동 포함되므로 생성할 필요가 없습니다.**
+   - background.quote: 프로젝트의 핵심 가치나 비전을 담은 인용구 (1.2 제안 배경 및 목적에 사용)
+   - background.marketBackground: 미팅에서 논의된 시장 상황이나 배경 (1.2 제안 배경 및 목적에 사용)
+   - background.primaryGoal: 프로젝트의 주요 목표 (1.2 제안 배경 및 목적에 사용)
+   - scope: 프로젝트 범위에 포함되는 주요 항목들 (각 항목은 title과 description을 포함한 객체 배열, 3개) - 1.3 제안의 범위에 사용
+   - strengths: 제안사의 차별화된 강점 (3개) - 1.4 제안사의 특징 및 장점에 사용
+   - **주의: 별도의 "제안사의 특징 및 장점" 고정 템플릿이 conclusion 전에 자동 포함되므로, 이 strengths는 1.4 섹션에만 사용됩니다.**
 
 2. **II. 제안 전략**:
    - marketAnalysis.trends: 미팅에서 논의된 시장 트렌드 (3개)
@@ -355,11 +358,16 @@ export const PROPOSAL_TEMPLATE = `
 
 **색상 규칙 (브랜드 컬러 사용):**
 - 표지 배경: 브랜드 컬러 {BRAND_COLOR1}와 {BRAND_COLOR2}를 사용한 그라데이션
-- 본문 배경: bg-white (모든 섹션에 필수)
+- 본문 배경: 브랜드 컬러 {BRAND_COLOR3}를 배경색으로 사용 (모든 섹션에 적용)
 - 제목 색상: style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)" 사용 (모든 h2 제목에 필수)
+- 카드/박스 배경: 브랜드 컬러 {BRAND_COLOR2}를 투명도 0.3~0.4로 적용 (카드, 아이콘 컨테이너, 정보 박스 등)
+- 보조 강조 요소: 브랜드 컬러 {BRAND_COLOR2}를 사용하여 주요 강조보다 덜 강한 시각적 계층 구조 생성
 - 본문 텍스트: text-gray-900 또는 text-gray-700
 
-**중요**: 브랜드 컬러 {BRAND_COLOR1}를 제목 색상으로 사용하세요. 기본값은 #4f46e5입니다.
+**중요**: 
+- 브랜드 컬러 {BRAND_COLOR1}를 제목 색상으로 사용하세요. 기본값은 #4f46e5입니다.
+- 브랜드 컬러 {BRAND_COLOR2}는 카드 배경, 아이콘 컨테이너, 정보 박스 등에 투명도와 함께 사용됩니다. 기본값은 #1f2937입니다.
+- 브랜드 컬러 {BRAND_COLOR3}는 페이지 배경색에 주로 사용됩니다. 기본값은 #ffffff입니다.
 
 ### 2. Design & Language Guidelines
 1) Company Name: 제안 주체인 회사명은 무조건 대문자 'TOKTOKHAN.DEV'로 표기합니다.
@@ -405,9 +413,10 @@ export const PROPOSAL_TEMPLATE = `
 2) Font Import: Pretendard CDN 사용.
 3) **스타일 일관성 (필수)**: Tailwind 클래스를 사용하여 일관된 스타일을 적용하세요.
    - 표지: 브랜드 컬러 {BRAND_COLOR1}와 {BRAND_COLOR2}를 사용한 그라데이션 배경
-   - 목차/본문/끝마무리: bg-white
+   - 목차/본문/끝마무리 배경: 브랜드 컬러 {BRAND_COLOR3}를 배경색으로 사용
+   - 카드/박스 배경: 브랜드 컬러 {BRAND_COLOR2}를 rgba로 변환하여 투명도 0.3~0.4 적용
    - 제목: text-2xl font-bold mb-6 (h2 태그) + style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)"
-   - 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-md p-8
+   - 섹션 컨테이너: proposal-section rounded-lg shadow-md p-8 + style="background-color: {BRAND_COLOR3}"
 4) **PDF/Print Logic (필수 - 엄격 준수):**
    - **중요**: HTML 내부에 PDF 저장 버튼을 생성하지 마세요. 외부 UI에서 제공됩니다.
    - **<style> 태그 내에 다음 CSS 규칙을 반드시 포함할 것:**
@@ -496,6 +505,9 @@ export const PROPOSAL_TEMPLATE = `
 4. 예산({BUDGET})이 있으면 프로젝트 개요나 별도 섹션에 언급하세요.
 5. 우선순위 기능({REQUIREMENTS})이 있으면 "제안하는 방향성" 섹션에서 핵심 기능으로 강조하세요.
 6. 브랜드 컬러({BRAND_COLOR1}, {BRAND_COLOR2}, {BRAND_COLOR3})가 있으면 제안서의 색상 스키마에 반영하세요.
+   - {BRAND_COLOR1}: 주요 강조 컬러 (제목, 아이콘, 강조 요소)
+   - {BRAND_COLOR2}: 보조 컬러 (카드 배경, 아이콘 컨테이너, 정보 박스 배경에 투명도 적용)
+   - {BRAND_COLOR3}: 배경색 (페이지 배경에 주로 사용)
 7. 폰트({FONT})가 있으면 HTML의 font-family에 적용하세요.
 
 회의록/메모 내용:

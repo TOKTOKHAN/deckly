@@ -75,13 +75,13 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
     const brandColor1 = proposal?.brandColor1 || '#4f46e5';
     const brandColor2 = proposal?.brandColor2 || '#1f2937';
     const styleId = 'proposal-cover-gradient-style';
-    
+
     // 기존 스타일이 있으면 제거
     const existingStyle = document.getElementById(styleId);
     if (existingStyle) {
       existingStyle.remove();
     }
-    
+
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
@@ -264,15 +264,7 @@ export default function ResultView({ proposal, onBack, onRegenerate, onUpdate }:
         updatedAt: new Date().toISOString(),
       };
 
-      console.log('업데이트할 메타데이터:', {
-        projectName: updatedProposal.projectName,
-        clientCompanyName: updatedProposal.clientCompanyName,
-        extracted: extractedMetadata,
-      });
-
       const savedProposal = await updateProposal(updatedProposal);
-
-      console.log('제안서 저장 성공:', savedProposal.id);
 
       onUpdate(savedProposal);
 

@@ -9,4 +9,6 @@ export { generateBodySection2Template } from './body-sections/section-2';
 export { generateBodySection3Template } from './body-sections/section-3';
 export { generateBodySection4Template } from './body-sections/section-4';
 export { generateBodySection5Template } from './body-sections/section-5';
+export { generateCompanyIntroductionTemplate } from './body-sections/company-introduction-template';
+export { generateStrengthsTemplate } from './body-sections/strengths-template';
 export { generateHTMLWrapper } from './html-wrapper';

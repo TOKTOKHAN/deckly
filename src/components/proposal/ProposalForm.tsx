@@ -6,12 +6,8 @@ import toast from 'react-hot-toast';
 import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
-import {
-  getProposals,
-  createProposal,
-  updateProposal,
-  deleteProposal,
-} from '@/lib/supabase/proposals';
+import { getProposals, updateProposal, deleteProposal } from '@/lib/supabase/proposals';
+import { supabase } from '@/lib/supabase/client';
 import { useAuthStore } from '@/stores/authStore';
 import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
@@ -42,9 +38,31 @@ export default function ProposalForm() {
     enabled: !!user && !isAuthLoading, // 인증 상태가 준비된 후에만 실행
   });
 
-  // 제안서 생성 Mutation
+  // 제안서 생성 Mutation (API 호출)
   const createMutation = useMutation({
-    mutationFn: createProposal,
+    mutationFn: async (proposal: Proposal) => {
+      if (!supabase) {
+        throw new Error('Supabase가 설정되지 않았습니다.');
+      }
+
+      // Supabase 세션 토큰 가져오기
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error('로그인이 필요합니다.');
+      }
+
+      // API 호출
+      const response = await apiClient.post<Proposal>('/proposals', proposal, {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      return response.data;
+    },
     onSuccess: () => {
       // 제안서 목록 자동 리프레시
       queryClient.invalidateQueries({ queryKey: ['proposals'] });

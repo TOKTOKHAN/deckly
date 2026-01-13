@@ -16,9 +16,9 @@ export async function generateCoverTemplate(
   const textColors = getContrastTextColorWithGray(tertiaryColor);
 
   // 브랜드 컬러 기반 색상 조합
-  const cardBgColor = hexToRgba(secondaryColor, 0.4);
-  const cardBorderColor = hexToRgba(primaryColor, 0.1);
-  const subTextColor = hexToRgba(primaryColor, 0.8);
+  const cardBgColor = hexToRgba(secondaryColor, 0.4); // 카드 배경: 0.4
+  const cardBorderColor = hexToRgba(primaryColor, 0.1); // 테두리: 0.1
+  const subTextColor = hexToRgba(primaryColor, 0.8); // 서브 텍스트: 0.8
 
   // Proposal Ref 생성 함수
   const generateProposalRef = (dateString?: string): string => {
@@ -114,7 +114,7 @@ export async function generateCoverTemplate(
           </span>
           <div class="h-0.5 w-8" style="height: 2px !important; width: 2rem !important; background-color: ${primaryColor} !important; margin-top: 0.25rem !important;"></div>
         </div>
-        <div class="text-[10px] font-medium tracking-[0.2em]" style="font-size: 10px !important; font-weight: 500 !important; letter-spacing: 0.2em !important; color: #71717a !important; margin-left: auto !important; flex-shrink: 0 !important; text-align: right !important; line-height: 1 !important; display: block !important; padding: 0 !important; margin: 0 !important;">
+        <div class="text-[10px] font-medium tracking-[0.2em]" style="font-size: 10px !important; font-weight: 500 !important; letter-spacing: 0.2em !important; color: ${textColors.tertiary} !important; margin-left: auto !important; flex-shrink: 0 !important; text-align: right !important; line-height: 1 !important; display: block !important; padding: 0 !important; margin: 0 !important;">
           ${issueDate}
         </div>
       </div>
@@ -150,7 +150,7 @@ export async function generateCoverTemplate(
               <h2 class="text-4xl font-black italic tracking-tighter leading-none" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.05em !important; line-height: 1 !important; font-style: italic !important; color: ${textColors.primary} !important;">
                 ${data.clientCompanyName || 'Client'}<span class="font-light not-italic" style="font-weight: 300 !important; font-style: normal !important; color: ${primaryColor} !important;"> ${data.clientCompanyName ? '' : 'Company'}</span>
               </h2>
-              <p class="text-[10px] tracking-[0.3em] mt-2 font-bold uppercase" style="font-size: 10px !important; letter-spacing: 0.3em !important; color: #a1a1aa !important; margin-top: 0.5rem !important; font-weight: bold !important; text-transform: uppercase !important;">
+              <p class="text-[10px] tracking-[0.3em] mt-2 font-bold uppercase" style="font-size: 10px !important; letter-spacing: 0.3em !important; color: ${textColors.tertiary} !important; margin-top: 0.5rem !important; font-weight: bold !important; text-transform: uppercase !important;">
                 ${clientSubtitle}
               </p>
             </div>
@@ -166,7 +166,7 @@ export async function generateCoverTemplate(
           </h1>
 
           <div class="pl-8 border-l-[3px]" style="padding-left: 2rem !important; border-left: 3px solid ${primaryColor} !important;">
-            <p class="text-2xl text-zinc-300 font-light leading-snug break-keep max-w-2xl" style="font-size: 1.5rem !important; color: #d4d4d8 !important; font-weight: 300 !important; line-height: 1.375 !important; word-break: keep-all !important; max-width: 42rem !important; text-align: left !important;">
+            <p class="text-2xl text-zinc-300 font-light leading-snug break-keep max-w-2xl" style="font-size: 1.5rem !important; color: ${textColors.secondary} !important; font-weight: 300 !important; line-height: 1.375 !important; word-break: keep-all !important; max-width: 42rem !important; text-align: left !important;">
               ${subTitle}
             </p>
           </div>
@@ -206,22 +206,22 @@ export async function generateCoverTemplate(
             
             <div class="flex gap-5" style="display: flex !important; gap: 1rem !important;">
               <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
-                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: ${textColors.tertiary} !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
                   <span style="color: ${secondaryColor} !important;">📍</span> Address
                 </p>
-                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">서울시 마포구 동교로 12안길 39</p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: ${textColors.tertiary} !important;">서울시 마포구 동교로 12안길 39</p>
               </div>
               <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
-                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: ${textColors.tertiary} !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
                   <span style="color: ${primaryColor} !important;">🌐</span> Contact
                 </p>
-                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">sales@toktokhan.dev</p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: ${textColors.tertiary} !important;">sales@toktokhan.dev</p>
               </div>
               <div class="space-y-1" style="display: flex !important; flex-direction: column !important; gap: 0.25rem !important;">
-                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: #71717a !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
-                  <span style="color: #71717a !important;">📞</span> Phone
+                <p class="text-[10px] flex items-center gap-1.5 uppercase tracking-wider font-bold" style="font-size: 10px !important; color: ${textColors.tertiary} !important; display: flex !important; align-items: center !important; gap: 0.375rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: bold !important;">
+                  <span style="color: ${textColors.tertiary} !important;">📞</span> Phone
                 </p>
-                <p class="text-[11px]" style="font-size: 11px !important; color: #a1a1aa !important;">010-2493-2906</p>
+                <p class="text-[11px]" style="font-size: 11px !important; color: ${textColors.tertiary} !important;">010-2493-2906</p>
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ export async function generateCoverTemplate(
                 Strictly Confidential
               </span>
             </div>
-            <p class="text-[9px] leading-relaxed font-medium" style="font-size: 9px !important; color: #52525b !important; line-height: 1.625 !important; font-weight: 500 !important;">
+            <p class="text-[9px] leading-relaxed font-medium" style="font-size: 9px !important; color: ${textColors.tertiary} !important; line-height: 1.625 !important; font-weight: 500 !important;">
               본 문서는 기술적/영업적 기밀을 포함하고 있으므로 무단 복제 및 유출을 금합니다.<br/>
               © 2025 Toktokhan.dev. All rights reserved.
             </p>
@@ -244,7 +244,7 @@ export async function generateCoverTemplate(
         <!-- Page Number -->
         <div class="px-16 pb-8 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0 !important; padding-bottom: 0.125rem !important; position: relative !important; z-index: 10 !important; width: 100% !important; box-sizing: border-box !important;">
           <div class="flex justify-end items-center opacity-40" style="display: flex !important; justify-content: flex-end !important; align-items: center !important; opacity: 0.4 !important; width: 100% !important;">
-            <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important; text-align: right !important;">Page 01</span>
+            <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: ${textColors.tertiary} !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important; text-align: right !important;">Page 01</span>
           </div>
         </div>
       </div>

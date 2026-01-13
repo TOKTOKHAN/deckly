@@ -1,4 +1,9 @@
-/* 본문 섹션 1: 제안 개요 (Part I: Introduction)*/
+/* 본문 섹션 1: 제안 개요 (Part I: Introduction)
+ *
+ * 주의: 이 섹션에는 고정 템플릿이 포함되어 있습니다.
+ * - 1.1 제안사 소개 (company-introduction-template): Gemini 생성 데이터와 무관하게 항상 포함되는 고정 템플릿
+ * - 1.2, 1.3, 1.4: Gemini가 생성한 데이터 기반으로 동적 생성
+ */
 import type { BodySection1Data } from '../types';
 import {
   getContrastTextColorWithGray,
@@ -48,8 +53,39 @@ export function generateBodySection1Template(
   const smallCardTextColors = getCardTextColor(tertiaryColor, tertiaryColor, 0.3);
   const scopeCardTextColors = getCardTextColor(secondaryColor, tertiaryColor, 0.4);
 
-  return `
-    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
+  // 고정 템플릿: 제안사 소개 서비스 목록
+  // 주의: 이 데이터는 Gemini 생성 데이터와 무관하게 항상 동일하게 사용되는 고정 템플릿입니다.
+  const services = [
+    {
+      title: 'UXUI, 브랜드 컨설팅',
+      desc: '사용자 경험 기반의 인터페이스와 브랜드 이미지 및 가이드라인 구축',
+      keywords: ['UXUI', 'Branding', '2D-3D Graphic'],
+      icon: '🖥️',
+    },
+    {
+      title: 'WEB / APP 개발',
+      desc: 'MVP, 프로덕션, 인터랙티브 웹 등 플랫폼 구축 및 기능 고도화',
+      keywords: ['MVP', 'Production', 'React', 'Django'],
+      icon: '💻',
+    },
+    {
+      title: '마케팅 / 유저 분석 툴 연동',
+      desc: '유저 데이터 분석 및 마케팅 방향성 설정을 돕는 세팅 제공',
+      keywords: ['Hotjar', 'Google Analytics', 'Naver'],
+      icon: '📊',
+    },
+    {
+      title: 'SEO 최적화',
+      desc: '네이버, 구글 서치콘솔 등을 활용한 검색 최적화 고려 개발',
+      keywords: ['Technical SEO', 'Naver Search Advisor', 'GSC'],
+      icon: '🌐',
+    },
+  ];
+
+  // 고정 템플릿: 1.1 제안사 소개 페이지 생성
+  // 주의: 이 템플릿은 Gemini 생성 데이터와 무관하게 항상 포함되는 고정 템플릿입니다.
+  const companyIntroductionPage = `
+    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}; page-break-after: always !important; position: relative !important;">
       ${generateSectionHeader(
         'I',
         '제안 개요',
@@ -58,10 +94,84 @@ export function generateBodySection1Template(
         primaryColor,
         textColors,
       )}
+      <!-- 1.1 제안사 소개 -->
+      <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important; padding-bottom: 3rem !important;">
+        <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
+            <span style="font-size: 1.25rem !important;">🏢</span>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
+              1.1 제안사 소개
+            </h2>
+            <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Company Introduction</p>
+          </div>
+        </div>
 
-      <div class="flex-1 space-y-6" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1.5rem !important;">
-        
-        <!-- 1.1 제안 배경 및 목적 -->
+        <!-- Main Identity Section -->
+        <div class="mb-3 relative" style="margin-bottom: 0.5rem !important; position: relative !important;">
+          <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
+            <div style="height: 2px !important; width: 3rem !important; background-color: ${primaryColor} !important;"></div>
+          </div>
+          <h2 style="font-size: 2.25rem !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.02em !important; margin-bottom: 0.75rem !important; color: ${textColors.primary} !important;">
+            IT 프로덕트의
+            가장 <span style="color: ${primaryColor} !important; font-style: italic !important;">똑똑한 경험</span>, <br />
+            똑똑한개발자
+          </h2>
+          <div style="max-width: 42rem !important; border-left: 2px solid ${hexToRgba(tertiaryColor, 0.2)} !important; padding-left: 1rem !important;">
+            <p style="font-size: 0.875rem !important; color: ${textColors.secondary} !important; font-weight: 500 !important; line-height: 1.4 !important; word-break: keep-all !important; margin: 0 !important;">
+              똑똑한개발자는 IT 프로덕트 에이전시입니다. <br />
+              서비스의 이야기와 지닌 가치가 울림으로 다가갈 수 있도록 일상적인 시각 언어에 머무르지 않고, 
+              <span style="color: ${textColors.primary} !important; font-weight: 900 !important;"> 기술을 통해 탐구하며 다각적인 서비스와 브랜드 경험을 제안합니다.</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Service Pillars Grid -->
+        <div class="flex-1" style="flex: 1 !important;">
+          <div class="grid grid-cols-1 gap-3" style="display: grid !important; grid-template-columns: repeat(1, minmax(0, 1fr)) !important; gap: 0.75rem !important;">
+            ${services
+              .map(
+                (s, idx) => `
+            <div style="display: flex !important; gap: 1.25rem !important; padding: 1.25rem !important; background-color: ${hexToRgba(secondaryColor, 0.2)} !important; border-radius: 1.5rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
+              <div style="width: 2.75rem !important; height: 2.75rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 1.125rem !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 1px 2px 0 ${hexToRgba(tertiaryColor, 0.1)} !important; flex-shrink: 0 !important;">
+                <span style="font-size: 1.125rem !important;">${s.icon}</span>
+              </div>
+              <div style="flex: 1 !important;">
+                <div style="display: flex !important; align-items: center !important; justify-content: space-between !important; margin-bottom: 0.375rem !important;">
+                  <h4 style="font-size: 1rem !important; font-weight: 900 !important; color: ${textColors.primary} !important; letter-spacing: -0.01em !important;">${s.title}</h4>
+                  <span style="font-size: 0.5625rem !important; font-weight: 900 !important; color: ${textColors.tertiary} !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-style: italic !important;">Service 0${idx + 1}</span>
+                </div>
+                <p style="font-size: 0.75rem !important; color: ${textColors.tertiary} !important; font-weight: 500 !important; line-height: 1.35 !important; margin-bottom: 0.625rem !important; word-break: keep-all !important;">${s.desc}</p>
+                <div style="display: flex !important; flex-wrap: wrap !important; gap: 0.375rem !important;">
+                  ${s.keywords
+                    .map(
+                      kw => `
+                  <span style="padding: 0.1875rem 0.5rem !important; background-color: ${hexToRgba(tertiaryColor, 0.2)} !important; color: ${textColors.secondary} !important; font-size: 0.5rem !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; border-radius: 0.375rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.15)} !important;">${kw}</span>
+                  `,
+                    )
+                    .join('')}
+                </div>
+              </div>
+            </div>
+            `,
+              )
+              .join('')}
+          </div>
+        </div>
+      </section>
+      <div style="position: absolute !important; bottom: 0.5rem !important; left: 0 !important; right: 0 !important; z-index: 10 !important;">
+        ${generatePageFooter('03', primaryColor, textColors)}
+      </div>
+    </div>
+  `;
+
+  return `
+    ${companyIntroductionPage}
+    <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}">
+      <div class="flex-1 space-y-6" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 1rem !important;">
+
+        <!-- 1.2 제안 배경 및 목적 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
@@ -69,25 +179,25 @@ export function generateBodySection1Template(
             </div>
             <div>
               <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
-                1.1 제안 배경 및 목적
+                1.2 제안 배경 및 목적
               </h2>
               <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Context & Objectives</p>
             </div>
           </div>
           
-          <div class="bg-zinc-900/30 border border-white/5 p-6 rounded-2xl grid grid-cols-12 gap-6 items-center" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; padding: 1.5rem !important; border-radius: 1rem !important; display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important; gap: 1.5rem !important; align-items: center !important;">
+          <div class="bg-zinc-900/30 border border-white/5 p-6 rounded-2xl grid grid-cols-12 gap-6 items-center" style="background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; padding: 1.25rem !important; border-radius: 1rem !important; display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important; gap: 1.25rem !important; align-items: center !important;">
             <div class="col-span-8" style="grid-column: span 8 / span 8 !important;">
-              <p class="text-zinc-400 leading-relaxed mb-4 font-light italic border-l-2 pl-4 text-sm" style="color: ${largeCardTextColors.tertiary} !important; line-height: 1.5 !important; margin-bottom: 1rem !important; font-weight: 300 !important; font-style: italic !important; border-left: 2px solid ${primaryColor} !important; padding-left: 1rem !important; font-size: 0.875rem !important;">
+              <p class="text-zinc-400 leading-relaxed mb-4 font-light italic border-l-2 pl-4 text-sm" style="color: ${largeCardTextColors.tertiary} !important; line-height: 1.4 !important; margin-bottom: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; border-left: 2px solid ${primaryColor} !important; padding-left: 0.875rem !important; font-size: 0.8125rem !important;">
                 "${background.quote}"
               </p>
-              <div class="grid grid-cols-2 gap-3" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.75rem !important;">
-                <div class="bg-zinc-950 p-4 rounded-xl border border-white/5" style="background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; padding: 1rem !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
-                  <p class="text-xs font-bold mb-1.5 uppercase tracking-tighter" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.375rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">Market Background</p>
-                  <p class="text-xs text-zinc-300 leading-relaxed" style="font-size: 0.75rem !important; color: ${smallCardTextColors.secondary} !important; line-height: 1.5 !important;">${background.marketBackground}</p>
+              <div class="grid grid-cols-2 gap-3" style="display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.625rem !important;">
+                <div class="bg-zinc-950 p-4 rounded-xl border border-white/5" style="background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; padding: 0.875rem !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
+                  <p class="text-xs font-bold mb-1.5 uppercase tracking-tighter" style="font-size: 0.6875rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.25rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">Market Background</p>
+                  <p class="text-xs text-zinc-300 leading-relaxed" style="font-size: 0.6875rem !important; color: ${smallCardTextColors.secondary} !important; line-height: 1.4 !important;">${background.marketBackground}</p>
                 </div>
-                <div class="bg-zinc-950 p-4 rounded-xl border border-white/5" style="background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; padding: 1rem !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
-                  <p class="text-xs font-bold mb-1.5 uppercase tracking-tighter" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.375rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">Primary Goal</p>
-                  <p class="text-xs text-zinc-300 leading-relaxed" style="font-size: 0.75rem !important; color: ${smallCardTextColors.secondary} !important; line-height: 1.5 !important;">${background.primaryGoal}</p>
+                <div class="bg-zinc-950 p-4 rounded-xl border border-white/5" style="background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; padding: 0.875rem !important; border-radius: 0.75rem !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
+                  <p class="text-xs font-bold mb-1.5 uppercase tracking-tighter" style="font-size: 0.6875rem !important; font-weight: bold !important; color: ${primaryColor} !important; margin-bottom: 0.25rem !important; text-transform: uppercase !important; letter-spacing: -0.025em !important;">Primary Goal</p>
+                  <p class="text-xs text-zinc-300 leading-relaxed" style="font-size: 0.6875rem !important; color: ${smallCardTextColors.secondary} !important; line-height: 1.4 !important;">${background.primaryGoal}</p>
                 </div>
               </div>
             </div>
@@ -100,7 +210,7 @@ export function generateBodySection1Template(
           </div>
         </section>
 
-        <!-- 1.2 제안의 범위 -->
+        <!-- 1.3 제안의 범위 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
@@ -108,26 +218,26 @@ export function generateBodySection1Template(
             </div>
             <div>
               <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
-                1.2 제안의 범위
+                1.3 제안의 범위
               </h2>
               <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Project Scope</p>
             </div>
           </div>
           
-          <div class="grid grid-cols-3 gap-3" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.75rem !important; width: 100% !important;">
+          <div class="grid grid-cols-3 gap-3" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.625rem !important; width: 100% !important;">
             ${scopeItems
               .slice(0, 3)
               .map(
                 item => `
-            <div class="p-4 bg-zinc-900/40 border border-white/5 rounded-xl" style="padding: 1rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; width: 100% !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; gap: 0.5rem !important;">
-              <div class="w-10 h-10 bg-zinc-950 rounded-lg flex items-center justify-center border border-white/5" style="width: 2.5rem !important; height: 2.5rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
+            <div class="p-4 bg-zinc-900/40 border border-white/5 rounded-xl" style="padding: 0.875rem !important; background-color: ${hexToRgba(secondaryColor, 0.4)} !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; border-radius: 0.75rem !important; width: 100% !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; gap: 0.375rem !important;">
+              <div class="w-10 h-10 bg-zinc-950 rounded-lg flex items-center justify-center border border-white/5" style="width: 2.25rem !important; height: 2.25rem !important; background-color: ${hexToRgba(tertiaryColor, 0.3)} !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: ${primaryColor} !important;">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
               </div>
-              <p class="text-xs font-bold text-zinc-200" style="font-size: 0.75rem !important; font-weight: bold !important; color: ${scopeCardTextColors.primary} !important; margin: 0 !important;">${item.title}</p>
-              ${item.description ? `<p class="text-[11px] text-zinc-400 leading-tight" style="font-size: 0.6875rem !important; color: ${scopeCardTextColors.tertiary} !important; line-height: 1.4 !important; margin: 0 !important;">${item.description}</p>` : ''}
+              <p class="text-xs font-bold text-zinc-200" style="font-size: 0.6875rem !important; font-weight: bold !important; color: ${scopeCardTextColors.primary} !important; margin: 0 !important;">${item.title}</p>
+              ${item.description ? `<p class="text-[11px] text-zinc-400 leading-tight" style="font-size: 0.625rem !important; color: ${scopeCardTextColors.tertiary} !important; line-height: 1.35 !important; margin: 0 !important;">${item.description}</p>` : ''}
             </div>
             `,
               )
@@ -135,7 +245,7 @@ export function generateBodySection1Template(
           </div>
         </section>
 
-        <!-- 1.3 제안사의 특징 및 장점 -->
+        <!-- 1.4 제안사의 특징 및 장점 -->
         <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
           <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
@@ -143,22 +253,22 @@ export function generateBodySection1Template(
             </div>
             <div>
               <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
-                1.3 제안사의 특징 및 장점
+                1.4 제안사의 특징 및 장점
               </h2>
               <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Key Strengths</p>
             </div>
           </div>
           
-          <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-600/20 p-6 rounded-2xl" style="background: linear-gradient(to bottom right, ${hexToRgba(primaryColor, 0.15)}, ${hexToRgba(tertiaryColor, 0.1)}) !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; padding: 1.5rem !important; border-radius: 1rem !important; width: 100% !important; box-sizing: border-box !important;">
-            <div class="grid grid-cols-3 gap-6" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 1.5rem !important; width: 100% !important;">
+          <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-600/20 p-6 rounded-2xl" style="background: linear-gradient(to bottom right, ${hexToRgba(primaryColor, 0.15)}, ${hexToRgba(tertiaryColor, 0.1)}) !important; border: 1px solid ${hexToRgba(primaryColor, 0.12)} !important; padding: 1.25rem !important; border-radius: 1rem !important; width: 100% !important; box-sizing: border-box !important;">
+            <div class="grid grid-cols-3 gap-6" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 1rem !important; width: 100% !important;">
               ${strengths
                 .slice(0, 3)
                 .map(
                   (item, i) => `
               <div>
-                <p class="text-3xl font-black italic mb-1.5" style="font-size: 1.875rem !important; font-weight: 900 !important; font-style: italic !important; color: ${primaryColor} !important; margin-bottom: 0.375rem !important;">0${i + 1}</p>
-                <p class="text-sm font-bold text-zinc-100 mb-1.5" style="font-size: 0.875rem !important; font-weight: bold !important; color: ${textColors.primary} !important; margin-bottom: 0.375rem !important;">${item.title}</p>
-                <p class="text-[11px] text-zinc-500 leading-tight whitespace-pre-line" style="font-size: 11px !important; color: ${textColors.tertiary} !important; line-height: 1.4 !important; white-space: pre-line !important;">${item.description}</p>
+                <p class="text-3xl font-black italic mb-1.5" style="font-size: 1.625rem !important; font-weight: 900 !important; font-style: italic !important; color: ${primaryColor} !important; margin-bottom: 0.25rem !important;">0${i + 1}</p>
+                <p class="text-sm font-bold text-zinc-100 mb-1.5" style="font-size: 0.8125rem !important; font-weight: bold !important; color: ${textColors.primary} !important; margin-bottom: 0.25rem !important;">${item.title}</p>
+                <p class="text-[11px] text-zinc-500 leading-tight whitespace-pre-line" style="font-size: 0.625rem !important; color: ${textColors.tertiary} !important; line-height: 1.35 !important; white-space: pre-line !important;">${item.description}</p>
               </div>
               `,
                 )
@@ -167,7 +277,7 @@ export function generateBodySection1Template(
           </div>
         </section>
       </div>
-      ${generatePageFooter('03', primaryColor, textColors)}
+      ${generatePageFooter('04', primaryColor, textColors)}
     </div>
   `;
 }

@@ -199,7 +199,7 @@ export function generateBodySection2Template(
           </div>
         </section>
       </div>
-      ${generatePageFooter('04', primaryColor, textColors)}
+      ${generatePageFooter('05', primaryColor, textColors)}
     </div>
   `;
 }

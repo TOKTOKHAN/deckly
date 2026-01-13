@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body: ProposalRequest = await request.json();
-    console.log('Request Body:', JSON.stringify(body, null, 2));
 
     // 필수 필드 검증
     // meetingNotes가 있으면 우선 사용, 없으면 title과 client 필수
@@ -37,7 +36,6 @@ export async function POST(request: NextRequest) {
 
     if (useLangChain) {
       // LangChain 사용: 표지/끝마무리 템플릿 + 본문 AI 생성
-      console.log('LangChain을 사용하여 제안서 생성 중...');
       content = await generateProposalWithChains({
         projectName: body.title || '',
         clientCompanyName: body.client || '',
@@ -66,9 +64,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // 기존 방식: 전체 제안서를 AI로 생성
-      console.log('기존 방식으로 제안서 생성 중...');
       const prompt = createProposalPrompt(body);
-      console.log('Generated Prompt:', prompt);
 
       const ai = new GoogleGenAI({});
       const modelName = process.env.GEMINI_MODEL || 'gemini-3-pro-preview';
@@ -85,9 +81,6 @@ export async function POST(request: NextRequest) {
         throw new Error('제안서 생성에 실패했습니다. 응답이 비어있습니다.');
       }
     }
-
-    console.log('Generated Content Length:', content.length);
-    console.log('Generated Content Preview:', content.substring(0, 200));
 
     return NextResponse.json({
       success: true,

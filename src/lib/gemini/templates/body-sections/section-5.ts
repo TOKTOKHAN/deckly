@@ -108,7 +108,7 @@ export function generateBodySection5Template(
               </div>
             </div>
             <div class="bg-zinc-900/40 p-6 rounded-2xl h-full flex flex-col justify-center" style="background-color: rgba(24, 24, 27, 0.4) !important; padding: 1.5rem !important; border-radius: 1rem !important; height: 100% !important; display: flex !important; flex-direction: column !important; justify-content: center !important; width: 100% !important;">
-              <p class="text-sm text-zinc-400 leading-relaxed font-light italic border-l-2 border-zinc-700 pl-4" style="font-size: 0.875rem !important; color: ${cardTextColors.secondary} !important; line-height: 1.5 !important; font-weight: 300 !important; font-style: italic !important; border-left: 2px solid ${part5Color} !important; padding-left: 1rem !important;">${knowledgeTransfer}</p>
+              <p class="text-sm text-zinc-400 leading-relaxed font-light italic border-l-2 border-zinc-700 pl-4" style="font-size: 0.875rem !important; color: ${cardTextColors.secondary} !important; line-height: 1.5 !important; font-weight: 300 !important; font-style: italic !important; border-left: 2px solid ${hexToRgba(part5Color, 0.12)} !important; padding-left: 1rem !important;">${knowledgeTransfer}</p>
             </div>
           </div>
         </section>
@@ -167,7 +167,7 @@ export function generateBodySection5Template(
           </div>
         </section>
       </div>
-      ${generatePageFooter('07', primaryColor, textColors)}
+      ${generatePageFooter('08', primaryColor, textColors)}
     </div>
   `;
 }
