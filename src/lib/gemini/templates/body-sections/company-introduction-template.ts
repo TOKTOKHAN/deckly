@@ -50,6 +50,21 @@ export function generateCompanyIntroductionTemplate(
 
   return `
     <div class="a4-page body-section flex flex-col" style="${getA4PageContainerStyle(tertiaryColor, textColors.primary)}; page-break-after: always !important;">
+      <!-- 1.1 제안사 소개 -->
+      <section style="page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important;">
+        <div class="flex items-center gap-3 mb-3" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 0.75rem !important;">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="width: 2rem !important; height: 2rem !important; border-radius: 0.5rem !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: ${hexToRgba(primaryColor, 0.15)} !important;">
+            <span style="font-size: 1.25rem !important;">🏢</span>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-white" style="font-size: 1.25rem !important; font-weight: bold !important; color: ${textColors.primary} !important;">
+              1.1 제안사 소개
+            </h2>
+            <p class="text-[10px] text-zinc-500 uppercase tracking-wider" style="font-size: 10px !important; color: #71717a !important; text-transform: uppercase !important; letter-spacing: 0.05em !important;">Company Introduction</p>
+          </div>
+        </div>
+      </section>
+
       <!-- Main Identity Section -->
       <div class="mb-8 relative" style="margin-bottom: 2rem !important; position: relative !important;">
         <div class="flex items-center gap-3 mb-4" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; margin-bottom: 1rem !important;">
@@ -102,6 +117,7 @@ export function generateCompanyIntroductionTemplate(
             .join('')}
         </div>
       </div>
+      </section>
     </div>
   `;
 }
