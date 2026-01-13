@@ -358,11 +358,16 @@ export const PROPOSAL_TEMPLATE = `
 
 **색상 규칙 (브랜드 컬러 사용):**
 - 표지 배경: 브랜드 컬러 {BRAND_COLOR1}와 {BRAND_COLOR2}를 사용한 그라데이션
-- 본문 배경: bg-white (모든 섹션에 필수)
+- 본문 배경: 브랜드 컬러 {BRAND_COLOR3}를 배경색으로 사용 (모든 섹션에 적용)
 - 제목 색상: style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)" 사용 (모든 h2 제목에 필수)
+- 카드/박스 배경: 브랜드 컬러 {BRAND_COLOR2}를 투명도 0.3~0.4로 적용 (카드, 아이콘 컨테이너, 정보 박스 등)
+- 보조 강조 요소: 브랜드 컬러 {BRAND_COLOR2}를 사용하여 주요 강조보다 덜 강한 시각적 계층 구조 생성
 - 본문 텍스트: text-gray-900 또는 text-gray-700
 
-**중요**: 브랜드 컬러 {BRAND_COLOR1}를 제목 색상으로 사용하세요. 기본값은 #4f46e5입니다.
+**중요**: 
+- 브랜드 컬러 {BRAND_COLOR1}를 제목 색상으로 사용하세요. 기본값은 #4f46e5입니다.
+- 브랜드 컬러 {BRAND_COLOR2}는 카드 배경, 아이콘 컨테이너, 정보 박스 등에 투명도와 함께 사용됩니다. 기본값은 #1f2937입니다.
+- 브랜드 컬러 {BRAND_COLOR3}는 페이지 배경색에 주로 사용됩니다. 기본값은 #ffffff입니다.
 
 ### 2. Design & Language Guidelines
 1) Company Name: 제안 주체인 회사명은 무조건 대문자 'TOKTOKHAN.DEV'로 표기합니다.
@@ -408,9 +413,10 @@ export const PROPOSAL_TEMPLATE = `
 2) Font Import: Pretendard CDN 사용.
 3) **스타일 일관성 (필수)**: Tailwind 클래스를 사용하여 일관된 스타일을 적용하세요.
    - 표지: 브랜드 컬러 {BRAND_COLOR1}와 {BRAND_COLOR2}를 사용한 그라데이션 배경
-   - 목차/본문/끝마무리: bg-white
+   - 목차/본문/끝마무리 배경: 브랜드 컬러 {BRAND_COLOR3}를 배경색으로 사용
+   - 카드/박스 배경: 브랜드 컬러 {BRAND_COLOR2}를 rgba로 변환하여 투명도 0.3~0.4 적용
    - 제목: text-2xl font-bold mb-6 (h2 태그) + style="color: {BRAND_COLOR1}" 또는 style="color: var(--primary)"
-   - 섹션 컨테이너: proposal-section bg-white rounded-lg shadow-md p-8
+   - 섹션 컨테이너: proposal-section rounded-lg shadow-md p-8 + style="background-color: {BRAND_COLOR3}"
 4) **PDF/Print Logic (필수 - 엄격 준수):**
    - **중요**: HTML 내부에 PDF 저장 버튼을 생성하지 마세요. 외부 UI에서 제공됩니다.
    - **<style> 태그 내에 다음 CSS 규칙을 반드시 포함할 것:**
@@ -499,6 +505,9 @@ export const PROPOSAL_TEMPLATE = `
 4. 예산({BUDGET})이 있으면 프로젝트 개요나 별도 섹션에 언급하세요.
 5. 우선순위 기능({REQUIREMENTS})이 있으면 "제안하는 방향성" 섹션에서 핵심 기능으로 강조하세요.
 6. 브랜드 컬러({BRAND_COLOR1}, {BRAND_COLOR2}, {BRAND_COLOR3})가 있으면 제안서의 색상 스키마에 반영하세요.
+   - {BRAND_COLOR1}: 주요 강조 컬러 (제목, 아이콘, 강조 요소)
+   - {BRAND_COLOR2}: 보조 컬러 (카드 배경, 아이콘 컨테이너, 정보 박스 배경에 투명도 적용)
+   - {BRAND_COLOR3}: 배경색 (페이지 배경에 주로 사용)
 7. 폰트({FONT})가 있으면 HTML의 font-family에 적용하세요.
 
 회의록/메모 내용:

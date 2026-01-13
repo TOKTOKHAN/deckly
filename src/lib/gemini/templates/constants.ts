@@ -266,7 +266,7 @@ export function generateSectionHeader(
   englishTitle: string,
   description: string,
   accentColor: string,
-  textColors: { primary: string },
+  textColors: { primary: string; secondary: string; tertiary: string },
 ): string {
   return `
       <!-- Main Title -->
@@ -277,9 +277,9 @@ export function generateSectionHeader(
         </div>
         <h1 class="text-4xl font-black tracking-tight text-white mb-2" style="font-size: 2.25rem !important; font-weight: 900 !important; letter-spacing: -0.025em !important; color: ${textColors.primary} !important; margin-bottom: 0.5rem !important;">
           ${koreanTitle}
-          <span class="block text-sm font-light italic tracking-widest uppercase mt-1" style="display: block !important; font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: #71717a !important; text-transform: uppercase !important; margin-top: 0.25rem !important;">${englishTitle}</span>
+          <span class="block text-sm font-light italic tracking-widest uppercase mt-1" style="display: block !important; font-size: 0.875rem !important; font-weight: 300 !important; font-style: italic !important; letter-spacing: 0.1em !important; color: ${textColors.tertiary} !important; text-transform: uppercase !important; margin-top: 0.25rem !important;">${englishTitle}</span>
         </h1>
-        <p class="text-sm text-zinc-400 mt-2" style="font-size: 0.875rem !important; color: #a1a1aa !important; margin-top: 0.5rem !important;">
+        <p class="text-sm text-zinc-400 mt-2" style="font-size: 0.875rem !important; color: ${textColors.tertiary} !important; margin-top: 0.5rem !important;">
           ${description}
         </p>
       </div>
