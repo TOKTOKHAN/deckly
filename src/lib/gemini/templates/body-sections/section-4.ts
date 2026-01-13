@@ -674,7 +674,7 @@ export function generateBodySection4Template(
             : ''
         }
       </div>
-      ${generatePageFooter('06', primaryColor, textColors)}
+      ${generatePageFooter('07', primaryColor, textColors)}
     </div>
   `;
 }

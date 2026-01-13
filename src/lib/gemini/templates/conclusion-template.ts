@@ -1,6 +1,6 @@
 /* 제안서 끝마무리 템플릿 */
 import type { TemplateData } from './types';
-import { getContrastTextColorWithGray, hexToRgba } from './constants';
+import { getContrastTextColorWithGray, hexToRgba, generatePageFooter } from './constants';
 
 export function generateConclusionTemplate(data: TemplateData): string {
   // 브랜드 컬러 추출
@@ -172,11 +172,7 @@ export function generateConclusionTemplate(data: TemplateData): string {
       </div>
       
       <!-- Page Number -->
-      <div class="px-16 pb-8 z-10 relative" style="padding-left: 4rem !important; padding-right: 4rem !important; padding-top: 0 !important; padding-bottom: 0.125rem !important; position: relative !important; z-index: 10 !important;">
-        <div class="flex justify-end items-center opacity-40" style="display: flex !important; justify-content: flex-end !important; align-items: center !important; opacity: 0.4 !important;">
-          <span class="text-[8px] font-bold tracking-widest uppercase leading-none" style="font-size: 9px !important; color: #71717a !important; font-weight: bold !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; line-height: 1 !important;">Page 08</span>
-        </div>
-      </div>
+      ${generatePageFooter('10', primaryColor, textColors)}
     </div>
   `;
 }

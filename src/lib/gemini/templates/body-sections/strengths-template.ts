@@ -1,5 +1,5 @@
 /* 제안사의 특징 및 장점 템플릿 (고정 템플릿) */
-import { hexToRgba, getA4PageContainerStyle } from '../constants';
+import { hexToRgba, getA4PageContainerStyle, generatePageFooter } from '../constants';
 
 interface TextColors {
   primary: string;
@@ -130,6 +130,7 @@ export function generateStrengthsTemplate(
           </div>
         </div>
       </div>
+      ${generatePageFooter('09', primaryColor, textColors)}
     </div>
   `;
 }

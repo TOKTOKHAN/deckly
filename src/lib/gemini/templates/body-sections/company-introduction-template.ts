@@ -1,5 +1,5 @@
 /* 제안사 소개 템플릿 (고정 템플릿) */
-import { hexToRgba, getA4PageContainerStyle } from '../constants';
+import { hexToRgba, getA4PageContainerStyle, generatePageFooter } from '../constants';
 
 interface TextColors {
   primary: string;
@@ -118,6 +118,7 @@ export function generateCompanyIntroductionTemplate(
         </div>
       </div>
       </section>
+      ${generatePageFooter('03', primaryColor, textColors)}
     </div>
   `;
 }
