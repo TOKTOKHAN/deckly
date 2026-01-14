@@ -1,0 +1,155 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# Deckly Storybook 가이드
+
+Deckly는 AI 기반 비즈니스 제안서 생성 플랫폼입니다. Storybook을 통해 모든 컴포넌트, 유틸리티 함수, 타입 정의를 문서화하고 있습니다.
+
+## 기술 스택
+
+- **프레임워크:** Next.js 14 (App Router)
+- **언어:** TypeScript
+- **스타일링:** Tailwind CSS
+- **상태 관리:** Zustand
+- **데이터 페칭:** React Query (TanStack Query)
+- **백엔드:** Supabase
+- **AI:** LangChain + Google Gemini
+- **폼 검증:** React Hook Form + Zod
+
+## 주요 기능
+
+- AI 기반 제안서 자동 생성
+- 사용자 인증 및 권한 관리
+- 관리자 대시보드 및 분석
+- 제안서 생성 제한 관리
+- 방문자 통계 추적
+
+## Storybook 구조
+
+Deckly 프로젝트의 Storybook은 컴포넌트뿐만 아니라 유틸리티 함수, 타입 정의, 훅, 스토어까지 포괄적으로 문서화하고 있습니다.
+
+### Components
+
+UI 컴포넌트들이 위치합니다. 실제 스토리를 제공하여 컴포넌트의 다양한 상태를 확인할 수 있습니다.
+
+- **UI:** Button, Modal, ProgressBar 등 기본 컴포넌트
+- **Admin:** 관리자 페이지용 컴포넌트
+- **Proposal:** 제안서 관련 컴포넌트
+- **Layout:** Navbar, ConditionalNavbar
+- **Skeletons:** 로딩 상태 스켈레톤 컴포넌트
+- **Providers:** AuthProvider, QueryProvider
+- **Contexts:** NotFoundContext
+
+### Lib
+
+유틸리티 함수와 API 클라이언트가 위치합니다. 문서만 제공하며 실제 스토리는 포함하지 않습니다.
+
+- **API:** Analytics API 함수
+- **Utils:** Admin, Analytics, Cookies, DateFormatter 등
+- **Validations:** Zod 스키마 및 검증 함수
+- **Supabase:** 데이터베이스 클라이언트 및 함수
+- **Gemini:** AI 생성 체인 및 프롬프트
+
+### Types, Hooks, Stores
+
+타입 정의, 커스텀 훅, 상태 관리 스토어를 문서화합니다.
+
+- **Types:** Proposal, Gemini 타입 정의
+- **Hooks:** useAnalytics, useRequireAuth, useRequireGuest
+- **Stores:** authStore (Zustand)
+
+## 프로젝트별 설정 가이드
+
+Deckly 프로젝트에서 Storybook을 사용할 때 알아야 할 주요 설정 방법입니다.
+
+### Next.js App Router 설정
+
+Next.js의 `useRouter`, `usePathname` 등을 사용하는 컴포넌트는 `parameters.nextjs`를 설정해야 합니다.
+
+```typescript
+parameters: {
+  nextjs: {
+    appDirectory: true,
+    navigation: { pathname: '/dashboard' },
+  },
+}
+```
+
+### 인증 상태 모킹
+
+Zustand의 `useAuthStore`를 사용하는 컴포넌트는 데코레이터로 인증 상태를 모킹합니다.
+
+```typescript
+decorators: [
+  Story => {
+    const mockUser: Partial<User> = {
+      id: '1',
+      email: 'admin@deckly.com',
+    };
+    useAuthStore.setState({ user: mockUser as User });
+    return <Story />;
+  },
+],
+```
+
+### React Query Provider
+
+React Query를 사용하는 컴포넌트는 `QueryClientProvider`로 감싸야 합니다.
+
+```typescript
+decorators: [
+  Story => (
+    <QueryClientProvider client={new QueryClient()}>
+      <Story />
+    </QueryClientProvider>
+  ),
+],
+```
+
+## 스토리 작성 가이드
+
+Deckly 프로젝트에서 스토리를 작성하는 방법을 안내합니다.
+
+### 컴포넌트 스토리
+
+실제 UI 컴포넌트는 다양한 상태와 props 조합을 보여주는 스토리를 작성합니다. `argTypes`를 사용하여 인터랙티브하게 테스트할 수 있습니다.
+
+### 문서화 전용 스토리
+
+함수, 타입, 훅 등은 문서만 제공하는 `Docs` 스토리를 작성합니다. `args: { children: <></> }`를 사용하여 타입 에러를 방지합니다.
+
+### 데코레이터 사용
+
+Provider나 Context가 필요한 컴포넌트는 데코레이터를 사용하여 필요한 환경을 제공합니다. 여러 데코레이터를 배열로 연결할 수 있습니다.
+
+### Autodocs 활용
+
+모든 스토리 파일에 `tags: ['autodocs']`를 추가하여 자동으로 문서 페이지가 생성되도록 합니다. JSDoc 주석을 활용하면 더 상세한 문서를 만들 수 있습니다.
+
+## 스토리 파일 위치
+
+스토리 파일은 해당 컴포넌트나 파일과 같은 경로에 `*.stories.tsx` 확장자로 저장됩니다.
+
+### 예시 구조
+
+```
+src/
+  components/
+    Button.tsx
+    Button.stories.tsx  ← 같은 경로
+  lib/
+    utils/
+      admin.ts
+      admin.stories.tsx  ← 같은 경로
+  types/
+    proposal.ts
+    proposal.stories.tsx  ← 같은 경로
+```
+
+### 스토리 파일 규칙
+
+- 파일명: `{ComponentName}.stories.tsx`
+- 컴포넌트와 같은 디렉토리에 위치
+- `tags: ['autodocs']` 필수
+- 타입 안전성을 위해 `satisfies Meta` 사용
