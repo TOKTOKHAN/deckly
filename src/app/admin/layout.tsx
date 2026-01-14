@@ -39,7 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           aria-label="관리자 페이지를 불러오는 중"
           className="flex w-full items-center justify-center"
         >
-          <div className="text-slate-400">로딩 중...</div>
+          <div className="text-slate-600">로딩 중...</div>
         </div>
       </div>
     );
@@ -66,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               aria-label="메인 메뉴 열기"
               aria-expanded={isSidebarOpen}
               aria-controls="admin-sidebar"
-              className="rounded-lg p-2 text-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:hidden"
+              className="rounded-lg p-2 text-slate-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <Menu size={20} aria-hidden="true" />

@@ -43,15 +43,21 @@ export default function AdminAnalyticsPage() {
           showUserAvatar={false}
         />
 
-        <div className="flex rounded-[1.5rem] border border-slate-100 bg-white p-1.5 shadow-sm">
+        <div
+          className="flex rounded-[1.5rem] border border-slate-100 bg-white p-1.5 shadow-sm"
+          role="group"
+          aria-label="통계 기간 선택"
+        >
           {(['week', 'month', 'year'] as const).map(opt => (
             <button
               key={opt}
               onClick={() => setInterval(opt)}
-              className={`rounded-2xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all ${
+              aria-label={`${opt === 'week' ? '주간' : opt === 'month' ? '월간' : '연간'} 통계 보기`}
+              aria-pressed={interval === opt}
+              className={`rounded-2xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                 interval === opt
                   ? 'bg-slate-900 text-white shadow-lg'
-                  : 'text-slate-400 hover:text-slate-600'
+                  : 'text-slate-600 hover:text-slate-700'
               }`}
             >
               {opt === 'week' ? 'Weekly' : opt === 'month' ? 'Monthly' : 'Yearly'}
@@ -119,13 +125,13 @@ export default function AdminAnalyticsPage() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-                  <span className="text-[10px] font-black uppercase text-slate-400">
+                  <span className="text-[10px] font-black uppercase text-slate-600">
                     제안서 완료
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-indigo-600"></div>
-                  <span className="text-[10px] font-black uppercase text-slate-400">방문자 수</span>
+                  <span className="text-[10px] font-black uppercase text-slate-600">방문자 수</span>
                 </div>
               </div>
             </div>
@@ -191,7 +197,7 @@ export default function AdminAnalyticsPage() {
 
             <div className="mt-10 flex items-center justify-between border-t border-slate-50 pt-8">
               <div className="flex items-center gap-6">
-                <p className="text-[10px] font-bold italic text-slate-400">
+                <p className="text-[10px] font-bold italic text-slate-600">
                   최근 업데이트 : {new Date().toLocaleString('ko-KR')}
                 </p>
               </div>
@@ -199,7 +205,9 @@ export default function AdminAnalyticsPage() {
           </div>
         </>
       ) : (
-        <EmptyState defaultMessage="통계 데이터가 없습니다." />
+        <div role="status" aria-live="polite" aria-label="통계 데이터가 없습니다">
+          <EmptyState defaultMessage="통계 데이터가 없습니다." />
+        </div>
       )}
     </div>
   );

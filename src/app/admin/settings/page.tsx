@@ -293,7 +293,7 @@ export default function AdminSettingsPage() {
                 <h2 className="text-2xl font-black tracking-tight text-slate-900">
                   기본 생성 제한 설정
                 </h2>
-                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-600">
                   Default Provisioning Policy
                 </p>
               </div>
@@ -316,7 +316,7 @@ export default function AdminSettingsPage() {
                 <Input
                   type="number"
                   label="Limit Value"
-                  labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400"
+                  labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600"
                   value={defaultLimitInput}
                   onChange={e => setDefaultLimitInput(e.target.value)}
                   placeholder="예: 100"
@@ -337,7 +337,7 @@ export default function AdminSettingsPage() {
 
             <div className="mt-6 flex items-center gap-2 px-2">
               <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-600"></div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">
                 Active Setting:{' '}
                 {defaultLimitData?.limit !== null && defaultLimitData?.limit !== undefined
                   ? `${defaultLimitData.limit} Decks`
@@ -356,7 +356,7 @@ export default function AdminSettingsPage() {
                 <h2 className="text-2xl font-black tracking-tight text-slate-900">
                   기존 사용자 일괄 적용
                 </h2>
-                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-600">
                   Bulk Resource Migration
                 </p>
               </div>
@@ -364,7 +364,7 @@ export default function AdminSettingsPage() {
 
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <p className="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
                   Target Audience Selection
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -379,7 +379,7 @@ export default function AdminSettingsPage() {
                     <div className="mb-2 flex items-center justify-between">
                       <span
                         className={`text-[10px] font-black uppercase tracking-widest ${
-                          batchTarget === 'null_only' ? 'text-indigo-600' : 'text-slate-400'
+                          batchTarget === 'null_only' ? 'text-indigo-600' : 'text-slate-600'
                         }`}
                       >
                         Segment 01
@@ -395,7 +395,7 @@ export default function AdminSettingsPage() {
                     >
                       제한이 없는 사용자만
                     </p>
-                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-400 opacity-60">
+                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-600 opacity-70">
                       Apply to users without individual limits only
                     </p>
                   </div>
@@ -410,7 +410,7 @@ export default function AdminSettingsPage() {
                     <div className="mb-2 flex items-center justify-between">
                       <span
                         className={`text-[10px] font-black uppercase tracking-widest ${
-                          batchTarget === 'all' ? 'text-orange-600' : 'text-slate-400'
+                          batchTarget === 'all' ? 'text-orange-600' : 'text-slate-600'
                         }`}
                       >
                         Segment 02
@@ -426,7 +426,7 @@ export default function AdminSettingsPage() {
                     >
                       모든 사용자 적용
                     </p>
-                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-400 opacity-60">
+                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-600 opacity-70">
                       Override all existing individual limits
                     </p>
                   </div>
@@ -438,7 +438,7 @@ export default function AdminSettingsPage() {
                   <Input
                     type="number"
                     label="Migration Value"
-                    labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400"
+                    labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600"
                     value={batchLimitInput}
                     onChange={e => setBatchLimitInput(e.target.value)}
                     placeholder="예: 500"
