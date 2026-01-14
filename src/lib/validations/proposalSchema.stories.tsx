@@ -103,6 +103,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 const meta = {
   title: 'Lib/Validations/proposalSchema',
   tags: ['autodocs'],
+  parameters: {
+    docsOnly: true,
+  },
 } satisfies Meta;
 
 export default meta;
@@ -112,6 +115,7 @@ type Story = StoryObj<typeof meta>;
 // Zod 스키마 파일이므로 실제 스토리는 제공하지 않습니다.
 // eslint-disable-next-line storybook/story-exports
 export const Docs: Story = {
+  render: () => <div style={{ display: 'none' }} />,
   parameters: {
     docs: {
       description: {

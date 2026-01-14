@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import QueryProvider from './QueryProvider';
+import React from 'react';
 
 /**
  *
@@ -55,9 +55,11 @@ import QueryProvider from './QueryProvider';
  */
 const meta = {
   title: 'Providers/QueryProvider',
-  component: QueryProvider,
   tags: ['autodocs'],
-} satisfies Meta<typeof QueryProvider>;
+  parameters: {
+    docsOnly: true,
+  },
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -66,9 +68,8 @@ type Story = StoryObj<typeof meta>;
 // 실제로는 컴포넌트를 렌더링하지 않고 문서만 표시합니다.
 // eslint-disable-next-line storybook/story-exports
 export const Docs: Story = {
-  args: {
-    children: <></>,
-  },
+  render: () => <div style={{ display: 'none' }} />,
+  args: {},
   parameters: {
     docs: {
       description: {

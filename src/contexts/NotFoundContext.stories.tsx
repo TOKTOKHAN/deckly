@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { NotFoundProvider } from './NotFoundContext';
+import React from 'react';
 
 /**
  *
@@ -62,9 +62,11 @@ import { NotFoundProvider } from './NotFoundContext';
  */
 const meta = {
   title: 'Contexts/NotFoundContext',
-  component: NotFoundProvider,
   tags: ['autodocs'],
-} satisfies Meta<typeof NotFoundProvider>;
+  parameters: {
+    docsOnly: true,
+  },
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -73,7 +75,8 @@ type Story = StoryObj<typeof meta>;
 // Context Provider이므로 실제 스토리는 제공하지 않습니다.
 // eslint-disable-next-line storybook/story-exports
 export const Docs: Story = {
-  args: { children: <></> },
+  render: () => <div style={{ display: 'none' }} />,
+  args: {},
   parameters: {
     docs: {
       description: {

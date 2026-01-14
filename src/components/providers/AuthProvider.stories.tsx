@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import AuthProvider from './AuthProvider';
+import React from 'react';
 
 /**
  *
@@ -47,9 +47,11 @@ import AuthProvider from './AuthProvider';
  */
 const meta = {
   title: 'Providers/AuthProvider',
-  component: AuthProvider,
   tags: ['autodocs'],
-} satisfies Meta<typeof AuthProvider>;
+  parameters: {
+    docsOnly: true,
+  },
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -58,9 +60,8 @@ type Story = StoryObj<typeof meta>;
 // 실제로는 컴포넌트를 렌더링하지 않고 문서만 표시합니다.
 // eslint-disable-next-line storybook/story-exports
 export const Docs: Story = {
-  args: {
-    children: <></>,
-  },
+  render: () => <div style={{ display: 'none' }} />,
+  args: {},
   parameters: {
     docs: {
       description: {

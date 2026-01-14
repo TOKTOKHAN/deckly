@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import React from 'react';
 
 /**
  *
@@ -195,6 +196,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 const meta = {
   title: 'Lib/Validations/userValidation',
   tags: ['autodocs'],
+  parameters: {
+    docsOnly: true,
+  },
 } satisfies Meta;
 
 export default meta;
@@ -204,6 +208,7 @@ type Story = StoryObj<typeof meta>;
 // 유틸리티 함수 파일이므로 실제 스토리는 제공하지 않습니다.
 // eslint-disable-next-line storybook/story-exports
 export const Docs: Story = {
+  render: () => <div style={{ display: 'none' }} />,
   parameters: {
     docs: {
       description: {

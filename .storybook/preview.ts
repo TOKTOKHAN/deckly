@@ -23,6 +23,8 @@ const preview: Preview = {
         pathname: '/',
       },
     },
+
+    viewMode: 'docs',
   },
 };
 

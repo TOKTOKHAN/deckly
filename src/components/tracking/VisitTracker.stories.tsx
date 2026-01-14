@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import React from 'react';
 import VisitTracker from './VisitTracker';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -72,6 +73,9 @@ const meta = {
       return <Story />;
     },
   ],
+  parameters: {
+    docsOnly: true,
+  },
 } satisfies Meta<typeof VisitTracker>;
 
 export default meta;
@@ -81,6 +85,7 @@ type Story = StoryObj<typeof meta>;
 // 실제로는 컴포넌트를 렌더링하지 않고 문서만 표시합니다.
 // eslint-disable-next-line storybook/story-exports
 export const Docs: Story = {
+  render: () => <div style={{ display: 'none' }} />,
   parameters: {
     docs: {
       description: {
