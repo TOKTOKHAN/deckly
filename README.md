@@ -1,41 +1,127 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DECKLY
 
-## Getting Started
+AI 기반 사업 제안서 생성 플랫폼
 
-First, run the development server:
+## 프로젝트 소개
+
+DECKLY는 미팅 전사록을 입력하면 AI가 자동으로 전문적인 사업 제안서를 생성해주는 플랫폼입니다. 생성된 제안서는 PDF로 다운로드할 수 있습니다.
+
+## 기술 스택
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: Supabase
+- **AI**: Google Gemini API, LangChain
+- **State Management**: Zustand
+- **Data Fetching**: React Query (TanStack Query)
+- **Form**: React Hook Form + Zod
+- **Charts**: Recharts
+
+## 시작하기
+
+### 필수 요구사항
+
+- Node.js 18 이상
+- pnpm (권장) 또는 npm/yarn
+
+### 설치 및 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 의존성 설치
+pnpm install
+
+# 개발 서버 실행
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 확인하세요.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Storybook
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+프로젝트의 컴포넌트, 훅, 유틸리티 함수 등을 문서화한 Storybook이 포함되어 있습니다.
 
-## Learn More
+### Storybook 실행
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm storybook
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+브라우저에서 [http://localhost:6006](http://localhost:6006)을 열어 Storybook을 확인할 수 있습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Storybook 구조
 
-## Deploy on Vercel
+- **Components**: UI 컴포넌트들
+- **Hooks**: 커스텀 훅들 (`useAnalytics`, `useRequireAuth` 등)
+- **Stores**: Zustand 스토어들 (`authStore`)
+- **Types**: TypeScript 타입 정의들
+- **Lib**: 유틸리티 함수, API 클라이언트, Supabase 함수들
+- **Contexts**: React Context Provider들
+- **Skeletons**: 로딩 스켈레톤 컴포넌트들
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Storybook 사용 목적
 
-# Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+이 Storybook은 **인수인계용 문서**로 작성되었습니다. 각 컴포넌트와 함수의:
 
-# deckly
+- 사용법
+- Props/매개변수
+- 반환값
+- 사용 예시
+- 주의사항
 
-> > > > > > > 7de19f6f587c72715a1eb4c851834cbf636f325a
+등을 확인할 수 있습니다.
+
+### Storybook 빌드
+
+정적 파일로 빌드하려면:
+
+```bash
+pnpm build-storybook
+```
+
+빌드된 파일은 `storybook-static` 폴더에 생성됩니다.
+
+## 스크립트
+
+```bash
+# 개발 서버 실행
+pnpm dev
+
+# 프로덕션 빌드
+pnpm build
+
+# 프로덕션 서버 실행
+pnpm start
+
+# 린트 검사
+pnpm lint
+
+# 코드 포맷팅
+pnpm format
+
+# 코드 포맷팅 검사
+pnpm format:check
+
+# Storybook 실행
+pnpm storybook
+
+# Storybook 빌드
+pnpm build-storybook
+```
+
+## 프로젝트 구조
+
+```
+deckly/
+├── src/
+│   ├── app/              # Next.js App Router 페이지
+│   ├── components/       # React 컴포넌트
+│   ├── hooks/           # 커스텀 훅
+│   ├── lib/              # 유틸리티 함수 및 클라이언트
+│   ├── stores/           # Zustand 스토어
+│   ├── types/            # TypeScript 타입 정의
+│   ├── contexts/         # React Context
+│   └── ...
+├── .storybook/           # Storybook 설정
+└── supabase/             # Supabase 마이그레이션 파일
+```
