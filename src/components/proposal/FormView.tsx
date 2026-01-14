@@ -9,47 +9,7 @@ import Input from '@/components/form/Input';
 import Textarea from '@/components/form/Textarea';
 import ColorInput from '@/components/form/ColorInput';
 import Button from '@/components/ui/Button';
-
-// 아이콘 컴포넌트
-const ChevronLeft = ({ size }: { size?: number }) => (
-  <svg
-    width={size || 20}
-    height={size || 20}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <polyline points="15 18 9 12 15 6"></polyline>
-  </svg>
-);
-
-const ChevronRight = ({ size }: { size?: number }) => (
-  <svg
-    width={size || 20}
-    height={size || 20}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <polyline points="9 18 15 12 9 6"></polyline>
-  </svg>
-);
-
-const X = ({ size }: { size?: number }) => (
-  <svg
-    width={size || 24}
-    height={size || 24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-);
+import { ChevronLeft, ChevronRight, X } from '@/components/icons';
 
 const initialFormData: ProposalFormData = {
   // 기본 정보

@@ -283,7 +283,9 @@ export default function ProposalForm() {
         {view === 'dashboard' && (
           <>
             {isProposalsLoading ? (
-              <ProposalDashboardSkeleton includeWrapper={false} />
+              <div role="status" aria-live="polite" aria-label="제안서 목록을 불러오는 중">
+                <ProposalDashboardSkeleton includeWrapper={false} />
+              </div>
             ) : (
               <DashboardView
                 proposals={proposals}
