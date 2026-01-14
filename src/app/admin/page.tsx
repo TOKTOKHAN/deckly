@@ -43,14 +43,20 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="animate-in fade-in space-y-12 duration-700">
-        <DashboardPageSkeleton />
+      <div role="status" aria-live="polite" aria-label="대시보드 통계를 불러오는 중">
+        <div className="animate-in fade-in space-y-12 duration-700">
+          <DashboardPageSkeleton />
+        </div>
       </div>
     );
   }
 
   if (error) {
-    return <ErrorState error={error} onRetry={() => refetch()} />;
+    return (
+      <div role="alert" aria-live="assertive">
+        <ErrorState error={error} onRetry={() => refetch()} />
+      </div>
+    );
   }
 
   // 성공률 계산

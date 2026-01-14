@@ -224,41 +224,45 @@ export default function AdminSettingsPage() {
 
   if (isLoadingDefault) {
     return (
-      <div className="animate-in fade-in space-y-10 duration-700">
-        <PageHeader
-          badge={{
-            icon: <Settings size={12} />,
-            text: 'System Configuration',
-            className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
-          }}
-          title="시스템 설정"
-          description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
-          showDate={false}
-          showUserAvatar={false}
-        />
-        <LoadingState message="설정을 불러오는 중..." />
+      <div role="status" aria-live="polite" aria-label="시스템 설정을 불러오는 중">
+        <div className="animate-in fade-in space-y-10 duration-700">
+          <PageHeader
+            badge={{
+              icon: <Settings size={12} />,
+              text: 'System Configuration',
+              className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
+            }}
+            title="시스템 설정"
+            description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
+            showDate={false}
+            showUserAvatar={false}
+          />
+          <LoadingState message="설정을 불러오는 중..." />
+        </div>
       </div>
     );
   }
 
   if (defaultLimitError) {
     return (
-      <div className="animate-in fade-in space-y-10 duration-700">
-        <PageHeader
-          badge={{
-            icon: <Settings size={12} />,
-            text: 'System Configuration',
-            className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
-          }}
-          title="시스템 설정"
-          description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
-          showDate={false}
-          showUserAvatar={false}
-        />
-        <ErrorState
-          error={defaultLimitError as Error}
-          onRetry={() => queryClient.invalidateQueries()}
-        />
+      <div role="alert" aria-live="assertive">
+        <div className="animate-in fade-in space-y-10 duration-700">
+          <PageHeader
+            badge={{
+              icon: <Settings size={12} />,
+              text: 'System Configuration',
+              className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
+            }}
+            title="시스템 설정"
+            description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
+            showDate={false}
+            showUserAvatar={false}
+          />
+          <ErrorState
+            error={defaultLimitError as Error}
+            onRetry={() => queryClient.invalidateQueries()}
+          />
+        </div>
       </div>
     );
   }
@@ -348,7 +352,7 @@ export default function AdminSettingsPage() {
               <div className="flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-orange-50 text-orange-600">
                 <Users size={28} />
               </div>
-    <div>
+              <div>
                 <h2 className="text-2xl font-black tracking-tight text-slate-900">
                   기존 사용자 일괄 적용
                 </h2>
@@ -453,7 +457,7 @@ export default function AdminSettingsPage() {
                     ? '적용 중...'
                     : '일괄 업데이트 실행'}
                 </Button>
-      </div>
+              </div>
 
               {batchTarget === 'all' && (
                 <div className="flex items-start gap-5 rounded-[2rem] border border-red-100 bg-red-50 p-8">

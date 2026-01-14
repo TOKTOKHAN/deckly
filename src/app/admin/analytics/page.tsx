@@ -61,7 +61,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {error && (
-        <div className="mb-6">
+        <div role="alert" aria-live="assertive" className="mb-6">
           <ErrorState
             error={error}
             onRetry={() => refetch()}
@@ -71,7 +71,9 @@ export default function AdminAnalyticsPage() {
       )}
 
       {isLoading ? (
-        <AnalyticsPageSkeleton />
+        <div role="status" aria-live="polite" aria-label="통계 데이터를 불러오는 중">
+          <AnalyticsPageSkeleton />
+        </div>
       ) : stats && stats.length > 0 ? (
         <>
           {/* 통계 카드 그리드 */}

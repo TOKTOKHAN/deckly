@@ -29,6 +29,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [user, isAdmin, isLoading, router]);
 
+  // 로딩 상태 접근성
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[calc(100vh-64px)] bg-[#F8FAFC] font-sans text-slate-900">
+        <div
+          role="status"
+          aria-live="polite"
+          aria-label="관리자 페이지를 불러오는 중"
+          className="flex w-full items-center justify-center"
+        >
+          <div className="text-slate-400">로딩 중...</div>
+        </div>
+      </div>
+    );
+  }
+
   // 조건이 만족되면 404 페이지 표시
   if (shouldShowNotFound) {
     notFound();
@@ -39,15 +55,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
 
       {/* 메인 콘텐츠 */}
-      <main className="custom-scrollbar min-w-0 flex-1 overflow-y-auto">
+      <main
+        className="custom-scrollbar min-w-0 flex-1 overflow-y-auto"
+        aria-label="관리자 대시보드 콘텐츠"
+      >
         {/* 상단 액션 바 */}
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-100 bg-white/80 backdrop-blur-md">
           <div className="flex items-center gap-4">
             <button
-              className="rounded-lg p-2 text-slate-400 hover:bg-slate-50 md:hidden"
+              aria-label="메인 메뉴 열기"
+              aria-expanded={isSidebarOpen}
+              aria-controls="admin-sidebar"
+              className="rounded-lg p-2 text-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
-              <Menu size={20} />
+              <Menu size={20} aria-hidden="true" />
             </button>
           </div>
         </header>

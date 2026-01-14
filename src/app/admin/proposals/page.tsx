@@ -204,7 +204,11 @@ export default function AdminProposalsPage() {
 
   // 초기 로딩 시에만 전체 스켈레톤 표시
   if (isLoading && !proposals) {
-    return <ProposalsPageSkeleton />;
+    return (
+      <div role="status" aria-live="polite" aria-label="제안서 목록을 불러오는 중">
+        <ProposalsPageSkeleton />
+      </div>
+    );
   }
 
   return (
@@ -230,19 +234,23 @@ export default function AdminProposalsPage() {
         />
 
         {(proposalsError || countError) && (
-          <ErrorState
-            error={proposalsError || countError}
-            onRetry={() => {
-              refetchProposals();
-              refetchCount();
-            }}
-            title="데이터를 불러오는 중 오류가 발생했습니다."
-          />
+          <div role="alert" aria-live="assertive">
+            <ErrorState
+              error={proposalsError || countError}
+              onRetry={() => {
+                refetchProposals();
+                refetchCount();
+              }}
+              title="데이터를 불러오는 중 오류가 발생했습니다."
+            />
+          </div>
         )}
 
         {isFetching && proposals ? (
           // 필터 변경 시 테이블만 스켈레톤으로 표시
-          <ProposalsTableSkeleton rows={5} />
+          <div role="status" aria-live="polite" aria-label="제안서 목록을 업데이트하는 중">
+            <ProposalsTableSkeleton rows={5} />
+          </div>
         ) : paginatedProposals && paginatedProposals.length > 0 ? (
           <div className="overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/40">
             <div className="overflow-x-auto">

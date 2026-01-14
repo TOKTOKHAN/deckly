@@ -176,13 +176,19 @@ export default function AdminUsersPage() {
   };
 
   if (isLoading) {
-    return <UsersPageSkeleton />;
+    return (
+      <div role="status" aria-live="polite" aria-label="사용자 목록을 불러오는 중">
+        <UsersPageSkeleton />
+      </div>
+    );
   }
 
   // 사용자 조회 실패 시에만 전체 에러 표시
   if (isUsersError) {
     return (
-      <ErrorState error={usersError} onRetry={() => refetch()} showServiceRoleKeyHelp={true} />
+      <div role="alert" aria-live="assertive">
+        <ErrorState error={usersError} onRetry={() => refetch()} showServiceRoleKeyHelp={true} />
+      </div>
     );
   }
 
@@ -373,8 +379,11 @@ export default function AdminUsersPage() {
                             {user.proposalCount} / 정보 없음
                           </span>
                         ) : isLoadingLimits ? (
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-black text-slate-400">
-                            <FileText size={12} />
+                          <span
+                            className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-black text-slate-400"
+                            aria-label="제한 정보를 불러오는 중"
+                          >
+                            <FileText size={12} aria-hidden="true" />
                             {user.proposalCount} / 로딩 중...
                           </span>
                         ) : user.effectiveLimit !== null ? (
