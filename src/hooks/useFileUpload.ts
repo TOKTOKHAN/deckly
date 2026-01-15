@@ -10,7 +10,7 @@ interface UseFileUploadOptions<T extends FieldValues> {
   acceptedTypes?: string[]; // 기본값: ['image/*']
 }
 
-interface UseFileUploadReturn {
+export interface UseFileUploadReturn {
   inputRef: React.RefObject<HTMLInputElement>;
   handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleRemoveImage: () => void;
