@@ -83,7 +83,6 @@ export default function ProposalFormView({
   // Zustand store에서 상태 가져오기
   const {
     view,
-    step,
     currentProposal,
     proposalToDelete,
     isGenerating,

@@ -118,6 +118,13 @@ export function useGenerateProposal({
 
         try {
           await updateMutation.mutateAsync(completedProposal);
+
+          // 캐시를 즉시 업데이트하여 대시보드에서 올바른 상태가 표시되도록 함
+          const cachedProposals = queryClient.getQueryData<Proposal[]>(['proposals']) || [];
+          const updatedProposals = cachedProposals.map(p =>
+            p.id === proposalId ? completedProposal : p,
+          );
+          queryClient.setQueryData<Proposal[]>(['proposals'], updatedProposals);
         } catch (err) {
           // eslint-disable-next-line no-console
           console.error('제안서 저장 오류:', err);
