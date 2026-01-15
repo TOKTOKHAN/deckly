@@ -1,4 +1,4 @@
-import ProposalForm from '@/components/proposal/ProposalForm';
+import ProposalForm from '@/components/proposal/ProposalFormContainer';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ProposalDashboardSkeleton from '@/components/skeletons/ProposalDashboardSkeleton';
 

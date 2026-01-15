@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
-import ProposalForm from './ProposalForm';
+import ProposalForm from './ProposalFormContainer';
 
 const meta = {
   title: 'Proposal/ProposalForm',
