@@ -9,9 +9,46 @@ import ProposalDashboardSkeleton from '@/components/skeletons/ProposalDashboardS
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 
-// 동적 import로 코드 스플리팅 적용
-const FormView = lazy(() => import('./FormView'));
-const ResultView = lazy(() => import('./ResultView'));
+/**
+ * 동적 import에 재시도 로직을 추가하는 헬퍼 함수
+ * 네트워크 오류나 일시적인 로딩 실패 시 자동으로 재시도합니다.
+ *
+ * @param importFn - 동적 import 함수
+ * @param maxRetries - 최대 재시도 횟수 (기본값: 3)
+ * @param retryDelay - 재시도 간격(ms) (기본값: 1000)
+ * @returns Promise<{ default: Component }>
+ */
+const retryImport = async <T,>(
+  importFn: () => Promise<T>,
+  maxRetries = 3,
+  retryDelay = 1000,
+): Promise<T> => {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await importFn();
+    } catch (error) {
+      // 마지막 시도에서도 실패하면 에러 throw
+      if (attempt === maxRetries - 1) {
+        console.error(`동적 import 실패 (${maxRetries}회 시도 후):`, error);
+        throw error;
+      }
+
+      // 지수 백오프: 1초, 2초, 4초...
+      const delay = retryDelay * Math.pow(2, attempt);
+      console.warn(`동적 import 실패 (시도 ${attempt + 1}/${maxRetries}), ${delay}ms 후 재시도...`);
+
+      // 재시도 전 대기
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  // 타입스크립트를 위한 fallback (실제로는 위에서 throw됨)
+  throw new Error('동적 import 재시도 실패');
+};
+
+// 동적 import로 코드 스플리팅 적용 (재시도 로직 포함)
+const FormView = lazy(() => retryImport(() => import('./FormView')));
+const ResultView = lazy(() => retryImport(() => import('./ResultView')));
 
 interface ProposalFormViewProps {
   view: 'dashboard' | 'form' | 'result';
