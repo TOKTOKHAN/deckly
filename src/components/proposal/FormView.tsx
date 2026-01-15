@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ProposalFormData } from '@/types/proposal';
 import { proposalFormSchema } from '@/lib/validations/proposalSchema';
 import { validateStep1 } from '@/lib/utils/formValidation';
+import { useProposalFormStore } from '@/stores/proposalFormStore';
 import { useFileUpload } from '@/hooks/useFileUpload';
 import Step1Form from './Step1Form';
 import Step2Form from './Step2Form';
@@ -46,13 +47,14 @@ const initialFormData: ProposalFormData = {
 };
 
 interface FormViewProps {
-  step: number;
-  onStepChange: (step: number) => void;
-  onClose: () => void;
   onSubmit: (data: ProposalFormData) => void;
 }
 
-export default function FormView({ step, onStepChange, onClose, onSubmit }: FormViewProps) {
+export default function FormView({ onSubmit }: FormViewProps) {
+  // Zustand store에서 상태와 액션 가져오기
+  const step = useProposalFormStore(state => state.step);
+  const setStep = useProposalFormStore(state => state.setStep);
+  const closeForm = useProposalFormStore(state => state.closeForm);
   // react-hook-form 설정
   const {
     register,
@@ -112,7 +114,7 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
             <h1 className="mt-1 text-2xl font-black text-gray-400">제안서 정보 입력</h1>
           </div>
           <button
-            onClick={onClose}
+            onClick={closeForm}
             className="rounded-full p-2 text-gray-400 transition hover:bg-gray-300"
           >
             <X size={24} />
@@ -125,7 +127,7 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
           <Button
             variant="ghost"
             disabled={step === 1}
-            onClick={() => onStepChange(step - 1)}
+            onClick={() => setStep(step - 1)}
             icon={<ChevronLeft size={20} />}
           >
             이전 단계
@@ -135,7 +137,7 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
             <Button
               variant="secondary"
               size="lg"
-              onClick={() => onStepChange(step + 1)}
+              onClick={() => setStep(step + 1)}
               icon={<ChevronRight size={20} />}
               iconPosition="right"
               disabled={!validateStep1(formData)}

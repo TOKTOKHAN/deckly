@@ -62,7 +62,6 @@ interface ProposalFormViewProps {
   onCreateNew: () => void;
   onCloseForm: () => void;
   onBackFromResult: () => void;
-  onStepChange: (step: number) => void;
   onCloseDeleteModal: () => void;
   onConfirmDelete: () => void;
 }
@@ -78,7 +77,6 @@ export default function ProposalFormView({
   onCreateNew,
   onCloseForm,
   onBackFromResult,
-  onStepChange,
   onCloseDeleteModal,
   onConfirmDelete,
 }: ProposalFormViewProps) {
@@ -131,12 +129,7 @@ export default function ProposalFormView({
               </div>
             ) : (
               <Suspense fallback={<ProposalDashboardSkeleton includeWrapper={false} />}>
-                <FormView
-                  step={step}
-                  onStepChange={onStepChange}
-                  onClose={onCloseForm}
-                  onSubmit={onSubmitForm}
-                />
+                <FormView onSubmit={onSubmitForm} />
               </Suspense>
             )}
           </>

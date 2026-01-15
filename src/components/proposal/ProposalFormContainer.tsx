@@ -16,7 +16,6 @@ export default function ProposalFormContainer() {
   const {
     proposalToDelete,
     setView,
-    setStep,
     setCurrentProposal,
     setProposalToDelete,
     setIsGenerating,
@@ -203,7 +202,6 @@ export default function ProposalFormContainer() {
       onCreateNew={handleCreateNew}
       onCloseForm={handleCloseForm}
       onBackFromResult={handleBackFromResult}
-      onStepChange={setStep}
       onCloseDeleteModal={handleCloseDeleteModal}
       onConfirmDelete={handleConfirmDelete}
     />
