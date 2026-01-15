@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProposalFormData } from '@/types/proposal';
 import { proposalFormSchema } from '@/lib/validations/proposalSchema';
+import { validateStep1 } from '@/lib/utils/formValidation';
 import { useFileUpload } from '@/hooks/useFileUpload';
 import Input from '@/components/form/Input';
 import Textarea from '@/components/form/Textarea';
@@ -32,11 +33,7 @@ const initialFormData: ProposalFormData = {
   reviewPeriod: '',
   maintenancePeriod: '',
   openDate: undefined,
-
-  // 예산
   budgetMin: '',
-
-  // 기타
   target: ['실무자'],
   includeSummary: '',
   excludeScope: '',
@@ -84,39 +81,6 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
     field: 'ourLogo',
     setValue,
   });
-
-  // Step 1 필수 필드 검증
-  const isStep1Valid = () => {
-    // Hex 색상 코드 검증
-    const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
-
-    // 필수 필드 체크
-    const hasProjectName = formData.projectName && formData.projectName.trim().length > 0;
-    const hasClientCompanyName =
-      formData.clientCompanyName && formData.clientCompanyName.trim().length > 0;
-    const hasBrandColor1 = formData.brandColor1 && hexColorRegex.test(formData.brandColor1);
-    const hasBrandColor2 = formData.brandColor2 && hexColorRegex.test(formData.brandColor2);
-    const hasBrandColor3 = formData.brandColor3 && hexColorRegex.test(formData.brandColor3);
-    const hasFont = formData.font && formData.font.trim().length > 0;
-    const hasStartDate = formData.startDate && formData.startDate.trim().length > 0;
-    const hasEndDate = formData.endDate && formData.endDate.trim().length > 0;
-
-    // 종료일이 시작일 이후인지 확인
-    const isDateValid =
-      hasStartDate && hasEndDate && new Date(formData.endDate) >= new Date(formData.startDate);
-
-    return (
-      hasProjectName &&
-      hasClientCompanyName &&
-      hasBrandColor1 &&
-      hasBrandColor2 &&
-      hasBrandColor3 &&
-      hasFont &&
-      hasStartDate &&
-      hasEndDate &&
-      isDateValid
-    );
-  };
 
   const renderStep = () => {
     switch (step) {
@@ -452,7 +416,7 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
               onClick={() => onStepChange(step + 1)}
               icon={<ChevronRight size={20} />}
               iconPosition="right"
-              disabled={!isStep1Valid()}
+              disabled={!validateStep1(formData)}
             >
               다음 단계
             </Button>
