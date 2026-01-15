@@ -2,7 +2,8 @@
 
 import { lazy, Suspense } from 'react';
 import { Proposal } from '@/types/proposal';
-import { ProposalFormData, GenerationStatus } from '@/types/proposal';
+import { ProposalFormData } from '@/types/proposal';
+import { useProposalFormStore } from '@/stores/proposalFormStore';
 import GeneratingOverlay from './GeneratingOverlay';
 import DashboardView from './DashboardView';
 import ProposalDashboardSkeleton from '@/components/skeletons/ProposalDashboardSkeleton';
@@ -51,52 +52,47 @@ const FormView = lazy(() => retryImport(() => import('./FormView')));
 const ResultView = lazy(() => retryImport(() => import('./ResultView')));
 
 interface ProposalFormViewProps {
-  view: 'dashboard' | 'form' | 'result';
   proposals: Proposal[];
-  currentProposal: Proposal | null;
-  step: number;
   isProposalsLoading: boolean;
-  isGenerating: boolean;
-  genStatus: GenerationStatus;
-  proposalToDelete: Proposal | null;
-  formError: string | null;
-  resultError: string | null;
-  onCreateNew: () => void;
-  onSelectProposal: (proposal: Proposal) => void;
-  onDeleteProposal: (proposal: Proposal) => void;
-  onStepChange: (step: number) => void;
-  onCloseForm: () => void;
   onSubmitForm: (data: ProposalFormData) => Promise<void>;
-  onBackFromResult: () => void;
   onRegenerate: (proposalId: string, data: ProposalFormData) => Promise<void>;
   onUpdateProposal: (updatedProposal: Proposal) => Promise<void>;
+  onSelectProposal: (proposal: Proposal) => void;
+  onDeleteProposal: (proposal: Proposal) => void;
+  onCreateNew: () => void;
+  onCloseForm: () => void;
+  onBackFromResult: () => void;
+  onStepChange: (step: number) => void;
   onCloseDeleteModal: () => void;
   onConfirmDelete: () => void;
 }
 
 export default function ProposalFormView({
-  view,
   proposals,
-  currentProposal,
-  step,
   isProposalsLoading,
-  isGenerating,
-  genStatus,
-  proposalToDelete,
-  formError,
-  resultError,
-  onCreateNew,
-  onSelectProposal,
-  onDeleteProposal,
-  onStepChange,
-  onCloseForm,
   onSubmitForm,
-  onBackFromResult,
   onRegenerate,
   onUpdateProposal,
+  onSelectProposal,
+  onDeleteProposal,
+  onCreateNew,
+  onCloseForm,
+  onBackFromResult,
+  onStepChange,
   onCloseDeleteModal,
   onConfirmDelete,
 }: ProposalFormViewProps) {
+  // Zustand store에서 상태 가져오기
+  const {
+    view,
+    step,
+    currentProposal,
+    proposalToDelete,
+    isGenerating,
+    genStatus,
+    formError,
+    resultError,
+  } = useProposalFormStore();
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="pb-20">
