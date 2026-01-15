@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProposalFormData } from '@/types/proposal';
 import { proposalFormSchema } from '@/lib/validations/proposalSchema';
+import { useFileUpload } from '@/hooks/useFileUpload';
 import Input from '@/components/form/Input';
 import Textarea from '@/components/form/Textarea';
 import ColorInput from '@/components/form/ColorInput';
@@ -72,78 +73,17 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
 
   // formData는 watch로 실시간 추적
   const formData = watch() as ProposalFormData;
-  // 파일 input ref
-  const clientLogoRef = useRef<HTMLInputElement>(null);
-  const ourLogoRef = useRef<HTMLInputElement>(null);
 
-  // 파일 선택 핸들러
-  const handleFileSelect = (
-    field: 'clientLogo' | 'ourLogo',
-    _ref: React.RefObject<HTMLInputElement>,
-  ) => {
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+  // 파일 업로드 훅 사용
+  const clientLogoUpload = useFileUpload<ProposalFormData>({
+    field: 'clientLogo',
+    setValue,
+  });
 
-      // 파일 크기 제한 (5MB)
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxSize) {
-        alert('파일 크기는 5MB 이하여야 합니다.');
-        if (_ref.current) {
-          _ref.current.value = '';
-        }
-        return;
-      }
-
-      // 이미지 파일만 허용
-      if (!file.type.startsWith('image/')) {
-        alert('이미지 파일만 업로드할 수 있습니다.');
-        if (_ref.current) {
-          _ref.current.value = '';
-        }
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        try {
-          const result = reader.result as string;
-          if (result) {
-            // base64 데이터 URL을 저장
-            setValue(field, result, { shouldValidate: true });
-          }
-        } catch (error) {
-          console.error('파일 읽기 오류:', error);
-          alert('파일을 읽는 중 오류가 발생했습니다.');
-          if (_ref.current) {
-            _ref.current.value = '';
-          }
-        }
-      };
-      reader.onerror = () => {
-        console.error('파일 읽기 오류');
-        alert('파일을 읽는 중 오류가 발생했습니다.');
-        if (_ref.current) {
-          _ref.current.value = '';
-        }
-      };
-      reader.readAsDataURL(file);
-    };
-  };
-
-  // 이미지 삭제 핸들러
-  const handleRemoveImage = (
-    field: 'clientLogo' | 'ourLogo',
-    ref: React.RefObject<HTMLInputElement>,
-  ) => {
-    return () => {
-      setValue(field, undefined, { shouldValidate: true });
-      // 파일 input 초기화
-      if (ref.current) {
-        ref.current.value = '';
-      }
-    };
-  };
+  const ourLogoUpload = useFileUpload<ProposalFormData>({
+    field: 'ourLogo',
+    setValue,
+  });
 
   // Step 1 필수 필드 검증
   const isStep1Valid = () => {
@@ -280,12 +220,12 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
                     )}
                   </label>
                   <input
-                    ref={clientLogoRef}
+                    ref={clientLogoUpload.inputRef}
                     id="clientLogo"
                     name="clientLogo"
                     type="file"
                     accept="image/*"
-                    onChange={handleFileSelect('clientLogo', clientLogoRef)}
+                    onChange={clientLogoUpload.handleFileSelect}
                     className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
                   />
                   {formData.clientLogo && (
@@ -298,7 +238,7 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
                       />
                       <button
                         type="button"
-                        onClick={handleRemoveImage('clientLogo', clientLogoRef)}
+                        onClick={clientLogoUpload.handleRemoveImage}
                         className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white transition hover:bg-red-600"
                         aria-label="이미지 삭제"
                       >
@@ -316,12 +256,12 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
                     )}
                   </label>
                   <input
-                    ref={ourLogoRef}
+                    ref={ourLogoUpload.inputRef}
                     id="ourLogo"
                     name="ourLogo"
                     type="file"
                     accept="image/*"
-                    onChange={handleFileSelect('ourLogo', ourLogoRef)}
+                    onChange={ourLogoUpload.handleFileSelect}
                     className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
                   />
                   {formData.ourLogo && (
@@ -334,7 +274,7 @@ export default function FormView({ step, onStepChange, onClose, onSubmit }: Form
                       />
                       <button
                         type="button"
-                        onClick={handleRemoveImage('ourLogo', ourLogoRef)}
+                        onClick={ourLogoUpload.handleRemoveImage}
                         className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white transition hover:bg-red-600"
                         aria-label="이미지 삭제"
                       >
