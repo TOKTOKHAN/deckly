@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import DetailFilter from './DetailFilter';
 
 const meta = {
-  title: 'Admin/DetailFilter',
+  title: 'Components/Admin/DetailFilter',
   component: DetailFilter,
   tags: ['autodocs'],
   argTypes: {

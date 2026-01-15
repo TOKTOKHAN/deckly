@@ -176,13 +176,19 @@ export default function AdminUsersPage() {
   };
 
   if (isLoading) {
-    return <UsersPageSkeleton />;
+    return (
+      <div role="status" aria-live="polite" aria-label="사용자 목록을 불러오는 중">
+        <UsersPageSkeleton />
+      </div>
+    );
   }
 
   // 사용자 조회 실패 시에만 전체 에러 표시
   if (isUsersError) {
     return (
-      <ErrorState error={usersError} onRetry={() => refetch()} showServiceRoleKeyHelp={true} />
+      <div role="alert" aria-live="assertive">
+        <ErrorState error={usersError} onRetry={() => refetch()} showServiceRoleKeyHelp={true} />
+      </div>
     );
   }
 
@@ -200,8 +206,12 @@ export default function AdminUsersPage() {
 
       {/* 제한 정보 조회 실패 시 경고 메시지 (사용자 목록은 계속 표시) */}
       {limitsError && (
-        <div className="flex items-center gap-3 rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3">
-          <AlertTriangle className="shrink-0 text-orange-600" size={18} />
+        <div
+          role="alert"
+          aria-live="polite"
+          className="flex items-center gap-3 rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3"
+        >
+          <AlertTriangle className="shrink-0 text-orange-600" size={18} aria-hidden="true" />
           <div className="flex-1">
             <p className="text-sm font-black text-orange-900">제한 정보를 불러올 수 없습니다</p>
             <p className="mt-0.5 text-xs font-medium text-orange-700">
@@ -210,7 +220,8 @@ export default function AdminUsersPage() {
                 : '제한 정보 조회 중 오류가 발생했습니다.'}{' '}
               <button
                 onClick={() => refetchLimits()}
-                className="font-black underline hover:no-underline"
+                aria-label="제한 정보 다시 불러오기"
+                className="font-black underline hover:no-underline focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 다시 시도
               </button>
@@ -267,23 +278,30 @@ export default function AdminUsersPage() {
           </div>
           <div className="flex w-full items-center gap-3 sm:w-auto">
             <div className="relative flex-1 sm:w-72">
+              <label htmlFor="user-search-input" className="sr-only">
+                사용자 검색
+              </label>
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
                 size={16}
+                aria-hidden="true"
               />
               <input
-                type="text"
+                id="user-search-input"
+                type="search"
                 placeholder="사용자 검색..."
                 value={searchQuery}
                 onChange={e => handleSearchChange(e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm transition-all placeholder:text-slate-300 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
+                aria-label="사용자 검색 (이메일 또는 전화번호)"
+                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm transition-all placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
               />
             </div>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full table-fixed border-collapse text-left">
+          <table className="w-full table-fixed border-collapse text-left" aria-label="사용자 목록">
+            <caption className="sr-only">사용자 목록 테이블</caption>
             <colgroup>
               <col className="w-[30%]" />
               <col className="w-[15%]" />
@@ -293,13 +311,25 @@ export default function AdminUsersPage() {
               <col className="w-[15%]" />
             </colgroup>
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                <th className="px-12 py-3">User Account</th>
-                <th className="px-6 py-3 text-center">Verification</th>
-                <th className="px-6 py-3">Member Since</th>
-                <th className="px-6 py-3">Last Activity</th>
-                <th className="px-6 py-3 text-center">Proposals</th>
-                <th className="px-12 py-3 text-right">Actions</th>
+              <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
+                <th scope="col" className="px-12 py-3">
+                  User Account
+                </th>
+                <th scope="col" className="px-6 py-3 text-center">
+                  Verification
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Member Since
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Last Activity
+                </th>
+                <th scope="col" className="px-6 py-3 text-center">
+                  Proposals
+                </th>
+                <th scope="col" className="px-12 py-3 text-right">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -308,14 +338,14 @@ export default function AdminUsersPage() {
                   <tr key={user.id} className="group h-[96px] transition-all hover:bg-blue-50/20">
                     <td className="px-12 py-6">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-slate-100 text-sm font-black text-slate-400 shadow-sm transition-transform group-hover:scale-110">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-slate-100 text-sm font-black text-slate-600 shadow-sm transition-transform group-hover:scale-110">
                           {user.email?.substring(0, 2).toUpperCase() || 'U'}
                         </div>
                         <div>
                           <div className="text-sm font-black text-slate-900 transition-colors group-hover:text-blue-600">
                             {user.email || '-'}
                           </div>
-                          <div className="mt-1 text-[10px] font-bold tracking-wider text-slate-400">
+                          <div className="mt-1 text-[10px] font-bold tracking-wider text-slate-600">
                             {user.phone || 'PHONE NOT REGISTERED'}
                           </div>
                         </div>
@@ -334,14 +364,23 @@ export default function AdminUsersPage() {
 
                         if (isAdminUser) {
                           return (
-                            <span className="inline-flex min-w-[80px] items-center justify-center gap-1.5 rounded-full border border-green-100 bg-green-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-green-600">
-                              <ShieldCheck size={10} className="shrink-0" /> Admin
+                            <span
+                              role="status"
+                              aria-label="관리자 계정"
+                              className="inline-flex min-w-[80px] items-center justify-center gap-1.5 rounded-full border border-green-100 bg-green-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-green-600"
+                            >
+                              <ShieldCheck size={10} className="shrink-0" aria-hidden="true" />{' '}
+                              Admin
                             </span>
                           );
                         } else {
                           return (
-                            <span className="inline-flex min-w-[80px] items-center justify-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-blue-600">
-                              <Users size={10} className="shrink-0" /> Users
+                            <span
+                              role="status"
+                              aria-label="일반 사용자 계정"
+                              className="inline-flex min-w-[80px] items-center justify-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-blue-600"
+                            >
+                              <Users size={10} className="shrink-0" aria-hidden="true" /> Users
                             </span>
                           );
                         }
@@ -349,51 +388,79 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-6 py-6">
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
-                        <Calendar size={14} className="text-slate-300" />
-                        {new Date(user.createdAt).toLocaleDateString('ko-KR')}
+                        <Calendar size={14} className="text-slate-500" aria-hidden="true" />
+                        <time dateTime={user.createdAt}>
+                          {new Date(user.createdAt).toLocaleDateString('ko-KR')}
+                        </time>
                       </div>
                     </td>
                     <td className="px-6 py-6">
                       <div className="text-xs font-bold text-slate-500">
                         {user.lastSignInAt ? (
                           <div className="flex items-center gap-2">
-                            <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500"></div>
-                            {new Date(user.lastSignInAt).toLocaleDateString('ko-KR')}
+                            <div
+                              className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500"
+                              aria-hidden="true"
+                              role="status"
+                              aria-label="활성 상태"
+                            />
+                            <time dateTime={user.lastSignInAt}>
+                              {new Date(user.lastSignInAt).toLocaleDateString('ko-KR')}
+                            </time>
                           </div>
                         ) : (
-                          <span className="font-medium italic text-slate-300">Never</span>
+                          <span
+                            className="font-medium italic text-slate-500"
+                            aria-label="마지막 활동 없음"
+                          >
+                            Never
+                          </span>
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-6">
                       <div className="flex justify-center">
                         {limitsError ? (
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-black text-slate-400">
-                            <FileText size={12} />
+                          <span
+                            aria-label={`제안서 생성: ${user.proposalCount}개, 제한 정보 없음`}
+                            className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-black text-slate-600"
+                          >
+                            <FileText size={12} aria-hidden="true" />
                             {user.proposalCount} / 정보 없음
                           </span>
                         ) : isLoadingLimits ? (
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-black text-slate-400">
-                            <FileText size={12} />
+                          <span
+                            className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-black text-slate-600"
+                            aria-label="제한 정보를 불러오는 중"
+                          >
+                            <FileText size={12} aria-hidden="true" />
                             {user.proposalCount} / 로딩 중...
                           </span>
                         ) : user.effectiveLimit !== null ? (
                           <span
+                            aria-label={`제안서 생성: ${user.proposalCount}개 / 제한: ${user.effectiveLimit}개${user.remainingCount !== null ? `, 남은 횟수: ${user.remainingCount}개${user.remainingCount <= 10 ? ' (경고)' : ''}` : ''}`}
                             className={`inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border px-5 py-2.5 text-xs font-black transition-all group-hover:scale-105 ${
                               user.remainingCount !== null && user.remainingCount <= 10
                                 ? 'border-orange-200 bg-orange-50 text-orange-600'
                                 : 'border-blue-100 bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white'
                             }`}
                           >
-                            <FileText size={12} />
+                            <FileText size={12} aria-hidden="true" />
                             {user.proposalCount} / {user.effectiveLimit}
                             {user.remainingCount !== null && user.remainingCount <= 10 && (
-                              <AlertTriangle size={12} className="ml-1" />
+                              <AlertTriangle
+                                size={12}
+                                className="ml-1"
+                                aria-label="남은 횟수 부족 경고"
+                              />
                             )}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-green-200 bg-green-50 px-5 py-2.5 text-xs font-black text-green-600 transition-all group-hover:bg-green-600 group-hover:text-white">
-                            <FileText size={12} />
+                          <span
+                            aria-label={`제안서 생성: ${user.proposalCount}개 / 제한: 무제한`}
+                            className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-green-200 bg-green-50 px-5 py-2.5 text-xs font-black text-green-600 transition-all group-hover:bg-green-600 group-hover:text-white"
+                          >
+                            <FileText size={12} aria-hidden="true" />
                             {user.proposalCount} / 무제한
                           </span>
                         )}
@@ -420,7 +487,12 @@ export default function AdminUsersPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-12 py-12 text-center">
+                  <td
+                    colSpan={6}
+                    className="px-12 py-12 text-center"
+                    role="status"
+                    aria-live="polite"
+                  >
                     <EmptyState searchQuery={searchQuery} defaultMessage="사용자가 없습니다." />
                   </td>
                 </tr>

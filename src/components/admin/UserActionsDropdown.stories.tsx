@@ -3,7 +3,7 @@ import UserActionsDropdown from './UserActionsDropdown';
 import type { UserWithStats } from '@/lib/supabase/admin/users';
 
 const meta = {
-  title: 'Admin/UserActionsDropdown',
+  title: 'Components/Admin/UserActionsDropdown',
   component: UserActionsDropdown,
   tags: ['autodocs'],
   argTypes: {

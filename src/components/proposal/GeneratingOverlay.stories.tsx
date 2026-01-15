@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import GeneratingOverlay from './GeneratingOverlay';
 
 const meta = {
-  title: 'Proposal/GeneratingOverlay',
+  title: 'Components/Proposal/GeneratingOverlay',
   component: GeneratingOverlay,
   parameters: {
     layout: 'fullscreen',

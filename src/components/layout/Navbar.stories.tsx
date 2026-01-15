@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
 const meta = {
-  title: 'Layout/Navbar',
+  title: 'Components/Layout/Navbar',
   component: Navbar,
   tags: ['autodocs'],
   parameters: {

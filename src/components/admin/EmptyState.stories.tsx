@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import EmptyState from './EmptyState';
 
 const meta = {
-  title: 'Admin/EmptyState',
+  title: 'Components/Admin/EmptyState',
   component: EmptyState,
   tags: ['autodocs'],
 } satisfies Meta<typeof EmptyState>;

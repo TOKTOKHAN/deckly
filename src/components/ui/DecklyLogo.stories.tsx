@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import DecklyLogo from './DecklyLogo';
 
 const meta = {
-  title: 'UI/DecklyLogo',
+  title: 'Components/UI/DecklyLogo',
   component: DecklyLogo,
   parameters: {
     layout: 'centered',

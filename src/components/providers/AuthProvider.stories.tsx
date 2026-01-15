@@ -46,7 +46,7 @@ import React from 'react';
  * - 앱의 최상위 레벨에서 한 번만 사용해야 합니다.
  */
 const meta = {
-  title: 'Providers/AuthProvider',
+  title: 'Components/Providers/AuthProvider',
   tags: ['autodocs'],
   parameters: {
     docsOnly: true,

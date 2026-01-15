@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import LoadingState from './LoadingState';
 
 const meta = {
-  title: 'Admin/LoadingState',
+  title: 'Components/Admin/LoadingState',
   component: LoadingState,
   tags: ['autodocs'],
 } satisfies Meta<typeof LoadingState>;

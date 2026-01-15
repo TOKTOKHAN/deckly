@@ -224,41 +224,45 @@ export default function AdminSettingsPage() {
 
   if (isLoadingDefault) {
     return (
-      <div className="animate-in fade-in space-y-10 duration-700">
-        <PageHeader
-          badge={{
-            icon: <Settings size={12} />,
-            text: 'System Configuration',
-            className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
-          }}
-          title="시스템 설정"
-          description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
-          showDate={false}
-          showUserAvatar={false}
-        />
-        <LoadingState message="설정을 불러오는 중..." />
+      <div role="status" aria-live="polite" aria-label="시스템 설정을 불러오는 중">
+        <div className="animate-in fade-in space-y-10 duration-700">
+          <PageHeader
+            badge={{
+              icon: <Settings size={12} />,
+              text: 'System Configuration',
+              className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
+            }}
+            title="시스템 설정"
+            description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
+            showDate={false}
+            showUserAvatar={false}
+          />
+          <LoadingState message="설정을 불러오는 중..." />
+        </div>
       </div>
     );
   }
 
   if (defaultLimitError) {
     return (
-      <div className="animate-in fade-in space-y-10 duration-700">
-        <PageHeader
-          badge={{
-            icon: <Settings size={12} />,
-            text: 'System Configuration',
-            className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
-          }}
-          title="시스템 설정"
-          description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
-          showDate={false}
-          showUserAvatar={false}
-        />
-        <ErrorState
-          error={defaultLimitError as Error}
-          onRetry={() => queryClient.invalidateQueries()}
-        />
+      <div role="alert" aria-live="assertive">
+        <div className="animate-in fade-in space-y-10 duration-700">
+          <PageHeader
+            badge={{
+              icon: <Settings size={12} />,
+              text: 'System Configuration',
+              className: 'border-indigo-100 bg-indigo-50 text-indigo-600',
+            }}
+            title="시스템 설정"
+            description="비즈니스 운영 정책 및 사용자 리소스 제한을 관리합니다."
+            showDate={false}
+            showUserAvatar={false}
+          />
+          <ErrorState
+            error={defaultLimitError as Error}
+            onRetry={() => queryClient.invalidateQueries()}
+          />
+        </div>
       </div>
     );
   }
@@ -289,7 +293,7 @@ export default function AdminSettingsPage() {
                 <h2 className="text-2xl font-black tracking-tight text-slate-900">
                   기본 생성 제한 설정
                 </h2>
-                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-600">
                   Default Provisioning Policy
                 </p>
               </div>
@@ -312,7 +316,7 @@ export default function AdminSettingsPage() {
                 <Input
                   type="number"
                   label="Limit Value"
-                  labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400"
+                  labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600"
                   value={defaultLimitInput}
                   onChange={e => setDefaultLimitInput(e.target.value)}
                   placeholder="예: 100"
@@ -333,7 +337,7 @@ export default function AdminSettingsPage() {
 
             <div className="mt-6 flex items-center gap-2 px-2">
               <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-600"></div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">
                 Active Setting:{' '}
                 {defaultLimitData?.limit !== null && defaultLimitData?.limit !== undefined
                   ? `${defaultLimitData.limit} Decks`
@@ -348,11 +352,11 @@ export default function AdminSettingsPage() {
               <div className="flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-orange-50 text-orange-600">
                 <Users size={28} />
               </div>
-    <div>
+              <div>
                 <h2 className="text-2xl font-black tracking-tight text-slate-900">
                   기존 사용자 일괄 적용
                 </h2>
-                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+                <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-600">
                   Bulk Resource Migration
                 </p>
               </div>
@@ -360,7 +364,7 @@ export default function AdminSettingsPage() {
 
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <p className="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
                   Target Audience Selection
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -375,7 +379,7 @@ export default function AdminSettingsPage() {
                     <div className="mb-2 flex items-center justify-between">
                       <span
                         className={`text-[10px] font-black uppercase tracking-widest ${
-                          batchTarget === 'null_only' ? 'text-indigo-600' : 'text-slate-400'
+                          batchTarget === 'null_only' ? 'text-indigo-600' : 'text-slate-600'
                         }`}
                       >
                         Segment 01
@@ -391,7 +395,7 @@ export default function AdminSettingsPage() {
                     >
                       제한이 없는 사용자만
                     </p>
-                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-400 opacity-60">
+                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-600 opacity-70">
                       Apply to users without individual limits only
                     </p>
                   </div>
@@ -406,7 +410,7 @@ export default function AdminSettingsPage() {
                     <div className="mb-2 flex items-center justify-between">
                       <span
                         className={`text-[10px] font-black uppercase tracking-widest ${
-                          batchTarget === 'all' ? 'text-orange-600' : 'text-slate-400'
+                          batchTarget === 'all' ? 'text-orange-600' : 'text-slate-600'
                         }`}
                       >
                         Segment 02
@@ -422,7 +426,7 @@ export default function AdminSettingsPage() {
                     >
                       모든 사용자 적용
                     </p>
-                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-400 opacity-60">
+                    <p className="mt-1 text-[10px] font-bold uppercase italic leading-relaxed text-slate-600 opacity-70">
                       Override all existing individual limits
                     </p>
                   </div>
@@ -434,7 +438,7 @@ export default function AdminSettingsPage() {
                   <Input
                     type="number"
                     label="Migration Value"
-                    labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400"
+                    labelClassName="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600"
                     value={batchLimitInput}
                     onChange={e => setBatchLimitInput(e.target.value)}
                     placeholder="예: 500"
@@ -453,7 +457,7 @@ export default function AdminSettingsPage() {
                     ? '적용 중...'
                     : '일괄 업데이트 실행'}
                 </Button>
-      </div>
+              </div>
 
               {batchTarget === 'all' && (
                 <div className="flex items-start gap-5 rounded-[2rem] border border-red-100 bg-red-50 p-8">

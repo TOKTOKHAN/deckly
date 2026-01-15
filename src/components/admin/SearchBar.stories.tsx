@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import SearchBar from './SearchBar';
 
 const meta = {
-  title: 'Admin/SearchBar',
+  title: 'Components/Admin/SearchBar',
   component: SearchBar,
   tags: ['autodocs'],
   argTypes: {

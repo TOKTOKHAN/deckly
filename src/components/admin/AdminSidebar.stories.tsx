@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import AdminSidebar from './AdminSidebar';
 
 const meta = {
-  title: 'Admin/AdminSidebar',
+  title: 'Components/Admin/AdminSidebar',
   component: AdminSidebar,
   tags: ['autodocs'],
   parameters: {

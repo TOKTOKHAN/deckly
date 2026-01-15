@@ -204,7 +204,11 @@ export default function AdminProposalsPage() {
 
   // 초기 로딩 시에만 전체 스켈레톤 표시
   if (isLoading && !proposals) {
-    return <ProposalsPageSkeleton />;
+    return (
+      <div role="status" aria-live="polite" aria-label="제안서 목록을 불러오는 중">
+        <ProposalsPageSkeleton />
+      </div>
+    );
   }
 
   return (
@@ -230,23 +234,28 @@ export default function AdminProposalsPage() {
         />
 
         {(proposalsError || countError) && (
-          <ErrorState
-            error={proposalsError || countError}
-            onRetry={() => {
-              refetchProposals();
-              refetchCount();
-            }}
-            title="데이터를 불러오는 중 오류가 발생했습니다."
-          />
+          <div role="alert" aria-live="assertive">
+            <ErrorState
+              error={proposalsError || countError}
+              onRetry={() => {
+                refetchProposals();
+                refetchCount();
+              }}
+              title="데이터를 불러오는 중 오류가 발생했습니다."
+            />
+          </div>
         )}
 
         {isFetching && proposals ? (
           // 필터 변경 시 테이블만 스켈레톤으로 표시
-          <ProposalsTableSkeleton rows={5} />
+          <div role="status" aria-live="polite" aria-label="제안서 목록을 업데이트하는 중">
+            <ProposalsTableSkeleton rows={5} />
+          </div>
         ) : paginatedProposals && paginatedProposals.length > 0 ? (
           <div className="overflow-hidden rounded-[3rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/40">
             <div className="overflow-x-auto">
-              <table className="w-full table-fixed text-left">
+              <table className="w-full table-fixed text-left" aria-label="제안서 목록">
+                <caption className="sr-only">제안서 목록 테이블</caption>
                 <colgroup>
                   <col className="w-[30%]" />
                   <col className="w-[15%]" />
@@ -256,13 +265,25 @@ export default function AdminProposalsPage() {
                   <col className="w-[10%]" />
                 </colgroup>
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                    <th className="py-6 pl-10">Project Name</th>
-                    <th className="px-6 py-6">Client</th>
-                    <th className="px-6 py-6 text-center">Status</th>
-                    <th className="px-6 py-6 text-center">Owner</th>
-                    <th className="px-3 py-6">Created At</th>
-                    <th className="px-3 py-6 text-center">Actions</th>
+                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
+                    <th scope="col" className="py-6 pl-10">
+                      Project Name
+                    </th>
+                    <th scope="col" className="px-6 py-6">
+                      Client
+                    </th>
+                    <th scope="col" className="px-6 py-6 text-center">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-6 text-center">
+                      Owner
+                    </th>
+                    <th scope="col" className="px-3 py-6">
+                      Created At
+                    </th>
+                    <th scope="col" className="px-3 py-6 text-center">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
@@ -273,7 +294,7 @@ export default function AdminProposalsPage() {
                           <div className="mb-1 text-sm font-black text-slate-900 transition-colors group-hover:text-blue-600">
                             {item.proposal.projectName}
                           </div>
-                          <div className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
+                          <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                             {item.proposal.id}
                           </div>
                         </div>
@@ -294,18 +315,28 @@ export default function AdminProposalsPage() {
                           </span>
                         </div>
                       </td>
-                      <td className="py-6 pl-2 text-xs font-bold text-slate-400">
-                        {item.proposal.createdAt
-                          ? new Date(item.proposal.createdAt).toLocaleDateString('ko-KR')
-                          : '-'}
+                      <td className="py-6 pl-2 text-xs font-bold text-slate-600">
+                        {item.proposal.createdAt ? (
+                          <time dateTime={item.proposal.createdAt}>
+                            {new Date(item.proposal.createdAt).toLocaleDateString('ko-KR')}
+                          </time>
+                        ) : (
+                          '-'
+                        )}
                       </td>
                       <td className="px-2 py-6 text-right">
                         <div className="flex items-center justify-center gap-2">
-                          <button className="rounded-xl p-2 text-slate-300 transition-all hover:bg-blue-50 hover:text-blue-600">
-                            <Eye size={18} />
+                          <button
+                            aria-label={`${item.proposal.projectName || '제안서'} 보기`}
+                            className="rounded-xl p-2 text-slate-500 transition-all hover:bg-blue-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          >
+                            <Eye size={18} aria-hidden="true" />
                           </button>
-                          <button className="rounded-xl p-2 text-slate-300 transition-all hover:bg-slate-100 hover:text-slate-600">
-                            <MoreVertical size={18} />
+                          <button
+                            aria-label={`${item.proposal.projectName || '제안서'} 작업 메뉴`}
+                            className="rounded-xl p-2 text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          >
+                            <MoreVertical size={18} aria-hidden="true" />
                           </button>
                         </div>
                       </td>
@@ -327,7 +358,9 @@ export default function AdminProposalsPage() {
             )}
           </div>
         ) : (
-          <EmptyState searchQuery={searchQuery} defaultMessage="제안서가 없습니다." />
+          <div role="status" aria-live="polite" aria-label="제안서 목록이 비어있습니다">
+            <EmptyState searchQuery={searchQuery} defaultMessage="제안서가 없습니다." />
+          </div>
         )}
       </main>
 

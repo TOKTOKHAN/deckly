@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/authStore';
 import type { User } from '@supabase/supabase-js';
 
 const meta = {
-  title: 'Admin/PageHeader',
+  title: 'Components/Admin/PageHeader',
   component: PageHeader,
   tags: ['autodocs'],
   decorators: [

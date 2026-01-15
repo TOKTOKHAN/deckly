@@ -59,7 +59,7 @@ import { useAuthStore } from '@/stores/authStore';
  * - `getOrCreateVisitorId`: 방문자 ID 관리 유틸리티
  */
 const meta = {
-  title: 'Tracking/VisitTracker',
+  title: 'Components/Tracking/VisitTracker',
   component: VisitTracker,
   tags: ['autodocs'],
   decorators: [

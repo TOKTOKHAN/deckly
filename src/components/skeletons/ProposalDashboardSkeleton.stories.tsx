@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import ProposalDashboardSkeleton from './ProposalDashboardSkeleton';
 
 const meta = {
-  title: 'Skeletons/ProposalDashboardSkeleton',
+  title: 'Components/Skeletons/ProposalDashboardSkeleton',
   component: ProposalDashboardSkeleton,
   tags: ['autodocs'],
   parameters: {

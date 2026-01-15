@@ -27,10 +27,17 @@ export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -55,7 +62,7 @@ export default function LandingPage() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2" aria-label="Deckly 홈으로 이동">
             <DecklyLogo className="h-8 w-auto text-indigo-600" />
           </Link>
 
@@ -69,6 +76,7 @@ export default function LandingPage() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
+                aria-label={`${item.label} 섹션으로 이동`}
                 className="text-sm font-bold text-slate-600 transition-colors hover:text-blue-600"
               >
                 {item.label}
@@ -87,7 +95,13 @@ export default function LandingPage() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+          >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -95,10 +109,20 @@ export default function LandingPage() {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="animate-in slide-in-from-top fixed inset-0 z-40 flex flex-col gap-6 bg-white p-6 duration-300 md:hidden">
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="메인 메뉴"
+          className="animate-in slide-in-from-top fixed inset-0 z-40 flex flex-col gap-6 bg-white p-6 duration-300 md:hidden"
+        >
           <div className="mb-10 mt-16 flex items-center justify-between">
             <DecklyLogo className="h-8 w-auto text-indigo-600" />
-            <button onClick={() => setIsMenuOpen(false)} className="text-slate-400">
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="메뉴 닫기"
+              className="text-slate-500"
+            >
               <X size={24} />
             </button>
           </div>
@@ -110,6 +134,7 @@ export default function LandingPage() {
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
+              aria-label={`${item.label} 섹션으로 이동`}
               className="text-left text-2xl font-black text-slate-800"
             >
               {item.label}
@@ -132,7 +157,7 @@ export default function LandingPage() {
 
       {/* 2. Hero Section */}
       <section className="relative overflow-hidden pb-24 pt-32 md:pb-40 md:pt-48">
-        <div className="absolute left-[-5%] top-[-10%] -z-10 h-[600px] w-[600px] animate-pulse rounded-full bg-blue-50 opacity-70 blur-3xl"></div>
+        <div className="absolute left-[-5%] top-[-10%] -z-10 h-[600px] w-[600px] rounded-full bg-blue-50 opacity-70 blur-3xl"></div>
 
         <div className="mx-auto max-w-7xl px-6 text-center">
           <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">
@@ -146,7 +171,7 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p className="mx-auto mb-16 max-w-3xl px-4 text-lg font-medium leading-relaxed text-slate-500 md:text-2xl">
+          <p className="mx-auto mb-16 max-w-3xl px-4 text-lg font-medium leading-relaxed text-slate-600 md:text-2xl">
             정리되지 않은 수많은 대화 속에서 핵심 비즈니스 로직을 추출합니다.{' '}
             <br className="hidden md:block" />
             Deckly 가 당신의 미팅 전사록을 가장 완벽한 제안서로 재구성합니다.
@@ -160,6 +185,7 @@ export default function LandingPage() {
               onClick={handleInquiryClick}
               icon={<ArrowRight size={20} />}
               iconPosition="right"
+              aria-label="문의하기 - 새 창에서 열림"
               className="w-full rounded-2xl px-12 py-5 text-xl font-black shadow-2xl shadow-slate-200 transition-all hover:scale-105 md:w-auto"
             >
               문의하기
@@ -196,7 +222,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <h4 className="mb-1 font-black text-slate-800">{item.t}</h4>
-                    <p className="text-sm font-medium text-slate-500">{item.d}</p>
+                    <p className="text-sm font-medium text-slate-600">{item.d}</p>
                   </div>
                 </div>
               ))}
@@ -218,7 +244,7 @@ export default function LandingPage() {
                 <Clock size={24} />
               </div>
               <div>
-                <p className="mb-1 text-xs font-black uppercase leading-none tracking-widest text-slate-400">
+                <p className="mb-1 text-xs font-black uppercase leading-none tracking-widest text-slate-500">
                   Writing Time
                 </p>
                 <p className="text-xl font-black text-blue-600">72시간 → 5분</p>
@@ -235,7 +261,7 @@ export default function LandingPage() {
             <h2 className="mb-6 text-4xl font-black tracking-tight tracking-tighter text-slate-900 md:text-6xl">
               Deckly 워크플로우
             </h2>
-            <p className="text-lg font-medium text-slate-500 md:text-xl">
+            <p className="text-lg font-medium text-slate-600 md:text-xl">
               대화가 문자가 되고, 문자가 전략이 되는 과정
             </p>
           </div>
@@ -281,7 +307,7 @@ export default function LandingPage() {
                   STEP {item.step}
                 </span>
                 <h4 className="mb-4 text-xl font-black text-slate-900">{item.title}</h4>
-                <p className="text-sm font-medium leading-relaxed text-slate-500">{item.desc}</p>
+                <p className="text-sm font-medium leading-relaxed text-slate-600">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -318,7 +344,7 @@ export default function LandingPage() {
                       <div className="h-2 w-2 rounded-full bg-blue-500 transition-all group-hover:w-8"></div>
                       <h4 className="text-xl font-black">{feature.t}</h4>
                     </div>
-                    <p className="ml-6 font-medium text-slate-400 md:ml-12">{feature.d}</p>
+                    <p className="ml-6 font-medium text-slate-300 md:ml-12">{feature.d}</p>
                   </div>
                 ))}
               </div>
@@ -329,10 +355,11 @@ export default function LandingPage() {
                 <div className="relative aspect-[4/3] -rotate-3 transform overflow-hidden rounded-[2.5rem] border-4 border-slate-700 bg-slate-800 shadow-2xl transition-transform duration-500 hover:rotate-0">
                   <Image
                     src="/images/inputs-screenshot.png"
-                    alt="Meeting Transcription Screenshot"
+                    alt="미팅 전사록 입력 화면 - 사용자가 미팅 전사록을 입력하는 인터페이스 화면"
                     fill
-                    quality={95}
-                    priority
+                    quality={80}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading="lazy"
                     className="object-cover opacity-90 group-hover:opacity-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
@@ -345,10 +372,11 @@ export default function LandingPage() {
                 <div className="relative aspect-[4/3] rotate-3 transform overflow-hidden rounded-[2.5rem] border-4 border-slate-100 bg-white shadow-[0_30px_60px_rgba(0,0,0,0.3)] transition-transform duration-500 hover:rotate-0">
                   <Image
                     src="/images/transcript-screenshot.png"
-                    alt="Generated Proposal Screenshot"
+                    alt="생성된 제안서 미리보기 - AI가 생성한 전문적인 제안서 레이아웃과 디자인"
                     fill
-                    quality={95}
-                    priority
+                    quality={80}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading="lazy"
                     className="object-cover"
                   />
                 </div>
@@ -370,7 +398,7 @@ export default function LandingPage() {
               <div>
                 <Zap className="mb-8 text-blue-600" size={40} />
                 <h3 className="mb-6 text-3xl font-black text-slate-900">초고속 엔진</h3>
-                <p className="text-lg font-medium leading-relaxed text-slate-500">
+                <p className="text-lg font-medium leading-relaxed text-slate-600">
                   수시간 분량의 미팅 녹취록도 수분 내에 파악합니다. 핵심 주제 분류부터 세부 액션
                   아이템 도출까지, 당신이 생각하는 속도보다 빠르게 제안서를 설계합니다.
                 </p>
@@ -386,7 +414,7 @@ export default function LandingPage() {
                 <h3 className="mb-6 text-3xl font-black text-slate-900">
                   승률을 높이는 전략 인사이트
                 </h3>
-                <p className="text-lg font-medium leading-relaxed text-slate-500">
+                <p className="text-lg font-medium leading-relaxed text-slate-600">
                   AI가 계약 성사 확률을 높이는 최적의 구조와 핵심 문구를 추천합니다. 단순한 기록
                   정리가 아닌, 고객을 설득하는 가장 강력한 도구가 되어 드립니다.
                 </p>
@@ -419,6 +447,7 @@ export default function LandingPage() {
                   variant="primary"
                   size="lg"
                   onClick={handleInquiryClick}
+                  aria-label="지금 상담받기 - 새 창에서 열림"
                   className="w-full rounded-3xl bg-white px-16 py-6 text-2xl font-black !text-indigo-600 shadow-2xl transition-all hover:scale-110 hover:bg-white hover:!text-indigo-700 active:scale-95 md:w-auto"
                 >
                   지금 상담받기

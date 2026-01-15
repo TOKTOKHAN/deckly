@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Pagination from './Pagination';
 
 const meta = {
-  title: 'Admin/Pagination',
+  title: 'Components/Admin/Pagination',
   component: Pagination,
   tags: ['autodocs'],
   argTypes: {

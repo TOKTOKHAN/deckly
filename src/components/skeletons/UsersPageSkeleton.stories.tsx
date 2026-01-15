@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/authStore';
 import type { User } from '@supabase/supabase-js';
 
 const meta = {
-  title: 'Skeletons/UsersPageSkeleton',
+  title: 'Components/Skeletons/UsersPageSkeleton',
   component: UsersPageSkeleton,
   tags: ['autodocs'],
   parameters: {

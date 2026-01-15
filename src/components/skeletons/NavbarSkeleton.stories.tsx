@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import NavbarSkeleton from './NavbarSkeleton';
 
 const meta = {
-  title: 'Skeletons/NavbarSkeleton',
+  title: 'Components/Skeletons/NavbarSkeleton',
   component: NavbarSkeleton,
   tags: ['autodocs'],
   parameters: {

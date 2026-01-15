@@ -43,14 +43,20 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="animate-in fade-in space-y-12 duration-700">
-        <DashboardPageSkeleton />
+      <div role="status" aria-live="polite" aria-label="대시보드 통계를 불러오는 중">
+        <div className="animate-in fade-in space-y-12 duration-700">
+          <DashboardPageSkeleton />
+        </div>
       </div>
     );
   }
 
   if (error) {
-    return <ErrorState error={error} onRetry={() => refetch()} />;
+    return (
+      <div role="alert" aria-live="assertive">
+        <ErrorState error={error} onRetry={() => refetch()} />
+      </div>
+    );
   }
 
   // 성공률 계산
@@ -143,7 +149,7 @@ export default function AdminDashboard() {
                 <AlertCircle size={32} />
               </div>
               <div>
-                <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-slate-600">
                   Error Log
                 </p>
                 <p className="text-3xl font-black text-slate-900">{stats?.errorProposals || 0}</p>
@@ -154,7 +160,7 @@ export default function AdminDashboard() {
                 <Clock size={32} />
               </div>
               <div>
-                <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-slate-600">
                   Generating
                 </p>
                 <p className="text-3xl font-black text-slate-900">
@@ -176,7 +182,7 @@ export default function AdminDashboard() {
               </div>
               <div className="space-y-2">
                 <div className="mb-1 flex items-center justify-between">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-200">
                     Efficiency Ratio
                   </p>
                   <span className="text-[10px] font-bold text-blue-400">{efficiencyRatio}%</span>
@@ -256,7 +262,7 @@ export default function AdminDashboard() {
               })}
             </div>
             <div className="mt-12 flex items-center justify-between border-t border-slate-50 pt-8">
-              <p className="text-[10px] font-bold uppercase italic text-slate-400">
+              <p className="text-[10px] font-bold uppercase italic text-slate-600">
                 마지막 갱신: {formattedTime}
               </p>
               <Link

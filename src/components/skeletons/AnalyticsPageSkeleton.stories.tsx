@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import AnalyticsPageSkeleton from './AnalyticsPageSkeleton';
 
 const meta = {
-  title: 'Skeletons/AnalyticsPageSkeleton',
+  title: 'Components/Skeletons/AnalyticsPageSkeleton',
   component: AnalyticsPageSkeleton,
   tags: ['autodocs'],
   parameters: {

@@ -50,33 +50,43 @@ export default function UserActionsDropdown({ user, onEdit, onDelete }: UserActi
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="rounded-xl p-2.5 text-slate-300 transition-all hover:bg-blue-50 hover:text-blue-600"
-        aria-label="사용자 작업 메뉴"
+        aria-label={`${user.email || '사용자'} 작업 메뉴`}
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        className="rounded-xl p-2.5 text-slate-300 transition-all hover:bg-blue-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
-        <MoreVertical size={20} />
+        <MoreVertical size={20} aria-hidden="true" />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-48 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-200/50">
+        <div
+          role="menu"
+          aria-label="사용자 작업 옵션"
+          className="absolute right-0 top-full z-50 mt-2 w-48 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-200/50"
+        >
           <div className="p-2">
             <button
+              role="menuitem"
               onClick={() => {
                 onEdit(user);
                 setIsOpen(false);
               }}
-              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-bold text-slate-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
+              aria-label={`${user.email || '사용자'} 정보 수정`}
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-bold text-slate-700 transition-colors hover:bg-blue-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <Edit size={16} />
+              <Edit size={16} aria-hidden="true" />
               <span>수정</span>
             </button>
             <button
+              role="menuitem"
               onClick={() => {
                 onDelete(user);
                 setIsOpen(false);
               }}
-              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+              aria-label={`${user.email || '사용자'} 삭제`}
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-bold text-red-600 transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
-              <Trash2 size={16} />
+              <Trash2 size={16} aria-hidden="true" />
               <span>삭제</span>
             </button>
           </div>
