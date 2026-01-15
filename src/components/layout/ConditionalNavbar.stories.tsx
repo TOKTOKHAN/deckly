@@ -3,7 +3,7 @@ import ConditionalNavbar from './ConditionalNavbar';
 import { NotFoundProvider } from '@/contexts/NotFoundContext';
 
 const meta = {
-  title: 'Layout/ConditionalNavbar',
+  title: 'Components/Layout/ConditionalNavbar',
   component: ConditionalNavbar,
   tags: ['autodocs'],
   parameters: {

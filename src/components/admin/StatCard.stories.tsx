@@ -3,7 +3,7 @@ import { Users, FileText, TrendingUp, DollarSign } from 'lucide-react';
 import StatCard from './StatCard';
 
 const meta = {
-  title: 'Admin/StatCard',
+  title: 'Components/Admin/StatCard',
   component: StatCard,
   parameters: {
     layout: 'padded',

@@ -3,7 +3,7 @@ import ProposalCard from './ProposalCard';
 import type { Proposal } from '@/types/proposal';
 
 const meta = {
-  title: 'Proposal/ProposalCard',
+  title: 'Components/Proposal/ProposalCard',
   component: ProposalCard,
   parameters: {
     layout: 'padded',

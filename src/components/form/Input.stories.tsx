@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Input from './Input';
 
 const meta = {
-  title: 'Form/Input',
+  title: 'Components/Form/Input',
   component: Input,
   parameters: {
     layout: 'padded',

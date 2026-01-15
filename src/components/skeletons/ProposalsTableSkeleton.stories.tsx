@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import ProposalsTableSkeleton from './ProposalsTableSkeleton';
 
 const meta = {
-  title: 'Skeletons/ProposalsTableSkeleton',
+  title: 'Components/Skeletons/ProposalsTableSkeleton',
   component: ProposalsTableSkeleton,
   tags: ['autodocs'],
   parameters: {

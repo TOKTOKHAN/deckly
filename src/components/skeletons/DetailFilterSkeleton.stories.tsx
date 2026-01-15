@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import DetailFilterSkeleton from './DetailFilterSkeleton';
 
 const meta = {
-  title: 'Skeletons/DetailFilterSkeleton',
+  title: 'Components/Skeletons/DetailFilterSkeleton',
   component: DetailFilterSkeleton,
   tags: ['autodocs'],
   parameters: {

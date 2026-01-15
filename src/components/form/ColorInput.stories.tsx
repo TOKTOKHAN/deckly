@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ColorInput from './ColorInput';
 
 const meta = {
-  title: 'Form/ColorInput',
+  title: 'Components/Form/ColorInput',
   component: ColorInput,
   parameters: {
     layout: 'padded',

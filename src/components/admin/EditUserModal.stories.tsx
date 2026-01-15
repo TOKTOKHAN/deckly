@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
 const meta = {
-  title: 'Admin/EditUserModal',
+  title: 'Components/Admin/EditUserModal',
   component: EditUserModal,
   tags: ['autodocs'],
   decorators: [

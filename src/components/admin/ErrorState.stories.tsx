@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import ErrorState from './ErrorState';
 
 const meta = {
-  title: 'Admin/ErrorState',
+  title: 'Components/Admin/ErrorState',
   component: ErrorState,
   tags: ['autodocs'],
   argTypes: {

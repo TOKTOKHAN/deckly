@@ -13,7 +13,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'Icons',
+  title: 'Components/Icons',
   tags: ['autodocs'],
 } satisfies Meta;
 

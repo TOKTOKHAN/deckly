@@ -3,7 +3,7 @@ import ResultView from './ResultView';
 import type { Proposal } from '@/types/proposal';
 
 const meta = {
-  title: 'Proposal/ResultView',
+  title: 'Components/Proposal/ResultView',
   component: ResultView,
   parameters: {
     layout: 'fullscreen',

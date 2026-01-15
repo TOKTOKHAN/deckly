@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import StatCardSkeleton from './StatCardSkeleton';
 
 const meta = {
-  title: 'Skeletons/StatCardSkeleton',
+  title: 'Components/Skeletons/StatCardSkeleton',
   component: StatCardSkeleton,
   tags: ['autodocs'],
   parameters: {

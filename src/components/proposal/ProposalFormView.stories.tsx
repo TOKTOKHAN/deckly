@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import React, { useEffect } from 'react';
 import ProposalFormView from './ProposalFormView';
 import type { Proposal, GenerationStatus } from '@/types/proposal';
+import { useProposalFormStore } from '@/stores/proposalFormStore';
 
 const meta = {
-  title: 'Proposal/ProposalFormView',
+  title: 'Components/Proposal/ProposalFormView',
   component: ProposalFormView,
   parameters: {
     layout: 'fullscreen',
@@ -13,7 +15,6 @@ const meta = {
     onCreateNew: { action: 'createNew' },
     onSelectProposal: { action: 'selectProposal' },
     onDeleteProposal: { action: 'deleteProposal' },
-    onStepChange: { action: 'stepChange' },
     onCloseForm: { action: 'closeForm' },
     onSubmitForm: { action: 'submitForm' },
     onBackFromResult: { action: 'backFromResult' },
@@ -87,7 +88,6 @@ const defaultHandlers = {
   onCreateNew: () => {},
   onSelectProposal: () => {},
   onDeleteProposal: () => {},
-  onStepChange: () => {},
   onCloseForm: () => {},
   onSubmitForm: async () => {},
   onBackFromResult: () => {},
@@ -97,132 +97,281 @@ const defaultHandlers = {
   onConfirmDelete: () => {},
 };
 
+// Store 초기화를 위한 래퍼 컴포넌트
+const ProposalFormViewWrapper = ({
+  view,
+  step,
+  currentProposal,
+  proposalToDelete,
+  isGenerating,
+  genStatus,
+  formError,
+  resultError,
+  ...props
+}: React.ComponentProps<typeof ProposalFormView> & {
+  view?: 'dashboard' | 'form' | 'result';
+  step?: number;
+  currentProposal?: Proposal | null;
+  proposalToDelete?: Proposal | null;
+  isGenerating?: boolean;
+  genStatus?: GenerationStatus;
+  formError?: string | null;
+  resultError?: string | null;
+}) => {
+  const setView = useProposalFormStore(state => state.setView);
+  const setStep = useProposalFormStore(state => state.setStep);
+  const setCurrentProposal = useProposalFormStore(state => state.setCurrentProposal);
+  const setProposalToDelete = useProposalFormStore(state => state.setProposalToDelete);
+  const setIsGenerating = useProposalFormStore(state => state.setIsGenerating);
+  const setGenStatus = useProposalFormStore(state => state.setGenStatus);
+  const setFormError = useProposalFormStore(state => state.setFormError);
+  const setResultError = useProposalFormStore(state => state.setResultError);
+
+  useEffect(() => {
+    if (view !== undefined) setView(view);
+    if (step !== undefined) setStep(step);
+    if (currentProposal !== undefined) setCurrentProposal(currentProposal);
+    if (proposalToDelete !== undefined) setProposalToDelete(proposalToDelete);
+    if (isGenerating !== undefined) setIsGenerating(isGenerating);
+    if (genStatus !== undefined) setGenStatus(genStatus);
+    if (formError !== undefined) setFormError(formError);
+    if (resultError !== undefined) setResultError(resultError);
+  }, [
+    view,
+    step,
+    currentProposal,
+    proposalToDelete,
+    isGenerating,
+    genStatus,
+    formError,
+    resultError,
+    setView,
+    setStep,
+    setCurrentProposal,
+    setProposalToDelete,
+    setIsGenerating,
+    setGenStatus,
+    setFormError,
+    setResultError,
+  ]);
+
+  return <ProposalFormView {...props} />;
+};
+
 // Dashboard View
 export const DashboardView: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="dashboard"
+      step={1}
+      currentProposal={null}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    view: 'dashboard',
     proposals: mockProposals,
-    currentProposal: null,
-    step: 1,
     isProposalsLoading: false,
-    isGenerating: false,
-    genStatus: defaultGenStatus,
-    proposalToDelete: null,
-    formError: null,
-    resultError: null,
     ...defaultHandlers,
   },
 };
 
 export const DashboardViewLoading: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="dashboard"
+      step={1}
+      currentProposal={null}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    ...DashboardView.args,
+    proposals: mockProposals,
     isProposalsLoading: true,
+    ...defaultHandlers,
   },
 };
 
 export const DashboardViewEmpty: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="dashboard"
+      step={1}
+      currentProposal={null}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    ...DashboardView.args,
     proposals: [],
+    isProposalsLoading: false,
+    ...defaultHandlers,
   },
 };
 
 // Form View
 export const FormView: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="form"
+      step={1}
+      currentProposal={null}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    view: 'form',
     proposals: [],
-    currentProposal: null,
-    step: 1,
     isProposalsLoading: false,
-    isGenerating: false,
-    genStatus: defaultGenStatus,
-    proposalToDelete: null,
-    formError: null,
-    resultError: null,
     ...defaultHandlers,
   },
 };
 
 export const FormViewStep2: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="form"
+      step={2}
+      currentProposal={null}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    ...FormView.args,
-    step: 2,
-  },
-};
-
-export const FormViewStep3: Story = {
-  args: {
-    ...FormView.args,
-    step: 3,
+    proposals: [],
+    isProposalsLoading: false,
+    ...defaultHandlers,
   },
 };
 
 export const FormViewError: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="form"
+      step={1}
+      currentProposal={null}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError="제안서 생성 중 오류가 발생했습니다."
+      resultError={null}
+    />
+  ),
   args: {
-    ...FormView.args,
-    formError: '제안서 생성 중 오류가 발생했습니다.',
+    proposals: [],
+    isProposalsLoading: false,
+    ...defaultHandlers,
   },
 };
 
 // Result View
 export const ResultView: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="result"
+      step={1}
+      currentProposal={mockProposal}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    view: 'result',
     proposals: [],
-    currentProposal: mockProposal,
-    step: 1,
     isProposalsLoading: false,
-    isGenerating: false,
-    genStatus: defaultGenStatus,
-    proposalToDelete: null,
-    formError: null,
-    resultError: null,
     ...defaultHandlers,
   },
 };
 
 export const ResultViewError: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="result"
+      step={1}
+      currentProposal={mockProposal}
+      proposalToDelete={null}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError="제안서 업데이트 중 오류가 발생했습니다."
+    />
+  ),
   args: {
-    ...ResultView.args,
-    resultError: '제안서 업데이트 중 오류가 발생했습니다.',
+    proposals: [],
+    isProposalsLoading: false,
+    ...defaultHandlers,
   },
 };
 
 // Generating State
 export const Generating: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="dashboard"
+      step={1}
+      currentProposal={null}
+      proposalToDelete={null}
+      isGenerating={true}
+      genStatus={{
+        progress: 60,
+        message: 'AI가 상세 내용을 작성하는 중...',
+      }}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    view: 'dashboard',
     proposals: mockProposals,
-    currentProposal: null,
-    step: 1,
     isProposalsLoading: false,
-    isGenerating: true,
-    genStatus: {
-      progress: 60,
-      message: 'AI가 상세 내용을 작성하는 중...',
-    },
-    proposalToDelete: null,
-    formError: null,
-    resultError: null,
     ...defaultHandlers,
   },
 };
 
 // Delete Modal
 export const DeleteModal: Story = {
+  render: args => (
+    <ProposalFormViewWrapper
+      {...args}
+      view="dashboard"
+      step={1}
+      currentProposal={null}
+      proposalToDelete={mockProposal}
+      isGenerating={false}
+      genStatus={defaultGenStatus}
+      formError={null}
+      resultError={null}
+    />
+  ),
   args: {
-    view: 'dashboard',
     proposals: mockProposals,
-    currentProposal: null,
-    step: 1,
     isProposalsLoading: false,
-    isGenerating: false,
-    genStatus: defaultGenStatus,
-    proposalToDelete: mockProposal,
-    formError: null,
-    resultError: null,
     ...defaultHandlers,
   },
 };

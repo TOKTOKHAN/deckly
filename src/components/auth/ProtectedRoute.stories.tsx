@@ -70,7 +70,7 @@ import React from 'react';
  * - 리다이렉트는 클라이언트 사이드에서 발생합니다.
  */
 const meta = {
-  title: 'Auth/ProtectedRoute',
+  title: 'Components/Auth/ProtectedRoute',
   tags: ['autodocs'],
   parameters: {
     docsOnly: true,

@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import ProposalFormContainer from './ProposalFormContainer';
 
 const meta = {
-  title: 'Proposal/ProposalFormContainer',
+  title: 'Components/Proposal/ProposalFormContainer',
   component: ProposalFormContainer,
   parameters: {
     layout: 'fullscreen',

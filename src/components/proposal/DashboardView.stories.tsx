@@ -3,7 +3,7 @@ import DashboardView from './DashboardView';
 import type { Proposal } from '@/types/proposal';
 
 const meta = {
-  title: 'Proposal/DashboardView',
+  title: 'Components/Proposal/DashboardView',
   component: DashboardView,
   parameters: {
     layout: 'fullscreen',

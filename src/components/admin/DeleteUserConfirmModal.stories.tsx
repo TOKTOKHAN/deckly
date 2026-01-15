@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
 const meta = {
-  title: 'Admin/DeleteUserConfirmModal',
+  title: 'Components/Admin/DeleteUserConfirmModal',
   component: DeleteUserConfirmModal,
   tags: ['autodocs'],
   decorators: [

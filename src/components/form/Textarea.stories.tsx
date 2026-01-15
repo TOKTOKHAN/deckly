@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Textarea from './Textarea';
 
 const meta = {
-  title: 'Form/Textarea',
+  title: 'Components/Form/Textarea',
   component: Textarea,
   parameters: {
     layout: 'padded',
