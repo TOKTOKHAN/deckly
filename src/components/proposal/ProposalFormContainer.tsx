@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { ProposalFormData, Proposal } from '@/types/proposal';
 import { getProposals } from '@/lib/supabase/proposals';
@@ -12,6 +12,7 @@ import { useGenerateProposal } from '@/hooks/useGenerateProposal';
 import ProposalFormView from './ProposalFormView';
 
 export default function ProposalFormContainer() {
+  const queryClient = useQueryClient();
   const { user, isLoading: isAuthLoading } = useAuthStore();
   const {
     proposalToDelete,
@@ -27,12 +28,22 @@ export default function ProposalFormContainer() {
     backFromResult,
   } = useProposalFormStore();
 
+  // 캐시에 데이터가 있는지 확인하여 refetchOnMount 조건부 설정
+  const queryKey = ['proposals', user?.id];
+  const hasCachedData = !!queryClient.getQueryData(queryKey);
+
   // React Query로 제안서 목록 조회 (인증 상태가 준비된 후에만 실행)
   const { data: proposals = [], isLoading: isProposalsLoading } = useQuery({
-    queryKey: ['proposals'],
-    queryFn: getProposals,
-    enabled: !!user && !isAuthLoading, // 인증 상태가 준비된 후에만 실행
+    queryKey,
+    queryFn: () => getProposals(user!.id),
+    enabled: !!user?.id && !isAuthLoading, // user.id가 확실히 있을 때만 실행
+    // 캐시에 데이터가 있으면 refetchOnMount: false, 없으면 true
+    refetchOnMount: !hasCachedData,
+    staleTime: 1000 * 60 * 5, // 5분간 캐시 유효 (불필요한 재요청 방지)
   });
+
+  // 인증 로딩과 제안서 로딩을 통합하여 하나의 로딩 상태로 관리
+  const isLoading = isAuthLoading || isProposalsLoading;
 
   // Mutation 훅 사용
   const { createMutation, updateMutation, deleteMutation } = useProposalMutations();
@@ -193,7 +204,7 @@ export default function ProposalFormContainer() {
   return (
     <ProposalFormView
       proposals={proposals}
-      isProposalsLoading={isProposalsLoading}
+      isLoading={isLoading}
       onSubmitForm={handleSubmitForm}
       onRegenerate={handleRegenerate}
       onUpdateProposal={handleUpdateProposal}

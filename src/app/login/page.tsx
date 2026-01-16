@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useQueryClient } from '@tanstack/react-query';
 import { Mail, Lock, ArrowRight, ChevronLeft, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/form/Input';
@@ -13,9 +14,11 @@ import { loginSchema, type LoginFormData } from '@/lib/validations/authSchema';
 import { supabase } from '@/lib/supabase/client';
 import { useAuthStore } from '@/stores/authStore';
 import { useRequireGuest } from '@/hooks/useRequireGuest';
+import { getProposals } from '@/lib/supabase/proposals';
 
 export default function LoginPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { initialize } = useAuthStore();
   // 로그인한 사용자는 대시보드로 리다이렉트
   useRequireGuest();
@@ -93,7 +96,23 @@ export default function LoginPage() {
         // 인증 상태 업데이트 대기
         await initialize();
 
-        // 상태 업데이트 완료 후 대시보드로 이동
+        // 제안서 목록 쿼리 프리페칭 (백그라운드에서 비동기로 실행, await 하지 않음)
+        const userId = authData.user.id;
+        if (userId) {
+          // 프리페칭을 await 하지 않고 백그라운드에서 실행하여 페이지 이동 지연 방지
+          queryClient
+            .prefetchQuery({
+              queryKey: ['proposals', userId],
+              queryFn: () => getProposals(userId),
+            })
+            .catch(error => {
+              // 프리페칭 실패해도 로그인은 계속 진행
+              // eslint-disable-next-line no-console
+              console.warn('제안서 목록 프리페칭 실패:', error);
+            });
+        }
+
+        // 프리페칭 완료를 기다리지 않고 즉시 대시보드로 이동
         router.push('/dashboard');
       }
     } catch (error) {

@@ -6,6 +6,7 @@ import apiClient from '@/lib/axios/client';
 import { Proposal } from '@/types/proposal';
 import { updateProposal, deleteProposal } from '@/lib/supabase/proposals';
 import { supabase } from '@/lib/supabase/client';
+import { useAuthStore } from '@/stores/authStore';
 
 /**
  * 제안서 관련 Mutation들을 관리하는 커스텀 훅
@@ -15,6 +16,7 @@ import { supabase } from '@/lib/supabase/client';
  */
 export function useProposalMutations() {
   const queryClient = useQueryClient();
+  const { user } = useAuthStore();
 
   // 제안서 생성 Mutation (API 호출)
   const createMutation = useMutation({
@@ -43,7 +45,7 @@ export function useProposalMutations() {
     },
     onSuccess: () => {
       // 제안서 목록 자동 리프레시
-      queryClient.invalidateQueries({ queryKey: ['proposals'] });
+      queryClient.invalidateQueries({ queryKey: ['proposals', user?.id] });
     },
     onError: (error: Error) => {
       console.error('제안서 생성 Mutation 오류:', error);
@@ -56,7 +58,7 @@ export function useProposalMutations() {
     mutationFn: updateProposal,
     onSuccess: () => {
       // 제안서 목록 자동 리프레시
-      queryClient.invalidateQueries({ queryKey: ['proposals'] });
+      queryClient.invalidateQueries({ queryKey: ['proposals', user?.id] });
     },
     onError: (error: Error) => {
       console.error('제안서 업데이트 Mutation 오류:', error);

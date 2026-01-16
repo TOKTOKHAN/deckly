@@ -53,7 +53,7 @@ const ResultView = lazy(() => retryImport(() => import('./ResultView')));
 
 interface ProposalFormViewProps {
   proposals: Proposal[];
-  isProposalsLoading: boolean;
+  isLoading: boolean;
   onSubmitForm: (data: ProposalFormData) => Promise<void>;
   onRegenerate: (proposalId: string, data: ProposalFormData) => Promise<void>;
   onUpdateProposal: (updatedProposal: Proposal) => Promise<void>;
@@ -68,7 +68,7 @@ interface ProposalFormViewProps {
 
 export default function ProposalFormView({
   proposals,
-  isProposalsLoading,
+  isLoading,
   onSubmitForm,
   onRegenerate,
   onUpdateProposal,
@@ -95,7 +95,7 @@ export default function ProposalFormView({
       <main className="pb-20">
         {view === 'dashboard' && (
           <>
-            {isProposalsLoading ? (
+            {isLoading ? (
               <div role="status" aria-live="polite" aria-label="제안서 목록을 불러오는 중">
                 <ProposalDashboardSkeleton includeWrapper={false} />
               </div>
