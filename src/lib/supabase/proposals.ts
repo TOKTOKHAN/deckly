@@ -116,20 +116,21 @@ function proposalToRow(
 }
 
 // ProposalRow → Proposal 변환
-function rowToProposal(row: ProposalRow): Proposal {
-  const metadata = row.metadata || ({} as ProposalMetadata);
+// 목록 조회 시 content와 meeting_notes는 undefined일 수 있음 (최적화를 위해 제외)
+function rowToProposal(row: Partial<ProposalRow>): Proposal {
+  const metadata = (row.metadata || {}) as ProposalMetadata;
 
   return {
-    id: row.id,
-    projectName: row.title,
-    clientCompanyName: row.client,
-    transcriptText: row.meeting_notes,
-    content: row.content || undefined,
-    status: row.status,
+    id: row.id!,
+    projectName: row.title!,
+    clientCompanyName: row.client!,
+    transcriptText: row.meeting_notes || '', // 목록 조회 시 undefined일 수 있음
+    content: row.content || undefined, // 목록 조회 시 undefined일 수 있음
+    status: row.status!,
     progress: row.progress || undefined,
     error: row.error || undefined,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    createdAt: row.created_at!,
+    updatedAt: row.updated_at!,
 
     // metadata에서 복원
     // 기본 정보
@@ -166,35 +167,31 @@ function rowToProposal(row: ProposalRow): Proposal {
 }
 
 // 제안서 목록 조회 (현재 사용자의 제안서만)
-export async function getProposals(): Promise<Proposal[]> {
+export async function getProposals(userId: string): Promise<Proposal[]> {
   if (!supabase) {
     throw new Error('Supabase가 설정되지 않았습니다.');
   }
 
+  if (!userId) {
+    // 사용자 ID가 없으면 빈 배열 반환
+    return [];
+  }
+
   try {
-    // 현재 로그인한 사용자 확인
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      // 로그인하지 않은 경우 빈 배열 반환
-      return [];
-    }
-
+    // 목록 조회 시 큰 필드(content, meeting_notes)는 제외하여 네트워크 크기 최적화
     const { data, error } = await supabase
       .from('proposals')
-      .select('*')
-      .eq('user_id', user.id) // 현재 사용자의 제안서만 조회
+      .select('id, title, client, status, progress, error, created_at, updated_at, metadata')
+      .eq('user_id', userId) // 현재 사용자의 제안서만 조회
       .order('created_at', { ascending: false });
 
     if (error) {
+      // eslint-disable-next-line no-console
       console.error('제안서 조회 오류:', error);
       throw error;
     }
 
-    return (data || []).map(rowToProposal);
+    return (data || []).map(row => rowToProposal(row as Partial<ProposalRow>));
   } catch (err) {
     console.error('제안서 조회 실패:', err);
     throw err;

@@ -7,6 +7,7 @@ import apiClient from '@/lib/axios/client';
 import { ProposalRequest, ProposalResponse } from '@/types/gemini';
 import { ProposalFormData, Proposal, ProposalStatus, GenerationStatus } from '@/types/proposal';
 import { useProposalMutations } from './useProposalMutations';
+import { useAuthStore } from '@/stores/authStore';
 
 interface UseGenerateProposalOptions {
   setIsGenerating: (value: boolean) => void;
@@ -27,6 +28,7 @@ export function useGenerateProposal({
 }: UseGenerateProposalOptions) {
   const queryClient = useQueryClient();
   const { updateMutation } = useProposalMutations();
+  const { user } = useAuthStore();
 
   const generateProposal = useCallback(
     async (proposalId: string, data: ProposalFormData) => {
@@ -37,7 +39,8 @@ export function useGenerateProposal({
         setGenStatus({ progress, message });
         try {
           // 현재 캐시에서 제안서 가져오기
-          const cachedProposals = queryClient.getQueryData<Proposal[]>(['proposals']) || [];
+          const cachedProposals =
+            queryClient.getQueryData<Proposal[]>(['proposals', user?.id]) || [];
           const currentProposal = cachedProposals.find(p => p.id === proposalId);
           if (currentProposal) {
             const updated = {
@@ -120,11 +123,12 @@ export function useGenerateProposal({
           await updateMutation.mutateAsync(completedProposal);
 
           // 캐시를 즉시 업데이트하여 대시보드에서 올바른 상태가 표시되도록 함
-          const cachedProposals = queryClient.getQueryData<Proposal[]>(['proposals']) || [];
+          const cachedProposals =
+            queryClient.getQueryData<Proposal[]>(['proposals', user?.id]) || [];
           const updatedProposals = cachedProposals.map(p =>
             p.id === proposalId ? completedProposal : p,
           );
-          queryClient.setQueryData<Proposal[]>(['proposals'], updatedProposals);
+          queryClient.setQueryData<Proposal[]>(['proposals', user?.id], updatedProposals);
         } catch (err) {
           // eslint-disable-next-line no-console
           console.error('제안서 저장 오류:', err);
@@ -171,7 +175,15 @@ export function useGenerateProposal({
         });
       }
     },
-    [queryClient, updateMutation, setIsGenerating, setGenStatus, setView, setCurrentProposal],
+    [
+      queryClient,
+      updateMutation,
+      setIsGenerating,
+      setGenStatus,
+      setView,
+      setCurrentProposal,
+      user?.id,
+    ],
   );
 
   return {

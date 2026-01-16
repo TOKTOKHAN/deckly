@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useQueryClient } from '@tanstack/react-query';
 import { LogOut } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import Button from '@/components/ui/Button';
@@ -12,11 +13,12 @@ import DecklyLogo from '@/components/ui/DecklyLogo';
 
 export default function Navbar() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { user, isLoading, logout, isAdmin } = useAuthStore();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = async () => {
-    await logout();
+    await logout(queryClient);
 
     router.push('/login');
     setShowLogoutModal(false);
