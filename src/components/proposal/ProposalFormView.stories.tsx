@@ -175,7 +175,7 @@ export const DashboardView: Story = {
   ),
   args: {
     proposals: mockProposals,
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -196,7 +196,7 @@ export const DashboardViewLoading: Story = {
   ),
   args: {
     proposals: mockProposals,
-    isProposalsLoading: true,
+    isLoading: true,
     ...defaultHandlers,
   },
 };
@@ -217,7 +217,7 @@ export const DashboardViewEmpty: Story = {
   ),
   args: {
     proposals: [],
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -239,7 +239,7 @@ export const FormView: Story = {
   ),
   args: {
     proposals: [],
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -260,7 +260,7 @@ export const FormViewStep2: Story = {
   ),
   args: {
     proposals: [],
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -281,7 +281,7 @@ export const FormViewError: Story = {
   ),
   args: {
     proposals: [],
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -303,7 +303,7 @@ export const ResultView: Story = {
   ),
   args: {
     proposals: [],
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -324,7 +324,7 @@ export const ResultViewError: Story = {
   ),
   args: {
     proposals: [],
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -349,7 +349,7 @@ export const Generating: Story = {
   ),
   args: {
     proposals: mockProposals,
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };
@@ -371,7 +371,7 @@ export const DeleteModal: Story = {
   ),
   args: {
     proposals: mockProposals,
-    isProposalsLoading: false,
+    isLoading: false,
     ...defaultHandlers,
   },
 };

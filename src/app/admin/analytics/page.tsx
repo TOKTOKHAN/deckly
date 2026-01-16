@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, lazy, Suspense } from 'react';
+import { useState } from 'react';
 import { BarChart3, TrendingUp, CheckCircle2, AlertCircle, MousePointer2 } from 'lucide-react';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import PageHeader from '@/components/admin/PageHeader';
@@ -8,11 +8,7 @@ import StatCard from '@/components/admin/StatCard';
 import ErrorState from '@/components/admin/ErrorState';
 import EmptyState from '@/components/admin/EmptyState';
 import AnalyticsPageSkeleton from '@/components/skeletons/AnalyticsPageSkeleton';
-
-// recharts를 동적 import로 분리하여 번들 크기 최적화
-// admin 페이지에서만 사용되므로 동적 import로 분리하여 초기 번들 크기 감소
-// @ts-expect-error - 동적 import로 인한 타입 체크 우회 (런타임에는 정상 작동)
-const AnalyticsChart = lazy(() => import('@/components/admin/AnalyticsChart'));
+import AnalyticsChart from '@/components/admin/AnalyticsChart';
 export default function AdminAnalyticsPage() {
   const [interval, setInterval] = useState<'week' | 'month' | 'year'>('week');
 
@@ -128,19 +124,7 @@ export default function AdminAnalyticsPage() {
               </div>
             </div>
 
-            <Suspense
-              fallback={
-                <div className="flex h-[400px] items-center justify-center">
-                  <div className="text-sm text-slate-500">차트를 불러오는 중...</div>
-                </div>
-              }
-            >
-              <AnalyticsChart
-                stats={stats}
-                interval={interval}
-                visitorAxisRange={visitorAxisRange}
-              />
-            </Suspense>
+            <AnalyticsChart stats={stats} interval={interval} visitorAxisRange={visitorAxisRange} />
 
             <div className="mt-10 flex items-center justify-between border-t border-slate-50 pt-8">
               <div className="flex items-center gap-6">
