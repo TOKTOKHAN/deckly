@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { ProposalFormData, Proposal } from '@/types/proposal';
@@ -27,6 +27,41 @@ export default function ProposalFormContainer() {
     closeForm,
     backFromResult,
   } = useProposalFormStore();
+
+  // 사용자 변경 감지를 위한 ref
+  const prevUserIdRef = useRef<string | undefined>(undefined);
+
+  // 사용자 변경 감지 및 proposalFormStore 초기화
+  useEffect(() => {
+    const currentUserId = user?.id;
+    const prevUserId = prevUserIdRef.current;
+
+    // 사용자가 변경되었을 때 (로그인 또는 계정 전환)
+    if (currentUserId && currentUserId !== prevUserId) {
+      // 이전 사용자가 있었고, 새로운 사용자로 변경된 경우
+      if (prevUserId !== undefined) {
+        // proposalFormStore 초기화
+        useProposalFormStore.getState().reset();
+        // view를 dashboard로 설정 (초기화 후에도 확실히)
+        useProposalFormStore.getState().setView('dashboard');
+      } else {
+        // 첫 로그인인 경우에도 view가 dashboard가 아니면 초기화
+        const currentView = useProposalFormStore.getState().view;
+        if (currentView !== 'dashboard') {
+          useProposalFormStore.getState().setView('dashboard');
+        }
+      }
+    }
+
+    // 사용자가 로그아웃한 경우 (user가 null이 되었을 때)
+    if (!currentUserId && prevUserId !== undefined) {
+      // proposalFormStore 초기화
+      useProposalFormStore.getState().reset();
+    }
+
+    // 현재 userId를 ref에 저장
+    prevUserIdRef.current = currentUserId;
+  }, [user?.id]);
 
   // 캐시에 데이터가 있는지 확인하여 refetchOnMount 조건부 설정
   const queryKey = ['proposals', user?.id];

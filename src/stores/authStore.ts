@@ -3,6 +3,7 @@ import { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase/client';
 import { isAdmin } from '@/lib/utils/admin';
+import { useProposalFormStore } from './proposalFormStore';
 
 interface AuthState {
   user: User | null;
@@ -64,6 +65,14 @@ export const useAuthStore = create<AuthState>(set => ({
         // eslint-disable-next-line no-console
         console.warn('React Query 캐시 초기화 오류:', error);
       }
+    }
+
+    // proposalFormStore 초기화 (이전 사용자의 상태 제거)
+    try {
+      useProposalFormStore.getState().reset();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('proposalFormStore 초기화 오류:', error);
     }
 
     if (!supabase) return;
